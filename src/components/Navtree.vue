@@ -1,431 +1,263 @@
 <template>
-  <div class="navTree noSelect">
-    <div class="fixedNav">
-      <img src="../assets/logo.png" class="logo" />
-      <div class="navItems" @mouseleave="handleOut">
-        <div
-          class="navItem"
-          v-for="(item, i) in navList"
-          :key="i"
-          @mouseover="handleHover(i)"
-          @click="clickItem(item.url)"
-        >
-          <img
-            :src="require(currentItem == i ? '_' + item.src : item.src)"
-            class="navLogo"
-          />
-          <p
-            class="navText"
-            :style="hoverItem == i || currentItem == i ? 'color:#c7242f' : ''"
-          >
-            {{ item.title }}
-          </p>
-        </div>
-        <div :class="'capsule' + (isResizing ? ' noTrans' : '')" ref="capsule">
-          <Transition duration="550" name="nested">
-            <div
-              class="menu"
-              v-if="showMenu && navList[hoverItem].children.length"
-            >
-              <div class="trueMenu">
-                <div
-                  class="menuItem"
-                  @mouseover="
-                    handleMouseEnter(navList[hoverItem].children, subItem)
-                  "
-                  v-for="(subItem, j) in navList[hoverItem].children"
-                  :key="j"
-                  @click="clickItem(subItem.url)"
-                  :style="
-                    $route.path.includes(subItem.url) ? 'color:#c7242f' : ''
-                  "
-                >
-                  <span
-                    :style="
-                      $route.path.includes(subItem.url)
-                        ? 'color:#c7242f;font-weight:700'
-                        : 'font-weight:700'
-                    "
-                  >
-                    · </span
-                  >{{ subItem.title }}
-                  <Transition duration="550" name="nested">
-                    <div
-                      class="moreMenu"
-                      v-if="
-                        subItem.children &&
-                        subItem.children.length &&
-                        subItem.show
-                      "
-                    >
-                      <div class="trueMenu">
-                        <p
-                          class="menuItem"
-                          v-for="(sub, k) in subItem.children"
-                          :key="k"
-                          @click.stop="clickItem(sub.url)"
-                          :style="
-                            $route.path.includes(sub.url)
-                              ? 'color:#c7242f'
-                              : 'color:#505050'
-                          "
-                        >
-                          <span
-                            :style="
-                              $route.path.includes(sub.url)
-                                ? 'color:#c7242f;font-weight:700'
-                                : 'font-weight:700'
-                            "
-                          >
-                            · </span
-                          >{{ sub.title }}
-                        </p>
-                      </div>
+    <div class="navTree noSelect">
+        <img src="../assets/logo.png" class="logo" />
+        <div class="item-box">
+            <div v-for="(i, idx) in navList" class="item">
+                <div :class="{
+                    'nav-1': 1,
+                    'active': i.active
+                }" @click="$router.push(i.routePath)">
+                    <div :class="{'left-dec':1,active:i.active}"></div>
+                    <div class="right-box">
+                        <div class="icon">
+                            <img v-show="!i.active" :src="require(i.icon)" alt="">
+                            <img v-show="i.active" :src="require(i.icon_)" alt="">
+                        </div>
+                        <div :class="{title:1,active:i.active}">
+                            {{ i.title }}
+                        </div>
                     </div>
-                  </Transition>
                 </div>
-              </div>
+                <div :class="{
+                    'sub-box-outer': 1,
+                    'active': i.state === 2
+                }" :style="{
+                    height: i.state === 1 ? i.height + 'px' : ''
+                }" @transitionend="transitionend(i)">
+                    <div :ref="el => domList[i.routePath] = el" :class="{'sub-box-inner':1, active:i.active}">
+                        <div @click="$router.push(ii.routePath)" class="nav-2" v-for="ii in i.children">
+                            <div class="left-dec none">
+
+                            </div>
+                            <div class="right-box">
+                                <div class="icon none"></div>
+                                <div :class="{
+                                    title: 1,
+                                    active: $route.path.includes(ii.routePath)
+                                }">
+                                    {{ii.title}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </Transition>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, onMounted, watch, watchEffect, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import require from "@/utils/pub-use";
-export default {
-  data() {
-    return {
-      defaultActive: "",
-      currentItem: -1,
-      hoverItem: -1,
-      showMenu: false,
-      isResizing: false,
-      navList: [
-        {
-          title: "消息通知",
-          src: "nav1.png",
-          url: "/notice/list",
-          children: [
+
+const $route = useRoute()
+const $router = useRouter()
+
+const navList = reactive([
+    {
+        title: '支部信息',
+        //自己设置对应的路由和icon路径（从assets文件夹开始
+        routePath: '/info',
+        icon: 'ljc/kuangjia/zhi.svg',
+        icon_: 'ljc/kuangjia/zhi_.svg',
+        children: [
             {
-              title: "通知列表",
-              url: "/notice/list",
-            },
-          ],
-        },
-        {
-          title: "站内信",
-          src: "nav2.png",
-          url: "/message/get",
-          children: [
-            {
-              title: "收件箱",
-              url: "/message/get",
-            },
-            {
-              title: "发件箱",
-              url: "/message/post",
-            },
-          ],
-        },
-        {
-          title: "资源库",
-          src: "nav3.png",
-          url: "/resource/columnList",
-          children: [
-            {
-              title: "栏目列表",
-              url: "/resource/columnList",
-            },
-            {
-              title: "文件列表",
-              url: "/resource/fileList",
-            },
-          ],
-        },
-        {
-          title: "网上党课学习",
-          src: "nav4.png",
-          url: "/lesson20/lesson20",
-          children: [
-            {
-              title: "课程管理",
-              url: "/lesson20/lesson20",
-            },
-            {
-              title: "文章管理",
-              url: "/lesson20/article20",
-            },
-            {
-              title: "试题管理",
-              url: "/lesson20/question20",
-            },
-          ],
-        },
-        {
-          title: "考试与选课",
-          src: "nav5.png",
-          url: "/examinationAndClass/trainingSummary",
-          children: [
-            {
-              title: "培训总表",
-              url: "/examinationAndClass/trainingSummary",
-            },
-            {
-              title: "入党申请人培训",
-              url: "/examinationAndClass/applicantsTraining",
-            },
-            {
-              title: "积极分子培训",
-              url: "/examinationAndClass/activistsTraining",
-            },
-            {
-              title: "预备党员培训",
-              url: "/examinationAndClass/preparativeMembersTraining",
-              children: [
-                {
-                  title: "课程管理",
-                  url: "/examinationAndClass/1",
-                },
-                {
-                  title: "课程成绩录入",
-                  url: "/examinationAndClass/2",
-                },
-                {
-                  title: "结业成绩录入",
-                  url: "/examinationAndClass/3",
-                },
-                {
-                  title: "成绩管理",
-                  url: "/examinationAndClass/gradesManagement",
-                },
-                {
-                  title: "个人成绩微调",
-                  url: "/examinationAndClass/5",
-                },
-              ],
-            },
-            {
-              title: "违纪管理",
-              url: "/examinationAndClass/disciplinaryManagement",
-            },
-          ],
-        },
-        {
-          title: "学生信息",
-          src: "nav6.png",
-          url: "/studentInfo/initStatue",
-          children: [
-            {
-              title: "状态初始化",
-              url: "/studentInfo/initStatue",
-            },
-            {
-              title: "个人状态更改",
-              url: "/studentInfo/personalStatue",
-            },
-          ],
-        },
-        {
-          title: "支部管理",
-          src: "nav7.png",
-          url: "/branch/branchList",
-          children: [
-            {
-              title: "支部列表",
-              url: "/branch/branchList",
-            },
-          ],
-        },
-        {
-          title: "首页管理",
-          src: "nav8.png",
-          url: "/homepage/swiper",
-          children: [
-            {
-              title: "轮播图",
-              url: "/homepage/swiper",
-            },
-            {
-              title: "近期通知",
-              url: "/homepage/notice",
-            },
-            {
-              title: "推荐阅读",
-              url: "/homepage/recommend",
-            },
-          ],
-        },
-      ],
-    };
-  },
-  methods: {
-    handleHover(val) {
-      this.hoverItem = val;
-      this.showMenu = true;
-      this.updatePlace();
+                title: 'asdfasdf',
+                routePath: '/info/asdfasdf',
+
+            }
+        ]
     },
-    handleMouseEnter(item, subItem) {
-      item.map((item) => (item.show = false));
-      subItem.show = true;
+    {
+        title: '业务处理',
+        routePath: '/deal',
+        icon: 'ljc/kuangjia/ye.svg',
+        icon_: 'ljc/kuangjia/ye_.svg',
+        children: [
+            {
+                title: '文件审批',
+                routePath: '/deal/xxx',
+            },
+            {
+                title: '状态管理',
+                routePath: '/deal/stateControl',
+            },
+            {
+                title: '操作记录',
+                routePath: '/deal/xxx',
+            },
+        ]
     },
-    handleMouseOut(subItem) {
-      subItem.show = false;
+    {
+        title: '人员管理',
+        routePath: '/2',
+        icon: 'ljc/kuangjia/ren.svg',
+        icon_: 'ljc/kuangjia/ren_.svg',
     },
-    handleOut() {
-      this.hoverItem = this.currentItem;
-      this.showMenu = false;
-      this.updatePlace();
-    },
-    require(url) {
-      return require(url);
-    },
-    clickItem(url) {
-      this.currentItem = this.hoverItem;
-      this.showMenu = false;
-      this.$router.push(url);
-    },
-    updatePlace(val = false) {
-      if (val) {
-        this.isResizing = true;
-        this.$refs.capsule.style.opacity = "0";
-        this.$nextTick(() => {
-          this.$refs.capsule.style.top = 5 * this.hoverItem + "rem";
-          this.$refs.capsule.style.opacity = "1";
-          setTimeout(() => {
-            this.isResizing = false;
-          }, 0);
-        });
-      } else {
-        this.$refs.capsule.style.opacity = "1";
-        this.$refs.capsule.style.top = 5 * this.hoverItem + "rem";
-      }
-    },
-    updateItem() {
-      for (let i = 0; i < this.navList.length; i++) {
-        if (this.$route.path.includes(this.navList[i].url)) {
-          this.currentItem = i;
-          this.hoverItem = i;
+    {
+        title: '权限管理',
+        routePath: '/3',
+        icon: 'ljc/kuangjia/quan.svg',
+        icon_: 'ljc/kuangjia/quan_.svg'
+    }
+])
+
+let domList = {};
+
+const route_change_handle = () => {
+    navList.forEach(nav => {
+        if ($route.path.includes(nav.routePath)) {
+            nav.height = domList[nav.routePath]?.offsetHeight || 0
+            nav.state = 1
+            nav.active = true
+        } else {
+            if (nav.state !== 0) {
+                nav.height = domList[nav.routePath]?.offsetHeight || 0
+                nav.state = 1
+                nav.active = false
+                nextTick(() => {
+                    nav.state = 0
+                })
+            }
         }
-        for (let j = 0; j < this.navList[i].children.length; j++) {
-          if (this.$route.path.includes(this.navList[i].children[j].url)) {
-            this.currentItem = i;
-            this.hoverItem = i;
-          }
-        }
-      }
-    },
-  },
-  mounted() {
-    this.updateItem();
-    this.updatePlace(true);
-  },
-  watch: {
-    $route(to, from) {
-      this.updateItem();
-      this.updatePlace(from.path === "/");
-    },
-  },
-};
+    });
+}
+
+const transitionend = (i) => {
+    if (i.state === 1) {
+        i.state = 2
+    }
+}
+
+watch($route, () => {
+    route_change_handle()
+
+})
+
+
+onMounted(() => {
+    route_change_handle()
+})
+
 </script>
 
 <style scoped>
 .navTree {
-  background-color: #ffffff;
-  position: relative;
+    /* background-color: #ffffff; */
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-.fixedNav {
-  position: fixed;
-  width: 300px;
-}
+
 .logo {
-  width: 234px;
-  margin: 20px auto;
-  margin-bottom: 60px;
-  display: block;
-  cursor: pointer;
+    width: 234px;
+    margin-top: 24px;
+    margin-bottom: 58px;
+    cursor: pointer;
 }
-.navItems {
-  position: relative;
+
+.item-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
-.navItem {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  box-sizing: content-box;
-  margin: 20px 24px;
-  border-radius: 4px;
+
+.item {
+    height: auto;
+    margin-bottom: 30px;
 }
-.navItem:hover {
-  background-color: #fdebed;
+
+.nav-1 {
+    height: 92px;
+    display: flex;
+    border-radius: 0px 4px 4px 0px;
+    transition: .12s;
+    cursor: pointer;
 }
-.navLogo {
-  width: 32px;
-  height: 32px;
-  margin-left: 40px;
-  margin-right: 24px;
+.nav-1.active {
+    background-color: #fff;
 }
-.navText {
-  font-size: 20px;
+
+.sub-box-outer {
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    transition: .26s ease;
 }
-.capsule {
-  width: 8px;
-  height: 60px;
-  background-color: #f2404c;
-  border-radius: 8px 0 0 8px;
-  margin: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  opacity: 0;
-  transition: all 0.5s;
+
+.sub-box-outer.active {
+    height: auto;
 }
-.menu {
-  padding-left: 40px;
-  transform: translateY(-50%);
-  top: 50%;
-  position: relative;
+
+.sub-box-inner {
+    height: auto;
+    width: 100%;
+    opacity: 0;
+    transition: .2s;
+    transform: scale(.9);
+    transform-origin: center 0;
+    padding-top: 30px;
+
 }
-.trueMenu {
-  min-width: 220px;
-  padding: 18px 0;
-  background-color: #ffffff;
-  transition: all 0.5s;
-  border-radius: 8px;
+.sub-box-inner.active {
+    transform: scale(1);
+    opacity: 1;
 }
-.menuItem {
-  font-size: 20px;
-  margin: 10px;
-  padding-left: 24px;
-  cursor: pointer;
-  position: relative;
+.nav-2 {
+    height: 92px;
+    display: flex;
+    cursor: pointer;
 }
-.moreMenu {
-  transform: translateY(-50%);
-  top: 50%;
-  padding-left: 220px;
-  position: absolute;
+.left-dec {
+    width: 8px;
+    height: 100%;
+    transform: translateX(-100%);    
+    transition: .2s;
 }
-.menuItem:hover {
-  color: #c7242f;
+.left-dec.active{
+    background-color: rgba(199, 36, 47, 1);
+    transform: translateX(0);    
 }
-.nested-enter-active,
-.nested-leave-active {
-  transition: all 0.3s ease-in-out;
+
+.left-dec.none {
+    opacity: 0;
 }
-.nested-leave-active {
-  transition-delay: 0.15s;
+
+.right-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.nested-enter-from,
-.nested-leave-to {
-  transform: translateY(-50%) translateX(30px);
-  opacity: 0;
+
+.icon {
+    margin-right: 12px;
+    width: 40px;
+    height: 40px;
 }
-.noTrans {
-  transition: opacity 0.5s !important;
+
+.icon img {
+    width: 100%;
+    height: 100%;
+}
+
+.icon.none {
+    opacity: 0;
+}
+
+.title {
+    font-size: 28px;
+    color: rgba(159, 159, 159, 1);
+    transition: .14s;
+}
+.title.active{
+    color: rgba(80, 80, 80, 1);
+
 }
 </style>
 

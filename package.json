@@ -14,6 +14,7 @@
         "@types/js-cookie": "^3.0.1",
         "autoprefixer": "^10.4.5",
         "axios": "^0.25.0",
+        "caniuse-lite": "^1.0.30001565",
         "element-plus": "^2.2.17",
         "element-ui": "^2.15.10",
         "js-cookie": "^3.0.1",

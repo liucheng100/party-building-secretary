@@ -11,21 +11,22 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import Navtree from "@/components/Navtree.vue";
 import MainHeader from "@/components/MainHeader.vue";
-export default {
-  components: {
-    Navtree,
-    MainHeader,
-  },
-};
+import { ref, reactive, provide } from 'vue'
+
+// 这里发请求获取支部信息
+const BRANCH_INFO = reactive({})
+// provide出去
+provide('BRANCH_INFO', BRANCH_INFO)
+
 </script>
 <style scoped>
 .main {
   background-color: #fafafa;
   display: grid;
-  grid-template-columns: 300px auto;
+  grid-template-columns: 307px auto;
   overflow-x: hidden;
 }
 .nav {
@@ -33,7 +34,6 @@ export default {
   min-height: 100vh;
 }
 .screen {
-  background-color: #fafafa;
   padding: 10px 30px;
   overflow: hidden;
 }
@@ -44,10 +44,10 @@ export default {
   padding: 40px 70px;
   padding-bottom: 25px;
   overflow: overlay;
-  background-color: #fff;
 }
 .content {
   display: grid;
   grid-template-rows: 90px auto;
+  padding: 0 32px 32px 0;
 }
 </style>
