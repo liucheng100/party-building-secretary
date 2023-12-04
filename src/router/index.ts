@@ -48,6 +48,13 @@ const routes = [
             },
           },
           {
+            path: "/p_management/p_info/p_info_check",
+            component: () => import("@/views/pages/p_info_check.vue"),
+            meta: {
+              title: "个人详情",
+            },
+          },
+          {
             path: "/p_management/learnGroup",
             component: () => import("@/views/pages/learnGroup.vue"),
             meta: {

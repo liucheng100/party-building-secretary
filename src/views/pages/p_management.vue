@@ -69,10 +69,12 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import { reactive } from "vue";
-
+const $route = useRoute();
+const $router = useRouter();
 zhCn.el.pagination = {
   goto: "跳至",
   pagesize: "\u6761/\u9875",
@@ -121,6 +123,7 @@ const handleCurrentChange = (val: number) => {
 
 const handleCheck = (index: number, row: User) => {
   console.log(index, row);
+  $router.push("/p_management/p_info/p_info_check");
 };
 
 const formInline = reactive({
@@ -153,6 +156,7 @@ const toggleSelection = (rows?: User[]) => {
     multipleTableRef.value!.clearSelection();
   }
 };
+
 const handleSelectionChange = (val: User[]) => {
   multipleSelection.value = val;
 };
