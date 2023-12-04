@@ -24,7 +24,7 @@
                 }" :style="{
                     height: i.state === 1 ? i.height + 'px' : ''
                 }" @transitionend="transitionend(i)">
-                    <div :ref="el => domList[i.routePath] = el" :class="{'sub-box-inner':1, active:i.active}">
+                    <div @transitionend.stop :ref="el => domList[i.routePath] = el" :class="{'sub-box-inner':1, active:i.active}">
                         <div @click="$router.push(ii.routePath)" class="nav-2" v-for="ii in i.children">
                             <div class="left-dec none">
 
@@ -187,7 +187,7 @@ onMounted(() => {
     width: 100%;
     height: 0;
     overflow: hidden;
-    transition: .26s ease;
+    transition: 5.26s ease;
 }
 
 .sub-box-outer.active {

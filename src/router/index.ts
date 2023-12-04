@@ -19,7 +19,6 @@ const routes = [
             },
             {
                 path: "/deal",
-                component: () => import("@/views/pages/deal.vue"),
                 meta: {
                     title: "业务处理",
                 },
@@ -27,7 +26,7 @@ const routes = [
                 children: [
                     {
                         path: "/deal/stateControl",
-                        component: () => import("@/views/pages/info.vue"),
+                        component: () => import("@/views/pages/deal.vue"),
                         meta: {
                             title: "状态管理",
                         },
