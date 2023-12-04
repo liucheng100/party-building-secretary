@@ -19,7 +19,6 @@ const routes = [
       },
       {
         path: "/deal",
-        component: () => import("@/views/pages/deal.vue"),
         meta: {
           title: "业务处理",
         },
@@ -36,7 +35,6 @@ const routes = [
       },
       {
         path: "/p_management",
-        component: () => import("@/views/pages/p_management.vue"),
         meta: {
           title: "人员管理",
         },
