@@ -1,9 +1,3 @@
-<template>
-  deal
-</template>
-<script setup>
-
-</script>
-<style scoped>
-
-</style>
+<template>deal</template>
+<script setup></script>
+<style scoped></style>

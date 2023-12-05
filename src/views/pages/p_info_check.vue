@@ -5,9 +5,7 @@
         <div class="p_check_head_1">
           <div>xx支部</div>
           <div>
-            <el-button style="color: #c7242f" plain @click="$router.back()"
-              >Back</el-button
-            >
+            <el-icon @click="$router.back()"><Close /></el-icon>
           </div>
         </div>
 
@@ -22,7 +20,7 @@
           </div>
           <div class="identity" style="display: flex; flex-direction: column">
             <div style="color: #9f9f9f; margin-bottom: 10px">身份</div>
-            <div style="font-size: 24px">共产党员</div>
+            <div style="font-size: 24px">中共党员</div>
           </div>
         </div>
       </div>
@@ -32,7 +30,6 @@
           :data="tableData"
           style="width: 100%"
           :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
-          @selection-change="handleSelectionChange"
         >
           <el-table-column property="title" label="标题">
             <template #default="scope">
@@ -80,19 +77,21 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          class="el-paginatio"
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :page-sizes="[12]"
-          :style="{ margin: '20px' }"
-          background
-          small
-          layout="total, ->,sizes, prev, pager, next, jumper"
-          :total="30"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+        <el-config-provider :locale="Cn">
+          <el-pagination
+            class="el-paginatio"
+            v-model:current-page="currentPage"
+            v-model:page-size="pageSize"
+            :page-sizes="[12]"
+            :style="{ margin: '20px' }"
+            background
+            small
+            layout="total, ->,sizes, prev, pager, next, jumper"
+            :total="30"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </el-config-provider>
       </div>
     </div>
     <div class="p_check_2">
@@ -694,7 +693,7 @@
             @click="toSubmit"
             class="redBtn"
             :loading="submitLoading"
-            >提交</el-button
+            >确认修改</el-button
           >
         </div>
       </div>
@@ -703,18 +702,12 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import { reactive } from "vue";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import $router from "@/router";
 import { ElMessage } from "element-plus";
-import {
-  getCollege,
-  getGrade,
-  getClass,
-  getStudentsByClass,
-  initStudentsStatue,
-} from "../../api/studentInfo";
+import { initStudentsStatue } from "../../api/studentInfo";
 
 interface User {
   title: string;
@@ -727,7 +720,6 @@ export default {
     return {
       currentPage: 1,
       pageSize: 12,
-      multipleTableRef: null,
       tableData: [
         {
           title: "强国有我",
@@ -789,155 +781,41 @@ export default {
           class: "思想汇报",
           situation: "已通过",
         },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "已通过",
-        },
       ],
-
-      isSearching: false,
-      selectedClass: {},
-      classes: [],
+      Cn: zhCn,
       tabIndex: 0,
-      statue: false,
-      isApplication: false,
       submitLoading: false,
-      title: "",
-      content: "",
       isAuto: false,
-      centerDialogVisible: false,
       subTabList: ["入党申请人", "入党积极分子", "发展对象", "中共预备党员"],
       isResizing: false,
       scrollTime: 0,
-      collegeList: [],
-      cascaderValue: [],
       statueList: [],
-      cascaderOptions: [],
-      classInfo: {},
-      studentTableData: [],
-      multipleSelection: [],
     };
   },
   methods: {
-    handleSizeChange(val) {
+    handleSizeChange(val: number) {
       console.log(`${val} items per page`);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange(val: number) {
       console.log(`current page: ${val}`);
-    },
-    toggleSelection(rows?: User[]) {
-      if (rows) {
-        rows.forEach((row) => {
-          // TODO: improvement typing when refactor table
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          multipleTableRef.value!.toggleRowSelection(row, undefined);
-        });
-      } else {
-        multipleTableRef.value!.clearSelection();
-      }
-    },
-    handleSelectionChange(val: User[]) {
-      multipleSelection.value = val;
     },
     handleCheck(index: number, row: User) {
       console.log(index, row);
-    },
-
-    handleRowClick(val, i, j) {
-      this.$refs.multipleTableRef[i.rawColumnKey].toggleRowSelection(val);
-    },
-    clickClass(id) {
-      this.selectedClass[id] = !this.selectedClass[id];
-      this.studentTableData = [];
-      for (let item in this.selectedClass) {
-        if (this.selectedClass[item]) {
-          if (!this.classInfo[item]) {
-            let formData = new FormData();
-            formData.append("classIdList", item);
-            getStudentsByClass(formData).then(({ data: res }) => {
-              if (res[0]) {
-                this.classInfo[item] = res[0];
-                this.studentTableData.push(res[0]);
-              }
-            });
-          } else {
-            this.studentTableData.push(this.classInfo[item]);
-          }
-        }
-      }
-    },
-    toSearch() {
-      if (
-        this.cascaderValue[0] === undefined ||
-        this.cascaderValue[1] === undefined
-      ) {
-        ElMessage.warning("请选择您要查询的对象");
-        return;
-      }
-      this.isSearching = true;
-      getClass({
-        collegeId: this.cascaderValue[0],
-        grade: this.cascaderValue[1],
-      })
-        .then(({ code: code, data: res, msg: msg }) => {
-          this.isSearching = false;
-          if (code === 0) {
-            this.classes = res;
-            ElMessage.success("查询班级成功");
-          } else {
-            ElMessage.error(msg);
-          }
-        })
-        .catch(() => {
-          this.isSearching = false;
-        });
-    },
-    getCollege() {
-      getCollege().then(async ({ data: res }) => {
-        let gradeList = [];
-        await getGrade().then(({ data: res }) => {
-          res.map((item) => {
-            gradeList.push({
-              label: item === 0 ? "其他" : item + "级",
-              value: item,
-            });
-          });
-        });
-        this.collegeList = res;
-        this.cascaderOptions = [];
-        this.collegeList.map((item) => {
-          this.cascaderOptions.push({
-            value: item.id,
-            label: item.collegeName,
-            children: gradeList,
-          });
-        });
-      });
     },
     toSubmit() {
       if (!this.statueList.length) {
         ElMessage.warning("请选择需要初始化的状态");
         return;
       }
-      if (!this.multipleSelection.length) {
-        ElMessage.warning("请选择需要进行初始化的对象");
-        return;
-      }
       this.submitLoading = true;
       let processIds = [];
       let status = [];
-      let ids = [];
+      let ids: Array<number> = [];
       for (let i = 0; i < 40; i++) {
         processIds.push(i);
         status.push(this.statueList[i] ? 1 : 0);
       }
-      this.multipleSelection.map((item) => {
-        item.map((_item) => {
-          ids.push(_item.uid);
-        });
-      });
+
       initStudentsStatue({ ids, processIds, status })
         .then(({ code: code, msg: msg }) => {
           if (code === 0) {
@@ -956,21 +834,10 @@ export default {
           this.submitLoading = false;
         });
     },
-    changeStatue(val) {
+    changeStatue(val: number) {
       this.statueList[val] = !this.statueList[val];
     },
-    goApplication() {
-      this.isApplication = true;
-    },
-    clickPath(val) {
-      if (val === 0) {
-        this.isApplication = false;
-      }
-    },
-    clickConfirm() {
-      this.centerDialogVisible = true;
-    },
-    changeUrl(val) {
+    changeUrl(val: number) {
       this.tabIndex = val;
       this.isAuto = true;
       this.scrollTime = new Date().getTime();
@@ -1054,7 +921,6 @@ export default {
     },
   },
   mounted() {
-    this.getCollege();
     this.updateResize();
     window.addEventListener("resize", this.updateResize);
   },
@@ -1088,12 +954,14 @@ export default {
 }
 .sureBtn :deep(.el-button) {
   background: #c7242f;
-  border-radius: 10px;
-  padding: 0 50px;
-  height: 50px;
-  font-size: 18px;
+  border-radius: 100px;
+  padding: 0 10px;
+  height: 35px;
+  font-size: 14px;
   color: #ffffff;
-  display: inline-block;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
 .progress {
   padding: 24px 150px;
@@ -1360,7 +1228,7 @@ export default {
 }
 .square {
   border-radius: 18px;
-  padding: 12px 22px;
+  padding: 12px 12px;
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -1435,7 +1303,7 @@ export default {
   z-index: 1;
 }
 .square-line-c {
-  width: 344px;
+  width: 244px;
   height: 132px;
   border: 1px solid #c7242f;
   border-radius: 32px;
@@ -1455,7 +1323,7 @@ export default {
   position: relative;
 }
 .square-line-c-3 {
-  width: 600px;
+  width: 450px;
   height: 220px;
   border: 1px solid #c7242f;
   border-radius: 32px;
@@ -1465,7 +1333,7 @@ export default {
   position: relative;
 }
 .square-line-c-3-b {
-  width: 600px;
+  width: 500px;
   height: 132px;
   border: 1px solid #c7242f;
   border-radius: 32px;
@@ -1662,6 +1530,7 @@ export default {
   width: 48%;
   background-color: #fff;
   display: flex;
+  position: relative;
 }
 
 .p_check_1_1 {
@@ -1695,6 +1564,9 @@ export default {
 .p_check_1_2 {
   flex: 7;
   background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .icon_situation {
