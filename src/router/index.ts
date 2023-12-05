@@ -60,6 +60,20 @@ const routes = [
             meta: {
               title: "学习小组",
             },
+            children: [
+              {
+                path: '',
+                redirect: '/p_management/learnGroup/grouped'
+              },
+              {
+                path: 'grouped',
+                component: () => import("@/views/pages/alreadyGrouped.vue"),
+              },
+              {
+                path: 'ungrouped',
+                component: () => import("@/views/pages/unGrouped.vue"),
+              }
+            ]
           },
         ],
       },
