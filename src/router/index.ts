@@ -31,6 +31,20 @@ const routes = [
               title: "状态管理",
             },
           },
+          {
+            path: "/deal/fileApproval",
+            component: () => import("@/views/pages/f_approval.vue"),
+            meta: {
+              title: "文件审批",
+            },
+          },
+          {
+            path: "/deal/fileApproval/fileCheck",
+            component: () => import("@/views/pages/f_check.vue"),
+            meta: {
+              title: "查看文件",
+            },
+          }
         ],
       },
       {

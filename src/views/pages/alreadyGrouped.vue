@@ -9,7 +9,7 @@
       >
         <el-table-column label="组号" width="50">
           <template #default="scope">
-            {{ scope.row.groupid }}
+            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.groupid }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" property="name">
@@ -34,7 +34,7 @@
       >
         <el-table-column label="组号" width="50">
           <template #default="scope">
-            {{ scope.row.groupid }}
+            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.groupid }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" property="name">
@@ -67,8 +67,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
+
+import { getGroup } from "@/api/learngroup";
 
 const currentPage = ref(1);
 const pageSize = ref(14);
@@ -87,6 +89,11 @@ interface GroupedUser {
 interface GroupedMember extends Member {
   groupid?: number;
 }
+
+onMounted(async () => {
+  const groupData = await getGroup();
+  console.log(groupData);
+})
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);

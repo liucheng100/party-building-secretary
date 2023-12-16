@@ -91,7 +91,7 @@ const navList = reactive([
     children: [
       {
         title: "文件审批",
-        routePath: "/deal/xxx",
+        routePath: "/deal/fileApproval",
       },
       {
         title: "状态管理",
