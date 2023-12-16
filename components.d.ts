@@ -17,8 +17,6 @@ declare module '@vue/runtime-core' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    ElTabPane: typeof import('element-plus/es')['ElTabPane']
-    ElTabs: typeof import('element-plus/es')['ElTabs']
     MainHeader: typeof import('./src/components/MainHeader.vue')['default']
     Navtree: typeof import('./src/components/Navtree.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

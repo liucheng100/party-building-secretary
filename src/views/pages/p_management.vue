@@ -21,7 +21,7 @@
       <span>学号 </span>
       <el-input
         style="display: inline; margin-left: 30px"
-        placeholder="请输入学号"
+        placeholder="输入需要查找的学号"
         v-model="input"
       ></el-input>
       <el-button style="margin-left: 30px" color="#c7242f">搜索</el-button>
@@ -40,7 +40,7 @@
         <template #default="scope">{{ scope.row.name }}</template>
       </el-table-column>
       <el-table-column property="stu_number" label="学号" />
-      <el-table-column property="identity" label="身份" show-overflow-tooltip />
+      <el-table-column property="identity" label="身份" />
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
@@ -93,8 +93,16 @@ const options = [
     value: 3,
   },
   {
-    label: "中共党员",
+    label: "发展对象",
     value: 4,
+  },
+  {
+    label: "中共预备党员",
+    value: 5,
+  },
+  {
+    label: "中共党员",
+    value: 6,
   },
 ];
 const currentPage = ref(1);

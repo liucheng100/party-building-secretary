@@ -1,56 +1,56 @@
 <template>
-    <div class="Main">
-      <div class="TableContainer">
-        <!-- 左边的表格 -->
-        <el-table
-          ref="multipleTableRefLeft"
-          :data="tableDataLeft"
-          style="width: 100%; margin-top: 20px"
-          :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
-          @selection-change="handleSelectionChange"
-        >
-          <el-table-column type="selection" />
-          <el-table-column label="姓名">
-            <template #default="scope">{{ scope.row.name }}</template>
-          </el-table-column>
-          <el-table-column property="stu_number" label="学号" />
-          <el-table-column property="major" label="专业" show-overflow-tooltip />
-        </el-table>
-      </div>
-  
-      <div class="TableContainer">
-        <!-- 右边的表格 -->
-        <el-table
-          ref="multipleTableRefRight"
-          :data="tableDataRight"
-          style="width: 100%; margin-top: 20px"
-          :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
-          @selection-change="handleSelectionChange"
-        >
-          <el-table-column type="selection" />
-          <el-table-column label="姓名">
-            <template #default="scope">{{ scope.row.name }}</template>
-          </el-table-column>
-          <el-table-column property="stu_number" label="学号" />
-          <el-table-column property="major" label="专业" show-overflow-tooltip />
-        </el-table>
-      </div>
+  <div class="Main">
+    <div class="TableContainer">
+      <!-- 左边的表格 -->
+      <el-table
+        ref="multipleTableRefLeft"
+        :data="tableDataLeft"
+        style="width: 100%; margin-top: 20px"
+        :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" />
+        <el-table-column label="姓名">
+          <template #default="scope">{{ scope.row.name }}</template>
+        </el-table-column>
+        <el-table-column property="stu_number" label="学号" />
+        <el-table-column property="major" label="专业" show-overflow-tooltip />
+      </el-table>
     </div>
-    <el-config-provider :locale="zhCn">
-      <el-pagination
-        class="el-pagination"
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :page-sizes="[14]"
-        :style="{ margin: '20px' }"
-        background
-        layout="total, ->,sizes, prev, pager, next, jumper"
-        :total="400"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </el-config-provider>
-  </template>
+
+    <div class="TableContainer">
+      <!-- 右边的表格 -->
+      <el-table
+        ref="multipleTableRefRight"
+        :data="tableDataRight"
+        style="width: 100%; margin-top: 20px"
+        :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" />
+        <el-table-column label="姓名">
+          <template #default="scope">{{ scope.row.name }}</template>
+        </el-table-column>
+        <el-table-column property="stu_number" label="学号" />
+        <el-table-column property="major" label="专业" show-overflow-tooltip />
+      </el-table>
+    </div>
+  </div>
+  <el-config-provider :locale="zhCn">
+    <el-pagination
+      class="el-pagination"
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[14]"
+      :style="{ margin: '20px' }"
+      background
+      layout="total, ->,sizes, prev, pager, next, jumper"
+      :total="400"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </el-config-provider>
+</template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
@@ -150,7 +150,7 @@ const tableData: learnUser[] = [
     stu_number: "3022244011",
     major: "中共党员",
   },
-]
+];
 
 // 将数据分割为左右两部分
 const half = Math.ceil(tableData.length / 2);

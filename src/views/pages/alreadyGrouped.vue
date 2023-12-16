@@ -162,16 +162,16 @@ const tableDataRight = processedData.slice(
 }
 .red-dot-container {
   display: flex;
-  justify-content: space-between; 
-  width: 100%; 
-  align-items: center; 
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
   padding-right: 30px;
 }
 
 .red-dot {
-  width: 7px; 
-  height: 7px; 
-  border-radius: 50%; 
-  background-color: #c7242f; 
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #c7242f;
 }
 </style>

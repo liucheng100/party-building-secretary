@@ -21,9 +21,8 @@
   </div>
   <router-view></router-view>
 </template>
-  
-  
-  <script setup>
+
+<script setup>
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -60,8 +59,8 @@ const handleTabChange = (value) => {
   }
 };
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .head {
   display: flex;
   justify-content: space-between;
@@ -74,4 +73,3 @@ const handleTabChange = (value) => {
   background-color: white;
 }
 </style>
-  
