@@ -78,8 +78,8 @@ const navList = reactive([
     icon_: "ljc/kuangjia/zhi_.svg",
     children: [
       {
-        title: "asdfasdf",
-        routePath: "/info/asdfasdf",
+        title: "支部信息",
+        routePath: "/info",
       },
     ],
   },
