@@ -96,28 +96,8 @@
     </div>
     <div class="p_check_2">
       <div class="mainView">
-        <div class="graphBar" v-show="0">
-          <div
-            :class="
-              'sub-capsule tab statue-0 current' +
-              (isResizing ? ' noTrans' : '')
-            "
-            ref="capsule"
-          >
-            {{ subTabList[tabIndex] }}
-          </div>
-          <div
-            :class="'tab statue-0' + (tabIndex === i ? ' current' : '')"
-            v-for="(item, i) in subTabList"
-            :key="i"
-            ref="tabs"
-            @click="changeUrl(i)"
-          >
-            {{ item }}
-          </div>
-        </div>
         <div class="graphMain">
-          <div class="chart-main" @scroll="updatePlace" id="chart">
+          <div class="chart-main" id="chart">
             <div class="chart">
               <div class="progressLine">
                 <div class="line-1"></div>
@@ -137,7 +117,7 @@
                 id="tabHome0"
               >
                 <div class="tab-point" id="tab0"></div>
-                <div class="dot-0" v-if="!statueList[0]"></div>
+                <div :class="statueList[0] ? 'dot-1' : 'dot-0'"></div>
                 递交入党申请书
               </div>
               <div class="line-v"></div>
@@ -164,7 +144,7 @@
                 "
                 @click="changeStatue(2)"
               >
-                <div class="dot-0" v-if="!statueList[2]"></div>
+                <div :class="statueList[2] ? 'dot-1' : 'dot-0'"></div>
                 参加入党申请人学习小组
               </div>
               <div class="line-v">
@@ -179,7 +159,7 @@
                   "
                   @click="changeStatue(3)"
                 >
-                  <div class="dot-0" v-if="!statueList[3]"></div>
+                  <div :class="statueList[3] ? 'dot-1' : 'dot-0'"></div>
                   群团组织推优
                 </div>
                 <div
@@ -189,8 +169,8 @@
                   "
                   @click="changeStatue(4)"
                 >
-                  <div class="dot-0" v-if="!statueList[4]"></div>
-                  通过网上申请人培训
+                  <div :class="statueList[4] ? 'dot-1' : 'dot-0'"></div>
+                  通过<br />网上申请人培训
                 </div>
               </div>
               <div class="line-v">
@@ -204,8 +184,8 @@
                 "
                 @click="changeStatue(5)"
               >
-                <div class="dot-0" v-if="!statueList[5]"></div>
-                支委会(支部大会) 审议并上报党委备案
+                <div :class="statueList[5] ? 'dot-1' : 'dot-0'"></div>
+                支委会(支部大会)<br />审议并上报党委备案
               </div>
               <div class="line-v"></div>
               <div
@@ -255,8 +235,8 @@
                   "
                   @click="changeStatue(7)"
                 >
-                  <div class="dot-0" v-if="!statueList[7]"></div>
-                  通过院级积极分子培训
+                  <div :class="statueList[7] ? 'dot-1' : 'dot-0'"></div>
+                  通过院级<br />积极分子培训
                 </div>
                 <div
                   :class="
@@ -265,8 +245,8 @@
                   "
                   @click="changeStatue(8)"
                 >
-                  <div class="dot-0" v-if="!statueList[8]"></div>
-                  按季度递交思想汇报
+                  <div :class="statueList[8] ? 'dot-1' : 'dot-0'"></div>
+                  按季度递<br />交思想汇报
                 </div>
                 <div
                   :class="
@@ -275,8 +255,8 @@
                   "
                   @click="changeStatue(9)"
                 >
-                  <div class="dot-0" v-if="!statueList[9]"></div>
-                  确定培养联系人
+                  <div :class="statueList[9] ? 'dot-1' : 'dot-0'"></div>
+                  确定培<br />养联系人
                 </div>
                 <div
                   :class="
@@ -285,7 +265,7 @@
                   "
                   @click="changeStatue(10)"
                 >
-                  <div class="dot-0" v-if="!statueList[10]"></div>
+                  <div :class="statueList[10] ? 'dot-1' : 'dot-0'"></div>
                   支部考察
                 </div>
               </div>
@@ -302,7 +282,7 @@
                   "
                   @click="changeStatue(11)"
                 >
-                  <div class="dot-0" v-if="!statueList[11]"></div>
+                  <div :class="statueList[11] ? 'dot-1' : 'dot-0'"></div>
                   听取党员意见
                 </div>
                 <div
@@ -312,7 +292,7 @@
                   "
                   @click="changeStatue(12)"
                 >
-                  <div class="dot-0" v-if="!statueList[12]"></div>
+                  <div :class="statueList[12] ? 'dot-1' : 'dot-0'"></div>
                   征求群众意见
                 </div>
                 <div
@@ -322,8 +302,8 @@
                   "
                   @click="changeStatue(13)"
                 >
-                  <div class="dot-0" v-if="!statueList[13]"></div>
-                  征求党小组、培养联系人意见
+                  <div :class="statueList[13] ? 'dot-1' : 'dot-0'"></div>
+                  征求党小组、<br />培养联系人意见
                 </div>
               </div>
               <div class="line-v">
@@ -337,8 +317,8 @@
                 "
                 @click="changeStatue(14)"
               >
-                <div class="dot-0" v-if="!statueList[14]"></div>
-                支委会(支部大会) 讨论决定并上报上级党委备案
+                <div :class="statueList[14] ? 'dot-1' : 'dot-0'"></div>
+                支委会(支部大会)<br />讨论决定并上报上级党委备案
               </div>
               <div class="line-v"></div>
               <div
@@ -386,8 +366,8 @@
                   "
                   @click="changeStatue(16)"
                 >
-                  <div class="dot-0" v-if="!statueList[16]"></div>
-                  确定2名正式党员为入党介绍人
+                  <div :class="statueList[16] ? 'dot-1' : 'dot-0'"></div>
+                  确定2名正式党<br />员为入党介绍人
                 </div>
                 <div
                   :class="
@@ -396,7 +376,7 @@
                   "
                   @click="changeStatue(17)"
                 >
-                  <div class="dot-0" v-if="!statueList[17]"></div>
+                  <div :class="statueList[17] ? 'dot-1' : 'dot-0'"></div>
                   撰写个人自传
                 </div>
                 <div
@@ -406,7 +386,7 @@
                   "
                   @click="changeStatue(18)"
                 >
-                  <div class="dot-0" v-if="!statueList[18]"></div>
+                  <div :class="statueList[18] ? 'dot-1' : 'dot-0'"></div>
                   通过发展对象党校培训
                 </div>
                 <div
@@ -416,7 +396,7 @@
                   "
                   @click="changeStatue(19)"
                 >
-                  <div class="dot-0" v-if="!statueList[19]"></div>
+                  <div :class="statueList[19] ? 'dot-1' : 'dot-0'"></div>
                   材料齐全
                 </div>
               </div>
@@ -431,7 +411,7 @@
                 "
                 @click="changeStatue(20)"
               >
-                <div class="dot-0" v-if="!statueList[20]"></div>
+                <div :class="statueList[20] ? 'dot-1' : 'dot-0'"></div>
                 支部综合审查
               </div>
               <div class="line-v"></div>
@@ -442,7 +422,7 @@
                 "
                 @click="changeStatue(21)"
               >
-                <div class="dot-0" v-if="!statueList[21]"></div>
+                <div :class="statueList[21] ? 'dot-1' : 'dot-0'"></div>
                 上级党委预审并公示
               </div>
               <div class="line-v"></div>
@@ -453,7 +433,7 @@
                 "
                 @click="changeStatue(22)"
               >
-                <div class="dot-0" v-if="!statueList[22]"></div>
+                <div :class="statueList[22] ? 'dot-1' : 'dot-0'"></div>
                 填写入党申请书
               </div>
               <div class="line-v"></div>
@@ -464,7 +444,7 @@
                 "
                 @click="changeStatue(23)"
               >
-                <div class="dot-0" v-if="!statueList[23]"></div>
+                <div :class="statueList[23] ? 'dot-1' : 'dot-0'"></div>
                 党员发展大会
               </div>
               <div class="line-v"></div>
@@ -475,7 +455,7 @@
                 "
                 @click="changeStatue(24)"
               >
-                <div class="dot-0" v-if="!statueList[24]"></div>
+                <div :class="statueList[24] ? 'dot-1' : 'dot-0'"></div>
                 党委谈话、审批
               </div>
               <div class="line-v"></div>
@@ -486,7 +466,7 @@
                 "
                 @click="changeStatue(25)"
               >
-                <div class="dot-0" v-if="!statueList[25]"></div>
+                <div :class="statueList[25] ? 'dot-1' : 'dot-0'"></div>
                 报再上一级党委组织部门备案
               </div>
               <div class="line-v"></div>
@@ -531,7 +511,7 @@
                 "
                 @click="changeStatue(27)"
               >
-                <div class="dot-0" v-if="!statueList[27]"></div>
+                <div :class="statueList[27] ? 'dot-1' : 'dot-0'"></div>
                 入党宣誓
               </div>
               <div class="line-v">
@@ -547,8 +527,8 @@
                   "
                   @click="changeStatue(28)"
                 >
-                  <div class="dot-0" v-if="!statueList[28]"></div>
-                  通过预备党员培训
+                  <div :class="statueList[28] ? 'dot-1' : 'dot-0'"></div>
+                  通过预备<br />党员培训
                 </div>
                 <div
                   :class="
@@ -557,8 +537,8 @@
                   "
                   @click="changeStatue(29)"
                 >
-                  <div class="dot-0" v-if="!statueList[29]"></div>
-                  季度递交个人小结
+                  <div :class="statueList[29] ? 'dot-1' : 'dot-0'"></div>
+                  季度递交<br />个人小结
                 </div>
                 <div
                   :class="
@@ -567,7 +547,7 @@
                   "
                   @click="changeStatue(30)"
                 >
-                  <div class="dot-0" v-if="!statueList[30]"></div>
+                  <div :class="statueList[30] ? 'dot-1' : 'dot-0'"></div>
                   参加组织生活
                 </div>
                 <div
@@ -577,7 +557,7 @@
                   "
                   @click="changeStatue(31)"
                 >
-                  <div class="dot-0" v-if="!statueList[31]"></div>
+                  <div :class="statueList[31] ? 'dot-1' : 'dot-0'"></div>
                   支部按季度进行考察
                 </div>
               </div>
@@ -592,7 +572,7 @@
                 "
                 @click="changeStatue(32)"
               >
-                <div class="dot-0" v-if="!statueList[32]"></div>
+                <div :class="statueList[32] ? 'dot-1' : 'dot-0'"></div>
                 提出转正申请
               </div>
               <div class="line-v">
@@ -607,7 +587,7 @@
                   "
                   @click="changeStatue(33)"
                 >
-                  <div class="dot-0" v-if="!statueList[33]"></div>
+                  <div :class="statueList[33] ? 'dot-1' : 'dot-0'"></div>
                   征求党员、群众意见
                 </div>
                 <div
@@ -617,8 +597,8 @@
                   "
                   @click="changeStatue(34)"
                 >
-                  <div class="dot-0" v-if="!statueList[34]"></div>
-                  听取党小组、入党介绍人意见
+                  <div :class="statueList[34] ? 'dot-1' : 'dot-0'"></div>
+                  听取党小组、<br />入党介绍人意见
                 </div>
               </div>
               <div class="line-v">
@@ -632,7 +612,7 @@
                 "
                 @click="changeStatue(35)"
               >
-                <div class="dot-0" v-if="!statueList[35]"></div>
+                <div :class="statueList[35] ? 'dot-1' : 'dot-0'"></div>
                 转正公示
               </div>
               <div class="line-v"></div>
@@ -643,7 +623,7 @@
                 "
                 @click="changeStatue(36)"
               >
-                <div class="dot-0" v-if="!statueList[36]"></div>
+                <div :class="statueList[36] ? 'dot-1' : 'dot-0'"></div>
                 转正大会
               </div>
               <div class="line-v"></div>
@@ -654,7 +634,7 @@
                 "
                 @click="changeStatue(37)"
               >
-                <div class="dot-0" v-if="!statueList[37]"></div>
+                <div :class="statueList[37] ? 'dot-1' : 'dot-0'"></div>
                 党委审批
               </div>
               <div class="line-v"></div>
@@ -665,7 +645,7 @@
                 "
                 @click="changeStatue(38)"
               >
-                <div class="dot-0" v-if="!statueList[38]"></div>
+                <div :class="statueList[38] ? 'dot-1' : 'dot-0'"></div>
                 支部书记谈话
               </div>
               <div class="line-v"></div>
@@ -702,12 +682,10 @@
 </template>
 
 <script lang="ts">
-import { reactive } from "vue";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import $router from "@/router";
 import { ElMessage } from "element-plus";
-import { initStudentsStatue } from "../../api/studentInfo";
 
 interface User {
   title: string;
@@ -720,6 +698,9 @@ export default {
     return {
       currentPage: 1,
       pageSize: 12,
+      Cn: zhCn,
+      submitLoading: false,
+      statueList: [false],
       tableData: [
         {
           title: "强国有我",
@@ -782,14 +763,6 @@ export default {
           situation: "已通过",
         },
       ],
-      Cn: zhCn,
-      tabIndex: 0,
-      submitLoading: false,
-      isAuto: false,
-      subTabList: ["入党申请人", "入党积极分子", "发展对象", "中共预备党员"],
-      isResizing: false,
-      scrollTime: 0,
-      statueList: [],
     };
   },
   methods: {
@@ -807,126 +780,17 @@ export default {
         ElMessage.warning("请选择需要初始化的状态");
         return;
       }
-      this.submitLoading = true;
-      let processIds = [];
-      let status = [];
-      let ids: Array<number> = [];
-      for (let i = 0; i < 40; i++) {
-        processIds.push(i);
-        status.push(this.statueList[i] ? 1 : 0);
-      }
-
-      initStudentsStatue({ ids, processIds, status })
-        .then(({ code: code, msg: msg }) => {
-          if (code === 0) {
-            ElMessage.success("更新" + ids.length + "个用户的状态成功");
-            this.submitLoading = false;
-            Object.assign(this.$data, this.$options.data());
-            this.$nextTick(() => {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            });
-          } else {
-            this.submitLoading = false;
-            ElMessage.error(msg);
-          }
-        })
-        .catch(() => {
-          this.submitLoading = false;
-        });
     },
     changeStatue(val: number) {
       this.statueList[val] = !this.statueList[val];
     },
-    changeUrl(val: number) {
-      this.tabIndex = val;
-      this.isAuto = true;
-      this.scrollTime = new Date().getTime();
-      document.getElementById("tab" + val).scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-      this.cancelAuto();
-      this.updateSize();
-    },
-    cancelAuto() {
-      setTimeout(() => {
-        if (new Date().getTime() - this.scrollTime > 1000) {
-          this.isAuto = false;
-        } else {
-          this.cancelAuto();
-        }
-      }, 1000);
-    },
-    updateSize() {
-      this.$refs.capsule.style.width =
-        this.$refs.tabs[this.tabIndex].clientWidth + "px";
-      this.$refs.capsule.style.left =
-        this.$refs.tabs[this.tabIndex].getBoundingClientRect().left -
-        this.$refs.tabs[0].getBoundingClientRect().left +
-        "px";
-    },
-    updateResize() {
-      this.isResizing = true;
-      this.$nextTick(() => {
-        this.updateSize();
-        setTimeout(() => {
-          this.isResizing = false;
-        }, 0);
-      });
-    },
-    updatePlace() {
-      if (this.isAuto) return;
-      let x = document.getElementById("chart").scrollTop;
-      if (
-        x >
-        document.getElementById("tabHome3").offsetTop +
-          document.getElementById("tab3").offsetTop -
-          50
-      ) {
-        if (this.tabIndex !== 3) {
-          this.tabIndex = 3;
-          this.updateSize();
-        }
-      } else if (
-        x >
-        document.getElementById("tabHome2").offsetTop +
-          document.getElementById("tab2").offsetTop -
-          50
-      ) {
-        if (this.tabIndex !== 2) {
-          this.tabIndex = 2;
-          this.updateSize();
-        }
-      } else if (
-        x >
-        document.getElementById("tabHome1").offsetTop +
-          document.getElementById("tab1").offsetTop -
-          50
-      ) {
-        if (this.tabIndex !== 1) {
-          this.tabIndex = 1;
-          this.updateSize();
-        }
-      } else if (
-        x >
-        document.getElementById("tabHome0").offsetTop +
-          document.getElementById("tab0").offsetTop -
-          50
-      ) {
-        if (this.tabIndex !== 0) {
-          this.tabIndex = 0;
-          this.updateSize();
-        }
-      }
-    },
   },
   mounted() {
-    this.updateResize();
-    window.addEventListener("resize", this.updateResize);
+    for (let i = 0; i < 31; i++) {
+      this.statueList.push(false);
+    }
   },
-  destroyed() {
-    window.removeEventListener("resize", this.updateResize);
-  },
+  destroyed() {},
 };
 </script>
 
@@ -1303,7 +1167,7 @@ export default {
   z-index: 1;
 }
 .square-line-c {
-  width: 244px;
+  width: 280px;
   height: 132px;
   border: 1px solid #c7242f;
   border-radius: 32px;
@@ -1313,7 +1177,7 @@ export default {
   position: relative;
 }
 .square-line-c-2 {
-  width: 344px;
+  width: 280px;
   height: 220px;
   border: 1px solid #c7242f;
   border-radius: 32px;
@@ -1323,7 +1187,7 @@ export default {
   position: relative;
 }
 .square-line-c-3 {
-  width: 450px;
+  width: 400px;
   height: 220px;
   border: 1px solid #c7242f;
   border-radius: 32px;
@@ -1333,7 +1197,7 @@ export default {
   position: relative;
 }
 .square-line-c-3-b {
-  width: 500px;
+  width: 400px;
   height: 132px;
   border: 1px solid #c7242f;
   border-radius: 32px;
@@ -1376,6 +1240,7 @@ export default {
   width: 8px;
   height: 8px;
   background: #c7242f;
+  border: 1px solid #fff;
   display: inline-block;
   border-radius: 50% 50%;
   margin-right: 12px;
@@ -1531,6 +1396,7 @@ export default {
   background-color: #fff;
   display: flex;
   position: relative;
+  box-shadow: 0 5px 15px 9px #e8e8e8;
 }
 
 .p_check_1_1 {
