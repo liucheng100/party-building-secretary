@@ -99,7 +99,7 @@ const navList = reactive([
       },
       {
         title: "操作记录",
-        routePath: "/deal/xxx",
+        routePath: "/deal/operateRecord",
       },
     ],
   },
