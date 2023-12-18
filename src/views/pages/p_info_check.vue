@@ -3,7 +3,7 @@
     <div class="p_check_1">
       <div class="p_check_1_1">
         <div class="p_check_head_1">
-          <div>xx支部</div>
+          <div>{{ branchName }}</div>
           <div>
             <el-icon @click="$router.back()"><Close /></el-icon>
           </div>
@@ -12,15 +12,15 @@
         <div class="p_check_head_2">
           <div class="name" style="display: flex; flex-direction: column">
             <div style="color: #9f9f9f; margin-bottom: 10px">姓名</div>
-            <div style="font-size: 24px">taffy</div>
+            <div style="font-size: 24px">{{ name }}</div>
           </div>
           <div class="stu_id" style="display: flex; flex-direction: column">
             <div style="color: #9f9f9f; margin-bottom: 10px">学号</div>
-            <div style="font-size: 24px">3022244000</div>
+            <div style="font-size: 24px">{{ stu_id }}</div>
           </div>
           <div class="identity" style="display: flex; flex-direction: column">
             <div style="color: #9f9f9f; margin-bottom: 10px">身份</div>
-            <div style="font-size: 24px">中共党员</div>
+            <div style="font-size: 24px">{{ identity }}</div>
           </div>
         </div>
       </div>
@@ -686,6 +686,7 @@ import { ElTable } from "element-plus";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import $router from "@/router";
 import { ElMessage } from "element-plus";
+import { getPersonProcess } from "../../api/p_management";
 
 interface User {
   title: string;
@@ -696,6 +697,11 @@ interface User {
 export default {
   data() {
     return {
+      branchName: "XX支部",
+      name: "taffy",
+      stu_id: "3022244000",
+      identity: "预备党员",
+      status: 0,
       currentPage: 1,
       pageSize: 12,
       Cn: zhCn,
@@ -786,9 +792,22 @@ export default {
     },
   },
   mounted() {
-    for (let i = 0; i < 31; i++) {
-      this.statueList.push(false);
-    }
+    getPersonProcess("1")
+      .then((res: any) => {
+        if (res) {
+          console.log(res);
+          this.status = res.data[0].status;
+          for (let i = 0; i < 31; i++) {
+            if (i < this.status) this.statueList.push(true);
+            else this.statueList.push(false);
+          }
+        } else {
+          ElMessage.warning("未知错误");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   destroyed() {},
 };
