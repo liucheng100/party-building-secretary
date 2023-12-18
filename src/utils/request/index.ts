@@ -1,6 +1,6 @@
 import MYRequest from "@/utils/request/request";
 import { BASE_URL, TIMEOUT } from "@/utils/request/config";
-import qs from "querystring";
+import qs from "qs";
 import { getToken } from "../auth";
 
 const myRequest = new MYRequest({

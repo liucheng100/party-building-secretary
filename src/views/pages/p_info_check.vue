@@ -782,32 +782,32 @@ export default {
       console.log(index, row);
     },
     toSubmit() {
-      if (!this.statueList.length) {
-        ElMessage.warning("请选择需要初始化的状态");
-        return;
-      }
+      // if (!this.statueList.length) {
+      //   ElMessage.warning("请选择需要初始化的状态");
+      //   return;
+      // }
     },
     changeStatue(val: number) {
-      this.statueList[val] = !this.statueList[val];
+      // this.statueList[val] = !this.statueList[val];
     },
   },
   mounted() {
-    getPersonProcess("1")
-      .then((res: any) => {
-        if (res) {
-          console.log(res);
-          this.status = res.data[0].status;
-          for (let i = 0; i < 31; i++) {
-            if (i < this.status) this.statueList.push(true);
-            else this.statueList.push(false);
-          }
-        } else {
-          ElMessage.warning("未知错误");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // getPersonProcess("1")
+    //   .then((res: any) => {
+    //     if (res) {
+    //       console.log(res);
+    //       this.status = res.data[0].status;
+    //       for (let i = 0; i < 31; i++) {
+    //         if (i < this.status) this.statueList.push(true);
+    //         else this.statueList.push(false);
+    //       }
+    //     } else {
+    //       ElMessage.warning("未知错误");
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   },
   destroyed() {},
 };
