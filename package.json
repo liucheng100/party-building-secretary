@@ -20,12 +20,14 @@
     "element-ui": "^2.15.14",
     "js-cookie": "^3.0.1",
     "postcss-pxtorem": "^6.0.0",
+    "qs": "^6.11.2",
     "vis": "^4.21.0-EOL",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
+    "@types/qs": "^6.9.10",
     "@vitejs/plugin-vue": "^2.2.0",
     "@vue/test-utils": "^2.0.0-rc.18",
     "jest": "^27.5.1",
