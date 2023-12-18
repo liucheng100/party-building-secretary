@@ -681,12 +681,14 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { defineComponent, ref, onMounted } from "vue";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import $router from "@/router";
 import { ElMessage } from "element-plus";
 import { getPersonProcess } from "../../api/p_management";
+import { DefineComponent } from "vue";
 
 interface User {
   title: string;
@@ -694,123 +696,120 @@ interface User {
   situation: string;
 }
 
-export default {
-  data() {
-    return {
-      branchName: "XX支部",
-      name: "taffy",
-      stu_id: "3022244000",
-      identity: "预备党员",
-      status: 0,
-      currentPage: 1,
-      pageSize: 12,
-      Cn: zhCn,
-      submitLoading: false,
-      statueList: [false],
-      tableData: [
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "驳回",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "驳回",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "驳回",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "驳回",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "未审批",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "未审批",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "未审批",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "未审批",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "未审批",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "已通过",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "已通过",
-        },
-        {
-          title: "强国有我",
-          class: "思想汇报",
-          situation: "已通过",
-        },
-      ],
-    };
+const branchName = ref("XX支部");
+const name = ref("taffy");
+const stu_id = ref("3022244000");
+const identity = ref("预备党员");
+const statues = ref(0);
+const currentPage = ref<number>(1);
+const pageSize = ref(12);
+const Cn = ref(zhCn);
+const submitLoading = ref(false);
+var statueList = ref<boolean[]>([]);
+const tableData = ref([
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "驳回",
   },
-  methods: {
-    handleSizeChange(val: number) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val: number) {
-      console.log(`current page: ${val}`);
-    },
-    handleCheck(index: number, row: User) {
-      console.log(index, row);
-    },
-    toSubmit() {
-      // if (!this.statueList.length) {
-      //   ElMessage.warning("请选择需要初始化的状态");
-      //   return;
-      // }
-    },
-    changeStatue(val: number) {
-      // this.statueList[val] = !this.statueList[val];
-    },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "驳回",
   },
-  mounted() {
-    // getPersonProcess("1")
-    //   .then((res: any) => {
-    //     if (res) {
-    //       console.log(res);
-    //       this.status = res.data[0].status;
-    //       for (let i = 0; i < 31; i++) {
-    //         if (i < this.status) this.statueList.push(true);
-    //         else this.statueList.push(false);
-    //       }
-    //     } else {
-    //       ElMessage.warning("未知错误");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "驳回",
   },
-  destroyed() {},
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "驳回",
+  },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "未审批",
+  },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "未审批",
+  },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "未审批",
+  },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "未审批",
+  },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "未审批",
+  },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "已通过",
+  },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "已通过",
+  },
+  {
+    title: "强国有我",
+    class: "思想汇报",
+    situation: "已通过",
+  },
+]);
+
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`);
 };
+
+const handleCurrentChange = (val: number) => {
+  console.log(`current page: ${val}`);
+};
+
+const handleCheck = (index: number, row: User) => {
+  console.log(index, row);
+};
+const toSubmit = () => {
+  // if (!this.statueList.length) {
+  //   ElMessage.warning("请选择需要初始化的状态");
+  //   return;
+  // }
+};
+const changeStatue = (val: any) => {
+  statueList.value[val] = !statueList.value[val];
+};
+onMounted(() => {
+  // for (let i = 0; i < 31; i++) {
+  //   statueList.push(false);
+  // }
+  // getPersonProcess("1")
+  //   .then((res: any) => {
+  //     if (res) {
+  //       console.log(res);
+  //       statues = res.data[0].status;
+  //       for (let i = 0; i < 31; i++) {
+  //         if (i < statues) statueList.push(true);
+  //         else statueList.push(false);
+  //       }
+  //     } else {
+  //       ElMessage.warning("未知错误");
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+});
 </script>
 
 <style scoped>

@@ -12,7 +12,7 @@
       <el-button v-if="tabPosition !== '已分组'" class="custom-button"
         >将所选加入小组</el-button
       >
-      <el-button v-if="tabPosition !== '已分组'" class="custom-button"
+      <el-button v-if="tabPosition == '已分组'" class="custom-button"
         >导出当前分组名单</el-button
       >
       <el-button class="custom-button">创建学习小组</el-button>

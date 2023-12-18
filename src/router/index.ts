@@ -25,6 +25,13 @@ const routes = [
         redirect: "/deal/stateControl",
         children: [
           {
+            path: "/deal/operateRecord",
+            component: () => import("@/views/pages/operateRecord.vue"),
+            meta: {
+              title: "操作系统",
+            },
+          },
+          {
             path: "/deal/stateControl",
             component: () => import("@/views/pages/deal.vue"),
             meta: {
