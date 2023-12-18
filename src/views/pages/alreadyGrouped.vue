@@ -159,6 +159,7 @@ const tableDataRight = processedData.slice(
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  height: 80%;
 }
 .TableContainer {
   width: 50%; /* 每个表格占一半 */
