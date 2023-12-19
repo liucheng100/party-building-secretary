@@ -20,22 +20,19 @@ import { getInfo } from "@/api/login";
 import { getBranchInfo } from "@/api/branch";
 
 // 这里发请求获取支部信息
-const USER_INFO = ref({})
-const BRANCH_INFO = ref({})
+const USER_INFO = reactive({})
+const BRANCH_INFO = reactive({})
 // provide出去
 provide('BRANCH_INFO', BRANCH_INFO)
+provide('USER_INFO', USER_INFO)
 
 if (getToken()) {
     getInfo().then(v => {
-        // console.log(v)
         if (!v.code) {
-            USER_INFO.value = v.data
-            console.log(USER_INFO)
+            Object.assign(USER_INFO, v.data)
             const partybranchId = USER_INFO.partybranchId
-            console.log(partybranchId)
             getBranchInfo(partybranchId).then(v => {
-                console.log(65464654)
-                console.log(v)
+                Object.assign(BRANCH_INFO, v.data)
             })
         }
     })

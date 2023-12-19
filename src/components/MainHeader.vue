@@ -9,7 +9,7 @@
         <div class="r-box">
             <img class="icon-user" src="@/assets/ljc/kuangjia/user.svg" />
             <p class="text">当前支部</p>
-            <p class="name">{{ '十一支部' }}</p>
+            <p class="name">{{ BRANCH_INFO.partybranchName }}</p>
             <el-popconfirm title="您确定要退出登录吗？" confirm-button-text="确认" cancel-button-text="取消" @confirm="logout"
                 width="200px">
                 <template #reference>
@@ -22,37 +22,31 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import getAssetsFile from "@/utils/pub-use";
 import { removeToken } from "@/utils/auth";
-export default {
-    data() {
-        return {
-            isResizing: false,
-            login: false,
-            isCursor: false,
-        };
-    },
-    methods: {
-        getAssetsFile(url) {
-            return getAssetsFile(url);
-        },
-        logout() {
-            ElMessage.success("退出登录成功");
-            removeToken();
-            this.$router.push("/login");
-        },
-        goBack() {
-            if (this.$route.meta.title?.split("-").length >= 2) {
-                if (this.$router.options.history.state.back) {
-                    this.$router.back();
-                } else {
-                    this.$router.push("/");
-                }
-            }
-        },
-    },
-};
+import { ref, inject } from 'vue'
+
+const BRANCH_INFO = inject('BRANCH_INFO')
+const isResizing = ref(false)
+const login = ref(false)
+const isCursor = ref(false)
+
+const logout = () => {
+    ElMessage.success("退出登录成功");
+    removeToken();
+    this.$router.push("/login");
+}
+const goBack = () => {
+    if (this.$route.meta.title?.split("-").length >= 2) {
+        if (this.$router.options.history.state.back) {
+            this.$router.back();
+        } else {
+            this.$router.push("/");
+        }
+    }
+}
+
 </script>
 
 <style scoped>
