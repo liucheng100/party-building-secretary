@@ -57,13 +57,13 @@
                     {name:"积极分子",num:BRANCH_INFO.activeCount,icon:"icon2"},
                     {name:"发展对象",num:BRANCH_INFO.developCount,icon:"icon3"},
                     {name:"预备党员",num:BRANCH_INFO.prepareCount,icon:"icon4"},
-                    {name:"申请人考试合格",num:BRANCH_INFO.greatActiveCount,icon:"icon5"},
+                    {name:"正式党员",num:BRANCH_INFO.regularCount,icon:"icon5"},
                     {name:"团推优",num:BRANCH_INFO.greatCount,icon:"icon6"}]
             }
-            initChart(BRANCH_INFO.prepareCount, BRANCH_INFO.developCount, BRANCH_INFO.activeCount, BRANCH_INFO.applicantCount, BRANCH_INFO.totalCount)
+            initChart(BRANCH_INFO.regularCount, BRANCH_INFO.prepareCount, BRANCH_INFO.developCount, BRANCH_INFO.activeCount, BRANCH_INFO.applicantCount, BRANCH_INFO.greatCount, BRANCH_INFO.totalCount)
         });
     });
-    function initChart(a,b,c,d,e) {
+    function initChart(a,b,c,d,e,f,t) {
         var myChart = echarts.init(chart.value);
         var option;
         option = {
@@ -103,10 +103,12 @@
                         show: false
                     },
                     data: [
-                        { value: a, name: '预备党员', itemStyle: { color: '#FFC346' } },
-                        { value: b, name: '发展对象', itemStyle: { color: '#FA734A' } },
-                        { value: c, name: '积极分子', itemStyle: { color: '#FF8B8E' } },
-                        { value: d, name: '入党申请人', itemStyle: { color: '#FF416C' } },
+                        { value: a, name: '正式党员', itemStyle: { color: '#21B339' } },
+                        { value: b, name: '预备党员', itemStyle: { color: '#FFC346' } },
+                        { value: c, name: '发展对象', itemStyle: { color: '#FA734A' } },
+                        { value: d, name: '积极分子', itemStyle: { color: '#FF8B8E' } },
+                        { value: e, name: '入党申请人', itemStyle: { color: '#FF416C' } },
+                        { value: f, name: '团推优', itemStyle: { color: '#FF6AB2' } },
                     ]
                 }
             ]
@@ -119,7 +121,7 @@
         option.series[0].label = {
             show: true,
             position: 'center',
-            formatter: '{total|' + e + '}\n{label|总数}',
+            formatter: '{total|' + t + '}\n{label|总数}',
             rich: {
                 total: {
                     fontSize: 30,
