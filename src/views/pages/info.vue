@@ -31,12 +31,12 @@
 </template>
 
 <script setup>
-    import { ref, reactive, onMounted, } from 'vue';
+    import { ref, reactive, onMounted, inject} from 'vue';
     import * as echarts from 'echarts';
     function getIconPath(iconName) {
         return new URL(`../../assets/info/${iconName}.svg`, import.meta.url).href;
     }
-
+    let BRANCH_INFO = inject("BRANCH_INFO")
     let branchName = "哈哈哈支部";
     let department = "经济与管理学部";
     let branchID = "099281";

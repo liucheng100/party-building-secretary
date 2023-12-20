@@ -7,7 +7,7 @@
       <el-input v-model="account" placeholder="请输入您的用户名" class="input">
         <template #prefix>
           <el-icon class="el-input__icon"
-            ><img src="../../assets/account.png" alt="icon" class="icon"
+            ><img src="../assets/account.png" alt="icon" class="icon"
           /></el-icon>
         </template>
       </el-input>
@@ -22,7 +22,7 @@
       >
         <template #prefix>
           <el-icon class="el-input__icon"
-            ><img src="../../assets/password.png" alt="icon" class="icon"
+            ><img src="../assets/password.png" alt="icon" class="icon"
           /></el-icon>
         </template>
       </el-input>
