@@ -1,15 +1,15 @@
 <template>
     <div class="main">
         <div class="info">
-            <div class="font1">{{branchName}}</div>
+            <div class="font1">{{BRANCH_INFO.partybranchName}}</div>
             <div class="font2">所属</div>
-            <div class="font1">{{department}}</div>
+            <div class="font1">{{BRANCH_INFO.collegeName}}</div>
             <div class="font2">支部编号</div>
-            <div class="font1">{{branchID}}</div>
+            <div class="font1">{{BRANCH_INFO.partybranchId}}</div>
             <div class="font2">支部书记</div>
-            <div class="font1">{{secretary}}</div>
+            <div class="font1">{{BRANCH_INFO.partybranchSecretary?.username}}</div>
             <div class="font2">支部委员</div>
-            <div class="font1">{{committee}}</div>
+            <div class="font1">{{BRANCH_INFO.partybranchOrganizer?.username}}、{{BRANCH_INFO.partybranchPropagator?.username}}</div>
 
         </div>
         <div class="background">
@@ -31,31 +31,40 @@
 </template>
 
 <script setup>
+    import { watchEffect } from 'vue';
     import { ref, reactive, onMounted, inject} from 'vue';
     import * as echarts from 'echarts';
     function getIconPath(iconName) {
         return new URL(`../../assets/info/${iconName}.svg`, import.meta.url).href;
     }
     let BRANCH_INFO = inject("BRANCH_INFO")
-    let branchName = "哈哈哈支部";
-    let department = "经济与管理学部";
-    let branchID = "099281";
-    let secretary = "张三三";
-    let committee = "李老四";
-    let list = [
-        {name:"入党申请人",num:"10",icon:"icon1"},
-        {name:"积极分子",num:"10",icon:"icon2"},
-        {name:"发展对象",num:"10",icon:"icon3"},
-        {name:"预备党员",num:"10",icon:"icon4"},
-        {name:"申请人考试合格",num:"10",icon:"icon5"},
-        {name:"团推优",num:"10",icon:"icon6"}]
+    let list = ref([
+        {name:"入党申请人",num:0,icon:"icon1"},
+        {name:"积极分子",num:0,icon:"icon2"},
+        {name:"发展对象",num:0,icon:"icon3"},
+        {name:"预备党员",num:0,icon:"icon4"},
+        {name:"申请人考试合格",num:0,icon:"icon5"},
+        {name:"团推优",num:0,icon:"icon6"}])
     const chart = ref(null);
-    onMounted(() => {
-        initChart()
-    });
-    function initChart() {
-        var myChart = echarts.init(chart.value);
 
+
+    onMounted(() => {  
+        watchEffect(() => {
+            if(BRANCH_INFO){
+                console.log(BRANCH_INFO)
+                list.value = [
+                    {name:"入党申请人",num:BRANCH_INFO.applicantCount,icon:"icon1"},
+                    {name:"积极分子",num:BRANCH_INFO.activeCount,icon:"icon2"},
+                    {name:"发展对象",num:BRANCH_INFO.developCount,icon:"icon3"},
+                    {name:"预备党员",num:BRANCH_INFO.prepareCount,icon:"icon4"},
+                    {name:"申请人考试合格",num:BRANCH_INFO.greatActiveCount,icon:"icon5"},
+                    {name:"团推优",num:BRANCH_INFO.greatCount,icon:"icon6"}]
+            }
+            initChart(BRANCH_INFO.prepareCount, BRANCH_INFO.developCount, BRANCH_INFO.activeCount, BRANCH_INFO.applicantCount, BRANCH_INFO.totalCount)
+        });
+    });
+    function initChart(a,b,c,d,e) {
+        var myChart = echarts.init(chart.value);
         var option;
         option = {
             tooltip: {
@@ -94,10 +103,10 @@
                         show: false
                     },
                     data: [
-                        { value: 4, name: '预备党员', itemStyle: { color: '#FFC346' } },
-                        { value: 8, name: '发展对象', itemStyle: { color: '#FA734A' } },
-                        { value: 5, name: '积极分子', itemStyle: { color: '#FF8B8E' } },
-                        { value: 18, name: '入党申请人', itemStyle: { color: '#FF416C' } },
+                        { value: a, name: '预备党员', itemStyle: { color: '#FFC346' } },
+                        { value: b, name: '发展对象', itemStyle: { color: '#FA734A' } },
+                        { value: c, name: '积极分子', itemStyle: { color: '#FF8B8E' } },
+                        { value: d, name: '入党申请人', itemStyle: { color: '#FF416C' } },
                     ]
                 }
             ]
@@ -110,7 +119,7 @@
         option.series[0].label = {
             show: true,
             position: 'center',
-            formatter: '{total|' + total + '}\n{label|总数}',
+            formatter: '{total|' + e + '}\n{label|总数}',
             rich: {
                 total: {
                     fontSize: 30,
@@ -140,7 +149,7 @@
     .info {
         z-index: 1;
         position: absolute;
-        width: 252px;
+        width: 700px;
         height: 552px;
     }
 
