@@ -684,7 +684,7 @@
 <script lang="ts" setup>
 import { defineComponent, ref, onMounted } from "vue";
 import { ElTable } from "element-plus";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
 import $router from "@/router";
 import { ElMessage } from "element-plus";
 import { getPersonProcess } from "../../api/p_management";
