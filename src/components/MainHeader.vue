@@ -24,6 +24,7 @@
 
 <script setup>
 import getAssetsFile from "@/utils/pub-use";
+import { useRoute, useRouter } from "vue-router";
 import { removeToken } from "@/utils/auth";
 import { ref, inject } from 'vue'
 
@@ -31,11 +32,13 @@ const BRANCH_INFO = inject('BRANCH_INFO')
 const isResizing = ref(false)
 const login = ref(false)
 const isCursor = ref(false)
+const router = useRouter();
+const route = useRoute();
 
 const logout = () => {
     ElMessage.success("退出登录成功");
     removeToken();
-    this.$router.push("/login");
+    router.push("/login");
 }
 const goBack = () => {
     if (this.$route.meta.title?.split("-").length >= 2) {
