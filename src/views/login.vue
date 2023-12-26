@@ -39,7 +39,6 @@
 
 <script>
 import { getToken, setToken } from "@/utils/auth";
-import { useRoute, useRouter } from "vue-router";
 import { login } from "@/api/login";
 export default {
   
@@ -70,7 +69,7 @@ export default {
             ElMessage.success("登录成功");
             setToken(res.headers["token"]);
             this.loginLoading = false;
-            useRouter().push("/info");
+            this.$router.push("/info");
           } else {
             ElMessage.error(msg);
             this.password = "";
@@ -85,7 +84,7 @@ export default {
   },
   created() {
     if (getToken()) {
-      useRouter().push("/info");
+        this.$router.push("/info");
     }
   },
 };

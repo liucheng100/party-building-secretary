@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 const currentPage = ref(1);
@@ -64,6 +64,11 @@ interface learnUser {
   stu_number: string;
   major: string;
 }
+
+// onMounted(async () => {
+//   const groupData = await getGroup();
+//   console.log(groupData);
+// })
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);

@@ -9,18 +9,18 @@
       >
         <el-table-column label="组号" width="50">
           <template #default="scope">
-            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.groupid }}</span>
+            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" property="name">
           <template #default="scope">
             <div class="red-dot-container">
               <span>{{ scope.row.name }}</span>
-              <span v-if="scope.row.groupid" class="red-dot"></span>
+              <span v-if="scope.row.id" class="red-dot"></span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="学号" property="stu_number" />
+        <el-table-column label="学号" property="sno" />
         <el-table-column label="专业" property="major" show-overflow-tooltip />
       </el-table>
     </div>
@@ -34,18 +34,18 @@
       >
         <el-table-column label="组号" width="50">
           <template #default="scope">
-            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.groupid }}</span>
+            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" property="name">
           <template #default="scope">
             <div class="red-dot-container">
               <span>{{ scope.row.name }}</span>
-              <span v-if="scope.row.groupid" class="red-dot"></span>
+              <span v-if="scope.row.id" class="red-dot"></span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="学号" property="stu_number" />
+        <el-table-column label="学号" property="sno" />
         <el-table-column label="专业" property="major" show-overflow-tooltip />
       </el-table>
     </div>
@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import { getGroup } from "@/api/learngroup";
@@ -77,22 +77,26 @@ const pageSize = ref(14);
 
 interface Member {
   name: string;
-  stu_number: string;
+  sno: string;
   major: string;
+  isLeader: boolean;
 }
 
 interface GroupedUser {
   groupid: number;
   members: Member[];
+  id : number;
 }
 
 interface GroupedMember extends Member {
-  groupid?: number;
+  id?: number;
 }
-
+let groups : GroupedUser[] = [];
 onMounted(async () => {
-  const groupData = await getGroup();
-  console.log(groupData);
+  let GroupsRawData:{code:number,data:[]} = await getGroup()
+  if(GroupsRawData.code == 0)
+    TableDataCal(GroupsRawData.data)
+  // TableDataCal(groups)
 })
 
 const handleSizeChange = (val: number) => {
@@ -103,55 +107,38 @@ const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`);
 };
 
-// 假数据
-const groups: GroupedUser[] = [
-  {
-    groupid: 1,
-    members: [
-      { name: "张三", stu_number: "1001", major: "专业A" },
-      { name: "李四", stu_number: "1002", major: "专业B" },
-      { name: "王五", stu_number: "1003", major: "专业C" },
-    ],
-  },
-  {
-    groupid: 2,
-    members: [
-      { name: "张三三", stu_number: "2001", major: "专业A" },
-      { name: "李四四", stu_number: "2002", major: "专业B" },
-      { name: "王五五", stu_number: "2003", major: "专业C" },
-    ],
-  },
-  // more...
-];
-
-const processGroupData = (groups: GroupedUser[]): GroupedMember[] => {
+let LRFlag = false;
+const processGroupData = (groups: GroupedUser[]) => {
   let tableData: GroupedMember[] = [];
-
-  groups.forEach((group) => {
+  tableData;
+  groups.forEach((group,Groupindex) => {
     group.members.forEach((member, index) => {
       let row: GroupedMember = { ...member };
-      if (index === 0) {
-        row.groupid = group.groupid; // 只有每组的第一个成员有组号
+      if (member.isLeader === true) {
+        row.id = group.id; // 只有每组的第一个成员有组号
       }
-      tableData.push(row);
+      if(Groupindex < groups.length/2)
+        tableDataLeft.value.push(row);
+      else
+        tableDataRight.value.push(row)
     });
   });
-
-  return tableData;
 };
-
-const processedData = processGroupData(groups);
-
-const totalRows = processedData.length;
-const half = Math.floor(totalRows / 2);
-
-const tableDataLeft =
-  totalRows % 2 === 0
-    ? processedData.slice(0, half)
-    : processedData.slice(0, half + 1);
-const tableDataRight = processedData.slice(
-  half + (totalRows % 2 === 0 ? 0 : 1)
-);
+let tableDataLeft = ref(<GroupedMember[]>[])
+let tableDataRight = ref(<GroupedMember[]>[])
+const TableDataCal = (groups:GroupedUser[]) => {
+  let processedData = processGroupData(groups);
+  console.log('processed',processedData)
+  // let totalRows = processedData.length;
+  // let half = Math.floor(totalRows / 2);
+  // tableDataLeft.value =
+  //   totalRows % 2 === 0
+  //     ? processedData.slice(0, half)
+  //     : processedData.slice(0, half + 1);
+  // tableDataRight.value = processedData.slice(
+  //   half + (totalRows % 2 === 0 ? 0 : 1)
+  // );
+}
 </script>
 
 <style scoped>
