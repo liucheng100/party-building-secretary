@@ -7,6 +7,11 @@ export function getGroup<T>() {
 	});
 }
 
+export function getUnGroup<T>() {
+	return http.get<T>({
+		url: `/api/studyGroup/unalloc`,
+	});
+}
 // 获取特定学习小组
 export function getSingleGroup<T>(id: any){
     return http.get<T>({

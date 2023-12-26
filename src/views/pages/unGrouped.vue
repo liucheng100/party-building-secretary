@@ -4,16 +4,18 @@
       <!-- 左边的表格 -->
       <el-table
         ref="multipleTableRefLeft"
+        row-key = "sno"
         :data="tableDataLeft"
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" />
+        <el-table-column type="selection" :reserve-selection= "true"
+        />
         <el-table-column label="姓名">
           <template #default="scope">{{ scope.row.name }}</template>
         </el-table-column>
-        <el-table-column property="stu_number" label="学号" />
+        <el-table-column property="sno" label="学号" />
         <el-table-column property="major" label="专业" show-overflow-tooltip />
       </el-table>
     </div>
@@ -22,16 +24,18 @@
       <!-- 右边的表格 -->
       <el-table
         ref="multipleTableRefRight"
+        row-key = "sno"
         :data="tableDataRight"
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" />
+        <el-table-column type="selection" :reserve-selection= "true"
+        />
         <el-table-column label="姓名">
           <template #default="scope">{{ scope.row.name }}</template>
         </el-table-column>
-        <el-table-column property="stu_number" label="学号" />
+        <el-table-column property="sno" label="学号" />
         <el-table-column property="major" label="专业" show-overflow-tooltip />
       </el-table>
     </div>
@@ -41,11 +45,11 @@
       class="el-pagination"
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
-      :page-sizes="[14]"
+      :page-sizes="[UserNum / pageSize + 1]"
       :style="{ margin: '20px' }"
       background
       layout="total, ->,sizes, prev, pager, next, jumper"
-      :total="400"
+      :total="UserNum"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
@@ -54,113 +58,52 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { getUnGroup } from "@/api/learngroup";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 const currentPage = ref(1);
-const pageSize = ref(14);
+const pageSize = ref(<number>30);
 
 interface learnUser {
   name: string;
-  stu_number: string;
+  sno: string;
   major: string;
+  isSelected: false;
 }
 
-// onMounted(async () => {
-//   const groupData = await getGroup();
-//   console.log(groupData);
-// })
+let tableDataLeft = ref(<learnUser[]>[])
+let tableDataRight = ref(<learnUser[]>[])
+let UserRawData = ref(<learnUser[]>[])
+let UserNum = ref(0)
+let PageNum = ref(1)
+onMounted(async () => {
+  let RawData:{code:number,data:[]} = await getUnGroup();
+  if(RawData.code == 0){
+    // 将数据分割为左右两部分
+    UserRawData.value = RawData.data
+    UserNum.value = RawData.data.length
+    tableDataLeft.value = RawData.data.slice((PageNum.value - 1) * pageSize.value, (- 0.5 + PageNum.value) * pageSize.value);
+    tableDataRight.value = RawData.data.slice((- 0.5 + PageNum.value) * pageSize.value,PageNum.value * pageSize.value);
+  }
+})
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);
 };
 
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  PageNum.value = val
+    tableDataLeft.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, (- 0.5 + PageNum.value) * pageSize.value);
+    tableDataRight.value = UserRawData.value.slice((- 0.5 + PageNum.value) * pageSize.value,PageNum.value * pageSize.value);
+  // console.log(`current page: ${val}`);
 };
 
 const multipleSelection = ref<learnUser[]>([]);
 const handleSelectionChange = (val: learnUser[]) => {
+  console.log(val)
   multipleSelection.value = val;
 };
 
-// 假数据
-const tableData: learnUser[] = [
-  {
-    name: "东雪莲",
-    stu_number: "3022244001",
-    major: "马克思主义学院",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244002",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244003",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244004",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244005",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244006",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244007",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244008",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244001",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244009",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244010",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244011",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244012",
-    major: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244011",
-    major: "中共党员",
-  },
-];
-
-// 将数据分割为左右两部分
-const half = Math.ceil(tableData.length / 2);
-const tableDataLeft = tableData.slice(0, half);
-const tableDataRight = tableData.slice(half);
 </script>
 
 <style scoped>
@@ -168,7 +111,6 @@ const tableDataRight = tableData.slice(half);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 80%;
 }
 .TableContainer {
   width: 50%; /* 每个表格占一半 */

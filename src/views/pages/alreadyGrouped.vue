@@ -95,7 +95,7 @@ let groups : GroupedUser[] = [];
 onMounted(async () => {
   let GroupsRawData:{code:number,data:[]} = await getGroup()
   if(GroupsRawData.code == 0)
-    TableDataCal(GroupsRawData.data)
+    processGroupData(GroupsRawData.data);
   // TableDataCal(groups)
 })
 
@@ -126,19 +126,6 @@ const processGroupData = (groups: GroupedUser[]) => {
 };
 let tableDataLeft = ref(<GroupedMember[]>[])
 let tableDataRight = ref(<GroupedMember[]>[])
-const TableDataCal = (groups:GroupedUser[]) => {
-  let processedData = processGroupData(groups);
-  console.log('processed',processedData)
-  // let totalRows = processedData.length;
-  // let half = Math.floor(totalRows / 2);
-  // tableDataLeft.value =
-  //   totalRows % 2 === 0
-  //     ? processedData.slice(0, half)
-  //     : processedData.slice(0, half + 1);
-  // tableDataRight.value = processedData.slice(
-  //   half + (totalRows % 2 === 0 ? 0 : 1)
-  // );
-}
 </script>
 
 <style scoped>
