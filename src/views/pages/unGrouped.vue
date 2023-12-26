@@ -4,7 +4,7 @@
       <!-- 左边的表格 -->
       <el-table
         ref="multipleTableRefLeft"
-        row-key = "sno"
+        row-key = "userId"
         :data="tableDataLeft"
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
@@ -24,7 +24,7 @@
       <!-- 右边的表格 -->
       <el-table
         ref="multipleTableRefRight"
-        row-key = "sno"
+        row-key = "userId"
         :data="tableDataRight"
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
@@ -43,9 +43,8 @@
   <el-config-provider :locale="zhCn">
     <el-pagination
       class="el-pagination"
-      v-model:current-page="currentPage"
+      v-model:current-page="PageNum"
       v-model:page-size="pageSize"
-      :page-sizes="[UserNum / pageSize + 1]"
       :style="{ margin: '20px' }"
       background
       layout="total, ->,sizes, prev, pager, next, jumper"
@@ -61,21 +60,21 @@ import { ref, onMounted } from "vue";
 import { getUnGroup } from "@/api/learngroup";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
-const currentPage = ref(1);
-const pageSize = ref(<number>30);
 
 interface learnUser {
   name: string;
   sno: string;
   major: string;
-  isSelected: false;
+  userId: number;
 }
 
+const pageSize = ref(<number>30); //每页显示学生数量
 let tableDataLeft = ref(<learnUser[]>[])
 let tableDataRight = ref(<learnUser[]>[])
 let UserRawData = ref(<learnUser[]>[])
-let UserNum = ref(0)
-let PageNum = ref(1)
+let UserNum = ref(0)  //总长度
+let PageNum = ref(1)  //当前页码
+
 onMounted(async () => {
   let RawData:{code:number,data:[]} = await getUnGroup();
   if(RawData.code == 0){
@@ -83,6 +82,7 @@ onMounted(async () => {
     UserRawData.value = RawData.data
     UserNum.value = RawData.data.length
     tableDataLeft.value = RawData.data.slice((PageNum.value - 1) * pageSize.value, (- 0.5 + PageNum.value) * pageSize.value);
+    //slice.( (当前页面-1) * 每页数字 ， (当前页面-0.5) * 每页数字) 下面逻辑相同
     tableDataRight.value = RawData.data.slice((- 0.5 + PageNum.value) * pageSize.value,PageNum.value * pageSize.value);
   }
 })
@@ -92,7 +92,7 @@ const handleSizeChange = (val: number) => {
 };
 
 const handleCurrentChange = (val: number) => {
-  PageNum.value = val
+  PageNum.value = val //每次换页 修改显示范围
     tableDataLeft.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, (- 0.5 + PageNum.value) * pageSize.value);
     tableDataRight.value = UserRawData.value.slice((- 0.5 + PageNum.value) * pageSize.value,PageNum.value * pageSize.value);
   // console.log(`current page: ${val}`);

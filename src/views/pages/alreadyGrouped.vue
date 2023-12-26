@@ -16,7 +16,7 @@
           <template #default="scope">
             <div class="red-dot-container">
               <span>{{ scope.row.name }}</span>
-              <span v-if="scope.row.id" class="red-dot"></span>
+              <span v-if="scope.row.isLeader" class="red-dot"></span>
             </div>
           </template>
         </el-table-column>
@@ -41,7 +41,7 @@
           <template #default="scope">
             <div class="red-dot-container">
               <span>{{ scope.row.name }}</span>
-              <span v-if="scope.row.id" class="red-dot"></span>
+              <span v-if="scope.row.isLeader" class="red-dot"></span>
             </div>
           </template>
         </el-table-column>
@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted } from "vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import { getGroup } from "@/api/learngroup";
@@ -80,18 +80,18 @@ interface Member {
   sno: string;
   major: string;
   isLeader: boolean;
+  userId: number;
 }
 
 interface GroupedUser {
-  groupid: number;
+  id: number;  //组别Id
   members: Member[];
-  id : number;
+  userId : number;  //每个学生都有对应的userId
 }
 
 interface GroupedMember extends Member {
-  id?: number;
+  id?: number; //组别Id
 }
-let groups : GroupedUser[] = [];
 onMounted(async () => {
   let GroupsRawData:{code:number,data:[]} = await getGroup()
   if(GroupsRawData.code == 0)
@@ -107,10 +107,7 @@ const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`);
 };
 
-let LRFlag = false;
 const processGroupData = (groups: GroupedUser[]) => {
-  let tableData: GroupedMember[] = [];
-  tableData;
   groups.forEach((group,Groupindex) => {
     group.members.forEach((member, index) => {
       let row: GroupedMember = { ...member };
