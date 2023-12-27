@@ -1,7 +1,7 @@
 <!--
  * @Author: Langjc
  * @Date: 2023-12-26 20:40:50
- * @LastEditTime: 2023-12-27 16:49:29
+ * @LastEditTime: 2023-12-27 17:15:52
  * @LastEditors: Langjc
  * @Description: 
 -->
@@ -45,10 +45,11 @@
   <router-view></router-view>
 </template>
 
-<script setup>
+<script lang="ts"  setup>
 import { ref, watch, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { addGroup } from "@/api/learngroup";
+import { ElMessage } from 'element-plus';
 
 const BRANCH_INFO = inject('BRANCH_INFO')
 const router = useRouter();
@@ -65,7 +66,14 @@ const initTabPosition = () => {
   }
 };
 const createGroup = async () =>{
-  await addGroup(createGroupLeader.value)
+  let GroupsRawData:{code:number,data:[]} = await addGroup(createGroupLeader.value)
+  if(GroupsRawData.code == 0){
+    ElMessage.success({message:"创建成功",offset:150});
+    dialogVisible.value = false
+  }
+  else{
+    ElMessage.error({message:"创建失败",offset:150});
+  }
 }
 // 监听路由变化
 watch(
