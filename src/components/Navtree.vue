@@ -173,6 +173,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-right: 3px solid rgba(199, 36, 47, 1);
 }
 
 .logo {

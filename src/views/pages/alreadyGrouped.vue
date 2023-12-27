@@ -109,16 +109,19 @@ const handleCurrentChange = (val: number) => {
 
 const processGroupData = (groups: GroupedUser[]) => {
   groups.forEach((group,Groupindex) => {
-    group.members.forEach((member, index) => {
-      let row: GroupedMember = { ...member };
-      if (member.isLeader === true) {
-        row.id = group.id; // 只有每组的第一个成员有组号
-      }
-      if(Groupindex < groups.length/2)
-        tableDataLeft.value.push(row);
-      else
-        tableDataRight.value.push(row)
-    });
+    if(group.members != null)//判断下是不是空组别
+      group.members.forEach((member, index) => {
+        let row: GroupedMember = { ...member };
+        if(member != null){
+          if (member.isLeader === true) {
+            row.id = group.id; // 只有每组的第一个成员有组号
+          }
+          if(Groupindex < groups.length/2)
+            tableDataLeft.value.push(row);
+          else
+            tableDataRight.value.push(row)
+        }
+      });
   });
 };
 let tableDataLeft = ref(<GroupedMember[]>[])

@@ -34,11 +34,11 @@ export function getDeleteGroup<T>(id: any){
 }
 
 // 添加学习小组
-export function addGroup<T>(params: any, id: any){
+export function addGroup<T>(sno: string){
     return http.post<T>({
-        url:`/api/studyGroup/${id}`,
-        params:{
-            params,
+        url:`/api/studyGroup/new`,
+        data:{
+            'leaderSno' : sno
         }
     })
 }

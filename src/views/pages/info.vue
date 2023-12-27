@@ -184,7 +184,7 @@
         position: absolute;
         right: 0;
         width: 775px;
-        height: 100%;
+        height:90%;
         box-shadow: 0px 4px 16px 0px #00000014;
         border-radius: 5px;
         background-color: #ffffff;
@@ -201,16 +201,20 @@
         flex: 1 1 calc(30% - 30px); 
         margin-left: 10px;
         margin-right: 10px;
-        height: 40%;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
     .m {
-        width: 70%;
+        width: 90%;
+        height: 90%;
+        background-color:#fafafa;
+        padding:20px;
+        padding-bottom:0px;
+        border-radius: 12px;
     }
     .m img{
-        height: 50%;
+        height: 40%;
     }
     .m .font1{
         font-size: 16px;

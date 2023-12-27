@@ -1,3 +1,10 @@
+<!--
+ * @Author: Langjc
+ * @Date: 2023-12-26 20:40:50
+ * @LastEditTime: 2023-12-27 15:53:41
+ * @LastEditors: Langjc
+ * @Description: 
+-->
 <template>
     <div class="main">
         <Navtree class="nav" />
@@ -21,7 +28,7 @@ import { getBranchInfo } from "@/api/branch";
 
 // 这里发请求获取支部信息
 const USER_INFO = reactive({})
-const BRANCH_INFO = reactive({})
+const BRANCH_INFO = reactive({greatCount:'这个疑似砍了'})
 // provide出去
 provide('BRANCH_INFO', BRANCH_INFO)
 provide('USER_INFO', USER_INFO)
@@ -61,15 +68,15 @@ if (getToken()) {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
-    padding: 40px 70px;
-    padding-bottom: 25px;
+    padding: 40px 70px 0 70px;
+    /* padding-bottom: 25px; */
     overflow: overlay;
 }
 
 .content {
     display: grid;
     grid-template-rows: 90px auto;
-    padding: 0 32px 32px 0;
+    padding: 0 32px 0 0;
 }
 </style>
   
