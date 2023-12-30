@@ -37,10 +37,10 @@
     >
       <el-table-column type="selection" />
       <el-table-column label="姓名">
-        <template #default="scope">{{ scope.row.name }}</template>
+        <template #default="scope">{{ scope.row.username }}</template>
       </el-table-column>
-      <el-table-column property="stu_number" label="学号" />
-      <el-table-column property="identity" label="身份" />
+      <el-table-column property="usernumb" label="学号" />
+      <el-table-column property="politicalface" label="身份" />
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
@@ -55,13 +55,12 @@
     <el-config-provider :locale="zhCn">
       <el-pagination
         class="el-pagination"
-        v-model:current-page="currentPage"
+        v-model:current-page="PageNum"
         v-model:page-size="pageSize"
-        :page-sizes="[14]"
         :style="{ margin: '20px' }"
         background
         layout="total, ->,sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="UserNum"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -70,11 +69,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { reactive } from "vue";
+import { getMemberList } from "../../api/p_management";
+import { getBranchInfo } from "@/api/branch";
 const $route = useRoute();
 const $router = useRouter();
 const value = ref(1);
@@ -105,21 +106,41 @@ const options = [
     value: 6,
   },
 ];
-const currentPage = ref(1);
-const pageSize = ref(14);
+const tableData = ref<User[]>([]);
+const pageSize = ref(<number>15); //每页显示学生数量
+let UserRawData = ref(<User[]>[])
+let UserNum = ref(0)  //总长度
+let PageNum = ref(1)  //当前页码
+
+interface User {
+  username: string;
+  usernumb: string;
+  politicalface: string;
+  id: number;
+}
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);
 };
 
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  PageNum.value = val //每次换页 修改显示范围
+  tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
 };
 
+onMounted(async () => {//------------------这里USER——INFO刷新网页后会失效 要修 ------------------
+  const USER_INFO = await inject('USER_INFO');
+  let MemberList:{code:number,data:User[]} = await getMemberList(USER_INFO.partybranchId)
+  UserRawData.value = MemberList.data
+  tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
+  UserNum.value = MemberList.data.length
+})
+
+
 const handleCheck = (index: number, row: User) => {
-  console.log(index, row);
-  $router.push("/p_management/p_info/p_info_check");
-};
+  let params = {name:row.username,stu_id:row.usernumb,identity:row.politicalface,user_id:row.id}
+  $router.push({name:'p_info_check',state: { params }});
+}
 
 const formInline = reactive({
   user: "",
@@ -131,11 +152,6 @@ const onSubmit = () => {
   console.log("submit!");
 };
 
-interface User {
-  name: string;
-  stu_number: string;
-  identity: string;
-}
 
 const multipleTableRef = ref<InstanceType<typeof ElTable>>();
 const multipleSelection = ref<User[]>([]);
@@ -156,83 +172,12 @@ const handleSelectionChange = (val: User[]) => {
   multipleSelection.value = val;
 };
 
-const tableData: User[] = [
-  {
-    name: "东雪莲",
-    stu_number: "3022244001",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244002",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244003",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244004",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244005",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244006",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244007",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244008",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244001",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244009",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244010",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244011",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244012",
-    identity: "中共党员",
-  },
-  {
-    name: "东雪莲",
-    stu_number: "3022244011",
-    identity: "中共党员",
-  },
-];
+
 </script>
 
 <style>
 .Main {
-  height: 779px;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

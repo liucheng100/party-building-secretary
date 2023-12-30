@@ -69,11 +69,16 @@ const routes = [
             },
           },
           {
+            name: 'p_info_check',
             path: "/p_management/p_info/p_info_check",
             component: () => import("@/views/pages/p_info_check.vue"),
             meta: {
               title: "个人详情",
             },
+            params: {
+              row:{
+              }
+            }
           },
           {
             path: "/p_management/learnGroup",

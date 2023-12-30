@@ -16,3 +16,20 @@ export function updatePersonProcess<T>(userId: string,processId:number,status:nu
     }
   });
 }
+
+//获取已提交的文档
+export function getFile<T>(userId: string) {
+  return http.get<T>({
+    url: `/api/file/htd/user/${userId}`,
+  });
+}
+
+//获取党支部成员
+export function getMemberList<T>(branchId: number) {
+  return http.get<T>({
+    url: `/api/partyBranch/memberList`,
+    params:{
+      branchId
+    }
+  });
+}

@@ -3,7 +3,7 @@
     <div class="p_check_1">
       <div class="p_check_1_1">
         <div class="p_check_head_1">
-          <div>{{ branchName }}</div>
+          <div>{{ BRANCH_INFO.partybranchName }}</div>
           <div>
             <el-icon @click="$router.back()"><Close /></el-icon>
           </div>
@@ -38,7 +38,7 @@
           </el-table-column>
           <el-table-column property="class" label="类别">
             <template #default="scope">
-              {{ scope.row.class }}
+              {{(scope.row.type<100)?(scope.row.type == 0?'入党申请书':'个人自传'):(scope.row.type<200?'思想报告':'个人总结')}}
             </template>
           </el-table-column>
           <el-table-column property="situation" label="当前状态">
@@ -47,20 +47,20 @@
                 <i
                   class="dotClass"
                   style="background-color: #21b339"
-                  v-if="scope.row.situation == '已通过'"
+                  v-if="scope.row.status == 1"
                 ></i>
                 <i
                   class="dotClass"
                   style="background-color: #c7242f"
-                  v-if="scope.row.situation == '驳回'"
+                  v-if="scope.row.status == 2"
                 ></i>
                 <i
                   class="dotClass"
                   style="background-color: #fca235"
-                  v-if="scope.row.situation == '未审批'"
+                  v-if="scope.row.status == 0"
                 ></i>
                 <div class="situation_row">
-                  {{ scope.row.situation }}
+                  {{ situationType[scope.row.status] }}
                 </div>
               </div>
             </template>
@@ -682,12 +682,13 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, inject } from "vue";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
-import $router from "@/router";
+import $router from "@/router";//....
+import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
-import { getPersonProcess, updatePersonProcess } from "../../api/p_management";
+import { getPersonProcess, updatePersonProcess, getFile } from "../../api/p_management";
 import { DefineComponent } from "vue";
 
 interface User {
@@ -702,7 +703,6 @@ interface UserStatus {
   status: boolean
 }
 
-const branchName = ref("XX支部");
 const name = ref("taffy");
 const stu_id = ref("3022244000");
 const identity = ref("预备党员");
@@ -713,68 +713,10 @@ const pageSize = ref(12);
 const Cn = ref(zhCn);
 const submitLoading = ref(false);
 var statueList = ref<boolean[]>([]);
-const tableData = ref([
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "驳回",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "驳回",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "驳回",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "驳回",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "已通过",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "已通过",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "已通过",
-  },
-]);
+const tableData = ref([]);
+const situationType = ['待审','通过','未通过']
+const $route = useRoute();
+let BRANCH_INFO = inject('BRANCH_INFO');
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);
@@ -799,29 +741,20 @@ const changeStatue = (val: any) => {
 
 };
 onMounted(async () => {
-  // for (let i = 0; i < 31; i++) {
-  //   statueList.push(false);
-  // }
+  let params = history.state.params
+  console.log(params)
+  stu_id.value = params.stu_id;
+  identity.value = params.identity;
+  user_id.value = 198492;
+  name.value = params.name;
+
   let PersonRawData:{code:number,data:[]} = await getPersonProcess(user_id.value)
   for(let i = 0;i < PersonRawData.data.length;i++){
     let data:UserStatus = PersonRawData.data[i]
     statueList.value[data.processId] = data.status
   }
-  //   .then((res: any) => {
-  //     if (res) {
-  //       console.log(res);
-  //       statues = res.data[0].status;
-  //       for (let i = 0; i < 31; i++) {
-  //         if (i < statues) statueList.push(true);
-  //         else statueList.push(false);
-  //       }
-  //     } else {
-  //       ElMessage.warning("未知错误");
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+  let FileRawData:{code:number,data:[]} = await getFile(user_id.value)
+  tableData.value = FileRawData.data  //status 0待审 1通过 2未通过
 });
 </script>
 
@@ -1439,7 +1372,7 @@ onMounted(async () => {
 }
 .p_check_head_1 {
   flex: 1;
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 400;
   display: flex;
   justify-content: space-between;
