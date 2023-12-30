@@ -7,11 +7,13 @@ export function getGroup<T>() {
 	});
 }
 
+//获取未分组成员
 export function getUnGroup<T>() {
 	return http.get<T>({
 		url: `/api/studyGroup/unalloc`,
 	});
 }
+
 // 获取特定学习小组
 export function getSingleGroup<T>(id: any){
     return http.get<T>({
@@ -50,5 +52,13 @@ export function addGroupMember<T>(params: any, id: any){
         params:{
             params,
         }
+    })
+}
+
+// 导出当前分组名单
+export function getList<T>(){
+    return http.get<T>({
+        url:`/api/studyGroup/export`,
+		responseType: "blob",
     })
 }

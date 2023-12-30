@@ -79,8 +79,8 @@ onMounted(async () => {
   let RawData:{code:number,data:[]} = await getUnGroup();
   if(RawData.code == 0){
     // 将数据分割为左右两部分
-    UserRawData.value = RawData.data
-    UserNum.value = RawData.data.length
+    UserRawData.value = RawData.data;
+    UserNum.value = RawData.data.length;
     tableDataLeft.value = RawData.data.slice((PageNum.value - 1) * pageSize.value, (- 0.5 + PageNum.value) * pageSize.value);
     //slice.( (当前页面-1) * 每页数字 ， (当前页面-0.5) * 每页数字) 下面逻辑相同
     tableDataRight.value = RawData.data.slice((- 0.5 + PageNum.value) * pageSize.value,PageNum.value * pageSize.value);

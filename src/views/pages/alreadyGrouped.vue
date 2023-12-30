@@ -7,7 +7,7 @@
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
       >
-        <el-table-column label="组号" width="50">
+        <el-table-column label="组号" width="60">
           <template #default="scope">
             <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
           </template>
@@ -32,7 +32,7 @@
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
       >
-        <el-table-column label="组号" width="50">
+        <el-table-column label="组号" width="60">
           <template #default="scope">
             <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
           </template>
@@ -53,13 +53,12 @@
   <el-config-provider :locale="zhCn">
     <el-pagination
       class="el-pagination"
-      v-model:current-page="currentPage"
+      v-model:current-page="PageNum"
       v-model:page-size="pageSize"
-      :page-sizes="[14]"
       :style="{ margin: '20px' }"
       background
       layout="total, ->,sizes, prev, pager, next, jumper"
-      :total="400"
+      :total="GroupNum"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
@@ -72,8 +71,12 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import { getGroup } from "@/api/learngroup";
 
-const currentPage = ref(1);
-const pageSize = ref(14);
+const pageSize = ref(<number>6);
+let GroupNum = ref(0)  //总长度
+let PageNum = ref(1)  //当前页码
+
+let tableDataLeft = ref(<GroupedMember[]>[])
+let tableDataRight = ref(<GroupedMember[]>[])
 
 interface Member {
   name: string;
@@ -92,11 +95,11 @@ interface GroupedUser {
 interface GroupedMember extends Member {
   id?: number; //组别Id
 }
+
 onMounted(async () => {
   let GroupsRawData:{code:number,data:[]} = await getGroup()
   if(GroupsRawData.code == 0)
     processGroupData(GroupsRawData.data);
-  // TableDataCal(groups)
 })
 
 const handleSizeChange = (val: number) => {
@@ -108,9 +111,10 @@ const handleCurrentChange = (val: number) => {
 };
 
 const processGroupData = (groups: GroupedUser[]) => {
+  GroupNum.value = groups.length;
   groups.forEach((group,Groupindex) => {
     if(group.members != null)//判断下是不是空组别
-      group.members.forEach((member, index) => {
+      group.members.forEach((member) => {
         let row: GroupedMember = { ...member };
         if(member != null){
           if (member.isLeader === true) {
@@ -121,11 +125,11 @@ const processGroupData = (groups: GroupedUser[]) => {
           else
             tableDataRight.value.push(row)
         }
+        else
+          GroupNum.value = GroupNum.value - 1;
       });
   });
 };
-let tableDataLeft = ref(<GroupedMember[]>[])
-let tableDataRight = ref(<GroupedMember[]>[])
 </script>
 
 <style scoped>

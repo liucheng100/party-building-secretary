@@ -667,7 +667,7 @@
             </div>
           </div>
         </div>
-        <div class="sureBtn">
+        <!-- <div class="sureBtn">
           <el-button
             auto-insert-space
             @click="toSubmit"
@@ -675,7 +675,7 @@
             :loading="submitLoading"
             >确认修改</el-button
           >
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -687,7 +687,7 @@ import { ElTable } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import $router from "@/router";
 import { ElMessage } from "element-plus";
-import { getPersonProcess } from "../../api/p_management";
+import { getPersonProcess, updatePersonProcess } from "../../api/p_management";
 import { DefineComponent } from "vue";
 
 interface User {
@@ -696,10 +696,17 @@ interface User {
   situation: string;
 }
 
+interface UserStatus {
+  userId: number,
+  processId: number,
+  status: boolean
+}
+
 const branchName = ref("XX支部");
 const name = ref("taffy");
 const stu_id = ref("3022244000");
 const identity = ref("预备党员");
+const user_id = ref("198492");
 const statues = ref(0);
 const currentPage = ref<number>(1);
 const pageSize = ref(12);
@@ -787,13 +794,19 @@ const toSubmit = () => {
   // }
 };
 const changeStatue = (val: any) => {
+  updatePersonProcess(user_id.value,val,!statueList.value[val]?1:0)
   statueList.value[val] = !statueList.value[val];
+
 };
-onMounted(() => {
+onMounted(async () => {
   // for (let i = 0; i < 31; i++) {
   //   statueList.push(false);
   // }
-  // getPersonProcess("1")
+  let PersonRawData:{code:number,data:[]} = await getPersonProcess(user_id.value)
+  for(let i = 0;i < PersonRawData.data.length;i++){
+    let data:UserStatus = PersonRawData.data[i]
+    statueList.value[data.processId] = data.status
+  }
   //   .then((res: any) => {
   //     if (res) {
   //       console.log(res);
@@ -900,13 +913,13 @@ onMounted(() => {
 }
 .graphMain {
   width: 100%;
-  height: 800px;
+  height: 1000px;
   background: #ffffff;
   position: relative;
 }
 .chart-main {
   overflow: auto;
-  height: 800px;
+  height: 1000px;
   position: relative;
 }
 .chart-main::-webkit-scrollbar {
@@ -1400,7 +1413,7 @@ onMounted(() => {
 }
 
 .p_check {
-  height: 100%;
+  height: 1000px;
   display: flex;
   justify-content: space-around;
 }

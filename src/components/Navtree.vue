@@ -177,7 +177,7 @@ onMounted(() => {
 }
 
 .logo {
-  width: 234px;
+  width: 15vw;
   margin-top: 24px;
   margin-bottom: 58px;
   cursor: pointer;
@@ -258,8 +258,8 @@ onMounted(() => {
 
 .icon {
   margin-right: 12px;
-  width: 40px;
-  height: 40px;
+  width: 5vw;
+  height: 5vh;
 }
 
 .icon img {
@@ -272,7 +272,7 @@ onMounted(() => {
 }
 
 .title {
-  font-size: 28px;
+  font-size: clamp(1.8rem, 0.5rem + 1.05vw, 2.6rem);
   color: rgba(159, 159, 159, 1);
   transition: 0.14s;
 }

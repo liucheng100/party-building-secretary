@@ -50,7 +50,7 @@ if (getToken()) {
 .main {
     background-color: #fafafa;
     display: grid;
-    grid-template-columns: 307px auto;
+    grid-template-columns: 20vw auto;
     overflow-x: hidden;
 }
 

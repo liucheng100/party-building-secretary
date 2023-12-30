@@ -39,6 +39,8 @@ const myRequest = new MYRequest({
             return oldData;
           case "application/json":
             return JSON.stringify(oldData);
+          case "application/x-download":
+            return oldData;
           default:
             return qs.stringify(oldData);
         }
