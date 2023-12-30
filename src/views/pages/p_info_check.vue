@@ -707,15 +707,12 @@ const name = ref("taffy");
 const stu_id = ref("3022244000");
 const identity = ref("预备党员");
 const user_id = ref("198492");
-const statues = ref(0);
 const currentPage = ref<number>(1);
 const pageSize = ref(12);
 const Cn = ref(zhCn);
-const submitLoading = ref(false);
 var statueList = ref<boolean[]>([]);
 const tableData = ref([]);
 const situationType = ['待审','通过','未通过']
-const $route = useRoute();
 let BRANCH_INFO = inject('BRANCH_INFO');
 
 const handleSizeChange = (val: number) => {
@@ -745,7 +742,12 @@ onMounted(async () => {
   console.log(params)
   stu_id.value = params.stu_id;
   identity.value = params.identity;
-  user_id.value = 198492;
+  //-----------------------------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------------------
+  user_id.value = '198492'; //这里是方便调试的记得改------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------------------
+  //user_id.value = params.user_id
   name.value = params.name;
 
   let PersonRawData:{code:number,data:[]} = await getPersonProcess(user_id.value)

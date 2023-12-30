@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <el-icon @click="$router.back()" style="height:50px;margin:20px 5% 0 auto;font-size: 50px;"><Close /></el-icon>
     <!-- 表头部分 -->
     <el-row class="personal-info-title">
       <el-col :span="6"><div>姓名</div></el-col>
@@ -11,24 +12,27 @@
     <!-- 个人信息部分 -->
     <el-row class="personal-info">
       <el-col :span="6"
-        ><div>{{ userInfo.name }}</div></el-col
+        ><div>{{ userInfo.userName }}</div></el-col
       >
       <el-col :span="6"
-        ><div>{{ userInfo.studentNumber }}</div></el-col
+        ><div>{{ userInfo.sno }}</div></el-col
       >
       <el-col :span="6"
-        ><div>{{ userInfo.fileType }}</div></el-col
+        ><div>{{ userInfo.type }}</div></el-col
       >
       <el-col :span="6"
-        ><div>{{ userInfo.submissionTime }}</div></el-col
+        ><div>{{ 
+          new Date(Date.parse(userInfo.createAt)).getFullYear()+'-'+
+          (new Date(Date.parse(userInfo.createAt)).getMonth()+1) + '-'+
+          new Date(Date.parse(userInfo.createAt)).getDate()}}</div></el-col
       >
     </el-row>
 
     <!-- 文章标题 -->
-    <div class="article-title">{{ article.title }}</div>
+    <div class="article-title">{{ userInfo.title }}</div>
 
     <!-- 正文 -->
-    <div class="article-content">{{ article.content }}</div>
+    <div class="article-content">{{ userInfo.content }}</div>
 
     <!--审批意见-->
     <el-input
@@ -46,14 +50,35 @@
 </template>
   
   <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
-const userInfo = ref({
-  name: "张三",
-  studentNumber: "123456",
-  fileType: "入党申请书",
-  submissionTime: "2023-01-01",
+interface User {
+  userName: string;
+  sno: string;
+  type: string;
+  title: string;
+  content: string;
+  createAt: string;
+  status: string;
+  id: number;
+}
+
+const userInfo = ref<User>({
+  userName: '',
+  sno: '',
+  type: '',
+  title: '',
+  content: '',
+  createAt: '',
+  status: '',
+  id: 0
 });
+
+onMounted(async () =>{
+  userInfo.value = history.state.params
+  console.log(userInfo.value)
+})
+
 
 const article = ref({
   title: "入党申请书",

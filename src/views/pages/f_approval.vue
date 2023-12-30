@@ -44,28 +44,41 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" />
-        <el-table-column label="姓名">
-          <template #default="scope">{{ scope.row.name }}</template>
+        <el-table-column property="userName" label="姓名">
         </el-table-column>
-        <el-table-column property="stu_number" label="学号" />
-        <el-table-column property="file_type" label="文件类型" />
+        <el-table-column property="sno" label="学号" />
+        <el-table-column property="type" label="文件类型">
+          <template #default="scope">
+            <div class="icon_state">
+              <div class="state_row">
+                {{(scope.row.type<100)?(scope.row.type == 0?'入党申请书':'个人自传'):(scope.row.type<200?'思想报告':'个人总结')}}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column property="title" label="标题" />
-        <el-table-column property="submit_time" label="提交时间" />
-        <el-table-column property="state" label="状态">
+        <el-table-column property="createAt" label="提交时间">
+          <template #default="scope">
+          {{ new Date(Date.parse(scope.row.createAt)).getFullYear()+'-'+
+            (new Date(Date.parse(scope.row.createAt)).getMonth()+1) + '-'+
+            new Date(Date.parse(scope.row.createAt)).getDate()}}
+          </template>
+        </el-table-column>
+        <el-table-column property="status" label="状态">
             <template #default="scope">
               <div class="icon_state">
                 <i
                   class="dotClass"
                   style="background-color: #21b339"
-                  v-if="scope.row.state == '已处理'"
+                  v-if="scope.row.status == 1"
                 ></i>
                 <i
                   class="dotClass"
                   style="background-color: #c7242f"
-                  v-if="scope.row.state == '未处理'"
+                  v-if="scope.row.status == 0"
                 ></i>
                 <div class="state_row">
-                  {{ scope.row.state }}
+                  {{ (scope.row.status == 0) ? '未处理' : '已处理'}}
                 </div>
               </div>
             </template>
@@ -98,11 +111,12 @@
     </div>
   </template>
     
-    <script lang="ts" setup>
-  import { ref } from "vue";
+<script lang="ts" setup>
+  import { ref, onMounted } from "vue";
   import { useRoute, useRouter } from "vue-router";
   import { ElTable } from "element-plus";
   import zhCn from "element-plus/es/locale/lang/zh-cn";
+  import { getAllFiles } from "../../api/manageFile";
   import { reactive } from "vue";
   const $route = useRoute();
   const $router = useRouter();
@@ -147,6 +161,15 @@
   const currentPage = ref(1);
   const pageSize = ref(14);
   
+  const tableData = ref<User[]>([]);
+  const fileRawData = ref<User[]>([]);
+
+  onMounted(async () => {
+    let fileList:{code:number,data:User[]}= await getAllFiles(0) //0全部1已审2未审
+    fileRawData.value = fileList.data
+    tableData.value = fileList.data
+  })
+
   const handleSizeChange = (val: number) => {
     console.log(`${val} items per page`);
   };
@@ -156,8 +179,16 @@
   };
   
   const handleCheck = (index: number, row: User) => {
-    console.log(index, row);
-    $router.push("/deal/fileApproval/fileCheck");
+    let params = {
+      userName:row.userName,
+      sno:row.sno,
+      createAt:row.createAt,
+      type:row.type,
+      file_id:row.id,
+      title:row.title,
+      content:row.content
+    }
+    $router.push({name:'f_check',state: { params }});
   };
   
   const formInline = reactive({
@@ -171,12 +202,14 @@
   };
   
   interface User {
-    name: string;
-    stu_number: string;
-    file_type: string;
+    userName: string;
+    sno: string;
+    type: string;
     title: string;
-    submit_time: string;
-    state: string;
+    content: string;
+    createAt: string;
+    status: string;
+    id: number;
   }
   
   const multipleTableRef = ref<InstanceType<typeof ElTable>>();
@@ -198,16 +231,6 @@
     multipleSelection.value = val;
   };
   
-  const tableData: User[] = [
-    {
-      name: "东雪莲",
-      stu_number: "3022244001",
-      file_type: "入党申请书",
-      title: "标题",
-      submit_time: "2023-11-1",
-      state: "已处理"
-    },
-  ];
   </script>
     
 <style scoped>

@@ -47,6 +47,7 @@ const routes = [
           },
           {
             path: "/deal/fileApproval/fileCheck",
+            name: 'f_check',
             component: () => import("@/views/pages/f_check.vue"),
             meta: {
               title: "查看文件",
