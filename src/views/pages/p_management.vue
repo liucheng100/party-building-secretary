@@ -3,10 +3,11 @@
     <div>
       <span>身份 </span
       ><el-select
-        v-model="value"
+        v-model="filterValue"
         class="m-2"
         placeholder="Select"
         style="margin-left: 30px"
+        @change = "filterUser()"
       >
         <el-option
           v-for="item in options"
@@ -15,16 +16,17 @@
           :value="item.value"
         />
       </el-select>
-      <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button>
+      <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterUser()">筛选</el-button>
+      疑似反人类按钮 我先给扣了 用上面的@change="filterMember" -->
     </div>
     <div>
       <span>学号 </span>
       <el-input
         style="display: inline; margin-left: 30px"
         placeholder="输入需要查找的学号"
-        v-model="input"
+        v-model="snoInput"
       ></el-input>
-      <el-button style="margin-left: 30px" color="#c7242f">搜索</el-button>
+      <el-button style="margin-left: 30px" color="#c7242f" @click = "searchBySno()">搜索</el-button>
     </div>
   </div>
   <div class="Main">
@@ -36,11 +38,14 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" />
-      <el-table-column label="姓名">
-        <template #default="scope">{{ scope.row.username }}</template>
+      <el-table-column property="userName" label="姓名">
       </el-table-column>
-      <el-table-column property="usernumb" label="学号" />
-      <el-table-column property="politicalface" label="身份" />
+      <el-table-column property="sno" label="学号" />
+      <el-table-column property="type" label="身份">
+        <template #default="scope">
+          {{ types[scope.row.type + 1 ] }} <!--后端的身份type从-1开始的-->
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
           <el-button
@@ -69,45 +74,46 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { reactive } from "vue";
-import { getMemberList } from "../../api/p_management";
+import { getMemberList, searchByNum } from "../../api/p_management";
 import { getBranchInfo } from "@/api/branch";
-import { getBranchId } from "@/utils/auth";
+// import { getBranchId } from "@/utils/auth";
 
 const $route = useRoute();
 const $router = useRouter();
-const value = ref(1);
-const input = ref("");
+const filterValue = ref(0);
+const snoInput = ref("");
 const options = [
   {
     label: "全部",
-    value: 1,
+    value: -1,
   },
   {
     label: "入党申请人",
-    value: 2,
+    value: 0,
   },
   {
     label: "入党积极分子",
-    value: 3,
+    value: 1,
   },
   {
     label: "发展对象",
-    value: 4,
+    value: 2,
   },
   {
     label: "中共预备党员",
-    value: 5,
+    value: 3,
   },
   {
     label: "中共党员",
-    value: 6,
+    value: 4,
   },
 ];
+const types = ['入党申请人前','入党申请人','入党积极分子','发展对象','中共预备党员','中共党员']
 const tableData = ref<User[]>([]);
 const pageSize = ref(<number>15); //每页显示学生数量
 let UserRawData = ref(<User[]>[])
@@ -115,32 +121,45 @@ let UserNum = ref(0)  //总长度
 let PageNum = ref(1)  //当前页码
 
 interface User {
-  username: string;
-  usernumb: string;
-  politicalface: string;
+  userName: string;
+  sno: string;
+  type: number;
   id: number;
 }
 
-const handleSizeChange = (val: number) => {
-  pageSize.value = val
+const filterUser = async () => {
+  let MemberList:{code:number,data:User[]} = await getMemberList(filterValue.value)
+  UserRawData.value = MemberList.data
+  tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
+  UserNum.value = MemberList.data.length
+}
+
+const searchBySno = async () => {
+  tableData.value = []
+  filterValue.value = 0;
+  let MemberList:{code:number,data:User} = await searchByNum(snoInput.value)
+  if(MemberList.data){
+    UserRawData.value = [MemberList.data]
+    tableData.value = UserRawData.value
+    UserNum.value = 1
+  }
+}
+
+const handleSizeChange = () => {
   tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
 };
 
-const handleCurrentChange = (val: number) => {
-  PageNum.value = val //每次换页 修改显示范围
+const handleCurrentChange = () => {
   tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
 };
 
 onMounted(async () => {
-  let MemberList:{code:number,data:User[]} = await getMemberList(getBranchId())
-  UserRawData.value = MemberList.data
-  tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
-  UserNum.value = MemberList.data.length
+  filterUser()
 })
 
 
 const handleCheck = (index: number, row: User) => {
-  let params = {name:row.username,stu_id:row.usernumb,identity:row.politicalface,user_id:row.id}
+  let params = {name:row.userName,stu_id:row.sno,identity:types[row.type + 1],user_id:row.id} //后端的身份type从-1开始的
   $router.push({name:'p_info_check',state: { params }});
 }
 

@@ -1,12 +1,13 @@
 <template>
     <div class="head">
-      <div>
+      <div style="margin-right:20px">
         <span>文件类型 </span
         ><el-select
-          v-model="value"
+          v-model="typeValue"
           class="m-2"
           placeholder="Select"
           style="margin-left: 30px"
+          @change = "fetchAllFiles(typeValue,hasReadValue)"
         >
           <el-option
             v-for="item in options"
@@ -15,15 +16,16 @@
             :value="item.value"
           />
         </el-select>
-        <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button>
+        <!-- <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button> -->
       </div>
       <div>
         <span>处理状态 </span>
         <el-select
-          v-model="value"
+          v-model="hasReadValue"
           class="m-2"
           placeholder="Select"
           style="margin-left: 30px"
+          @change = "fetchAllFiles(typeValue,hasReadValue)"
         >
           <el-option
             v-for="item in options_2"
@@ -32,7 +34,7 @@
             :value="item.value"
           />
         </el-select>
-        <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button>
+        <!-- <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button> -->
       </div>
     </div>
     <div class="Main">
@@ -118,42 +120,43 @@
   import { reactive } from "vue";
   const $route = useRoute();
   const $router = useRouter();
-  const value = ref(1);
+  const typeValue = ref(-1);
+  const hasReadValue = ref(-1);
   const input = ref("");
   const options = [
     {
       label: "全部",
-      value: 1,
+      value: -1,
     },
     {
       label: "入党申请书",
-      value: 2,
+      value: 0,
     },
     {
       label: "思想汇报",
-      value: 3,
+      value: 1,
     },
     {
       label: "入党志愿书",
-      value: 4,
+      value: 2,
     },
     {
-      label: "个人小结",
-      value: 5,
+      label: "个人自传",
+      value: 3,
     },
   ];
   const options_2 = [
     {
       label: "全部",
-      value: 1,
+      value: -1,
     },
     {
       label: "未处理",
-      value: 2,
+      value: 0,
     },
     {
       label: "已处理",
-      value: 3,
+      value: 1,
     },
   ];
   const currentPage = ref(1);
@@ -162,10 +165,14 @@
   const tableData = ref<User[]>([]);
   const fileRawData = ref<User[]>([]);
 
-  onMounted(async () => {
-    let fileList:{code:number,data:User[]}= await getAllFiles(0) //0全部1已审2未审
+  const fetchAllFiles = async (type:number,hasRead:number) => {
+    let fileList:{code:number,data:User[]}= await getAllFiles(type,hasRead) //type:hasRead:0全部1已审2未审
     fileRawData.value = fileList.data
     tableData.value = fileList.data
+  }
+
+  onMounted(async () => {
+    fetchAllFiles(-1,-1)
   })
 
   const handleSizeChange = (val: number) => {
@@ -243,6 +250,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    justify-content: flex-end;
   }
   
   .el-pagination.is-background .el-pager li {

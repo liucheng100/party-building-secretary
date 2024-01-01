@@ -71,7 +71,7 @@
               <el-button
                 style="color: #c7242f"
                 link
-                @click="handleCheck(scope.$index, scope.row)"
+                @click="handleCheck(scope.row)"
                 >查看</el-button
               >
             </template>
@@ -688,19 +688,32 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 import $router from "@/router";//....
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
-import { getPersonProcess, updatePersonProcess, getFile } from "../../api/p_management";
+import { getPersonProcess, updatePersonProcess, getFile, getSFileDetail } from "../../api/p_management";
 import { DefineComponent } from "vue";
 
 interface User {
   title: string;
   class: string;
   situation: string;
+  id: number;
 }
 
 interface UserStatus {
   userId: number,
   processId: number,
   status: boolean
+}
+
+interface File {
+  userName: string;
+  sno: string;
+  type: string;
+  title: string;
+  content: string;
+  createAt: string;
+  status: string;
+  id: string;
+  file_id: string;
 }
 
 const name = ref("taffy");
@@ -711,7 +724,7 @@ const currentPage = ref<number>(1);
 const pageSize = ref(12);
 const Cn = ref(zhCn);
 var statueList = ref<boolean[]>([]);
-const tableData = ref([]);
+const tableData = ref<File[]>([]);
 const situationType = ['待审','通过','未通过']
 let BRANCH_INFO: {'partybranchName':string} = JSON.parse(JSON.stringify(inject('BRANCH_INFO'))); //ts的类型检测能不能死啊
 
@@ -723,8 +736,14 @@ const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`);
 };
 
-const handleCheck = (index: number, row: User) => {
-  console.log(index, row);
+const handleCheck = async (row: File) => {
+  let res:{code:number,data:File} = await getSFileDetail(row.id)
+  if(res.code == 0){
+    res.data.userName = history.state.params.name
+    res.data.sno = history.state.params.stu_id
+    let params:any = res.data
+    $router.push({name:'f_check',state: { params }});
+  }
 };
 const toSubmit = () => {
   // if (!this.statueList.length) {
@@ -744,10 +763,10 @@ onMounted(async () => {
   identity.value = params.identity;
   //-----------------------------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------
-  user_id.value = '198492'; //这里是方便调试的记得改------------------------------------------------------------------------
+  // user_id.value = '198492'; //这里是方便调试的记得改------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------
-  //user_id.value = params.user_id
+  user_id.value = params.user_id
   name.value = params.name;
 
   let PersonRawData:{code:number,data:[]} = await getPersonProcess(user_id.value)
@@ -755,7 +774,7 @@ onMounted(async () => {
     let data:UserStatus = PersonRawData.data[i]
     statueList.value[data.processId] = data.status
   }
-  let FileRawData:{code:number,data:[]} = await getFile(user_id.value)
+  let FileRawData:{code:number,data:File[]} = await getFile(user_id.value)
   tableData.value = FileRawData.data  //status 0待审 1通过 2未通过
 });
 </script>

@@ -1,8 +1,11 @@
 import http from "@/utils/request";
 //业务处理 文件审批用接口
-export function getAllFiles<T>(filter:any){
+export function getAllFiles<T>(type:number,hasRead: number){
     return http.get<T>({
-        url:`/api/file/htd/list/?filter=${filter}`
+        url:'/api/file/htd/list',
+        params:{
+            type,hasRead
+        }
     })
 }
 

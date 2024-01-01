@@ -57,8 +57,9 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import { getUnGroup } from "@/api/learngroup";
+import { getUnGroup, addGroupMember } from "@/api/learngroup";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
+import { ElMessage } from "element-plus";
 
 
 interface learnUser {
@@ -75,7 +76,7 @@ let UserRawData = ref(<learnUser[]>[])
 let UserNum = ref(0)  //总长度
 let PageNum = ref(1)  //当前页码
 
-onMounted(async () => {
+const fetchUser = async () => {
   let RawData:{code:number,data:[]} = await getUnGroup();
   if(RawData.code == 0){
     // 将数据分割为左右两部分
@@ -85,6 +86,31 @@ onMounted(async () => {
     //slice.( (当前页面-1) * 每页数字 ， (当前页面-0.5) * 每页数字) 下面逻辑相同
     tableDataRight.value = RawData.data.slice((- 0.5 + PageNum.value) * pageSize.value,PageNum.value * pageSize.value);
   }
+}
+
+onMounted(() => {
+  fetchUser();
+})
+
+const emit = defineEmits([
+        'addComplete'
+])
+
+const addNewMember = async (groupId: number)=>{
+  let ids:number[] = []
+  multipleSelection.value.forEach((member) => {
+    ids.push(member.userId)
+  })
+  let res:{code:number} = await addGroupMember(ids,groupId)
+  if(res.code == 0){
+    ElMessage.success('添加成功')
+    emit('addComplete');
+    fetchUser();
+  }
+}
+
+defineExpose({
+  addNewMember
 })
 
 const handleSizeChange = (val: number) => {
@@ -100,7 +126,6 @@ const handleCurrentChange = (val: number) => {
 
 const multipleSelection = ref<learnUser[]>([]);
 const handleSelectionChange = (val: learnUser[]) => {
-  console.log(val)
   multipleSelection.value = val;
 };
 

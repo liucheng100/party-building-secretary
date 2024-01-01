@@ -46,14 +46,14 @@ export function addGroup<T>(sno: string){
 }
 
 // 添加学习小组成员
-export function addGroupMember<T>(params: any, id: any){
+export function addGroupMember<T>(ids: number[], id: any){
     return http.post<T>({
         url:`/api/studyGroup/${id}/addMember`,
-        params:{
-            params,
+        data:{
+            ids,
         }
     })
-}
+}   
 
 // 导出当前分组名单
 export function getList<T>(){

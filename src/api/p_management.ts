@@ -25,11 +25,29 @@ export function getFile<T>(userId: string) {
 }
 
 //获取党支部成员
-export function getMemberList<T>(branchId: string | undefined) {
+export function getMemberList<T>(type: number) {
   return http.get<T>({
-    url: `/api/partyBranch/memberList`,
+    url: `/api/process/filterMain`,
     params:{
-      branchId
+      type
     }
   });
 }
+
+//按学号搜索
+export function searchByNum<T>(sno:string){
+  return http.get<T>({
+    url:'/api/process/searchBySno',
+    params:{
+      sno
+    }
+  })
+}
+
+//查询文档详情
+export function getSFileDetail<T>(id:string){
+  return http.get<T>({
+    url:`/api/file/htd/${id}`,
+  })
+}
+

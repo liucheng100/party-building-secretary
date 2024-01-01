@@ -16,7 +16,7 @@
       <el-radio-button label="未分组人员"></el-radio-button>
     </el-radio-group>
     <div>
-      <el-button v-if="tabPosition !== '已分组'" class="custom-button"
+      <el-button v-if="tabPosition !== '已分组'" class="custom-button" @click = "addToGroup()"
         >将所选加入小组</el-button
       >
       <el-button v-if="tabPosition == '已分组'" class="custom-button" @click="List()"
@@ -76,7 +76,39 @@
       </el-table>
     </div>
   </el-dialog>
-  <router-view></router-view>
+  <el-dialog v-model="addVisible" title="添加到学习小组" width="30%">
+    <div class = "PopUp">
+      <el-table
+        :data="tableData"
+        style="width: 100%; margin-top: 20px"
+        :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
+      >
+        <el-table-column label="组号" width="60">
+          <template #default="scope">
+            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="组长" property="name">
+          <template #default="scope">
+            <div class="red-dot-container">
+              <span>{{ scope.row.name }}</span>
+              <span v-if="scope.row.isLeader" class="red-dot"></span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button
+              size="small"
+              @click="addMember(scope.row.id)">添加</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+  </el-dialog>
+  <router-view v-slot="{ Component }" >
+      <component @addComplete="addVisible = false" ref="routerViewRef" :is="Component" />
+  </router-view>
 </template>
 
 <script lang="ts"  setup>
@@ -91,7 +123,9 @@ const tabPosition = ref("已分组");
 let BRANCH_INFO: {'partybranchName':string} = JSON.parse(JSON.stringify(inject('BRANCH_INFO'))); //ts的类型检测能不能死啊
 let createDialogVisible = ref(false);
 let manageDialogVisible = ref(false);
+let addVisible = ref(false)
 let createGroupLeader = ref('');
+const routerViewRef = ref<any>()
 
 let tableData = ref(<GroupedMember[]>[])
 
@@ -113,6 +147,16 @@ interface GroupedMember extends Member {
   id?: number; //组别Id
 }
 
+const addMember = (groupId:number) => {
+  routerViewRef.value.addNewMember(groupId)
+}
+const addToGroup = async () => {
+  tableData = ref(<GroupedMember[]>[])
+  let GroupsRawData:{code:number,data:[]} = await getGroup()
+  if(GroupsRawData.code == 0)
+    processGroupData(GroupsRawData.data);
+  addVisible.value = true
+}
 // 根据路由初始化选项卡位置
 const initTabPosition = () => {
   if (route.path.includes("/p_management/learnGroup/ungrouped")) {
