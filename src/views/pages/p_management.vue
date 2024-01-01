@@ -122,7 +122,8 @@ interface User {
 }
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  pageSize.value = val
+  tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
 };
 
 const handleCurrentChange = (val: number) => {

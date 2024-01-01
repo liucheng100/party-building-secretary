@@ -71,7 +71,8 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import { getGroup } from "@/api/learngroup";
 
-const pageSize = ref(<number>6);
+const pageSize = ref(<number>10);//每页组别
+let GroupsData = ref(<GroupedUser[]>[])
 let GroupNum = ref(0)  //总长度
 let PageNum = ref(1)  //当前页码
 
@@ -98,21 +99,27 @@ interface GroupedMember extends Member {
 
 onMounted(async () => {
   let GroupsRawData:{code:number,data:[]} = await getGroup()
-  if(GroupsRawData.code == 0)
-    processGroupData(GroupsRawData.data);
+  if(GroupsRawData.code == 0){
+    GroupsData.value = GroupsRawData.data;
+    processGroupData(GroupsData.value);
+  }
 })
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  pageSize.value = val
+  processGroupData(GroupsData.value);
 };
 
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  processGroupData(GroupsData.value);
 };
 
 const processGroupData = (groups: GroupedUser[]) => {
+  tableDataLeft.value = []
+  tableDataRight.value = []
+  let nowGroups = groups.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value)
   GroupNum.value = groups.length;
-  groups.forEach((group,Groupindex) => {
+  nowGroups.forEach((group,Groupindex) => {
     if(group.members != null)//判断下是不是空组别
       group.members.forEach((member) => {
         let row: GroupedMember = { ...member };
@@ -120,7 +127,7 @@ const processGroupData = (groups: GroupedUser[]) => {
           if (member.isLeader === true) {
             row.id = group.id; // 只有每组的第一个成员有组号
           }
-          if(Groupindex < groups.length/2)
+          if(Groupindex < nowGroups.length/2)
             tableDataLeft.value.push(row);
           else
             tableDataRight.value.push(row)
