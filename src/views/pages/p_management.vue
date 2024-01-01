@@ -76,6 +76,8 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { reactive } from "vue";
 import { getMemberList } from "../../api/p_management";
 import { getBranchInfo } from "@/api/branch";
+import { getBranchId } from "@/utils/auth";
+
 const $route = useRoute();
 const $router = useRouter();
 const value = ref(1);
@@ -128,9 +130,8 @@ const handleCurrentChange = (val: number) => {
   tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
 };
 
-onMounted(async () => {//------------------这里USER——INFO刷新网页后会失效 要修 ------------------
-  const USER_INFO = await inject('USER_INFO');
-  let MemberList:{code:number,data:User[]} = await getMemberList(USER_INFO.partybranchId)
+onMounted(async () => {
+  let MemberList:{code:number,data:User[]} = await getMemberList(getBranchId())
   UserRawData.value = MemberList.data
   tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
   UserNum.value = MemberList.data.length

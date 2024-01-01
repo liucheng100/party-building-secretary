@@ -25,7 +25,7 @@ export function getFile<T>(userId: string) {
 }
 
 //获取党支部成员
-export function getMemberList<T>(branchId: number) {
+export function getMemberList<T>(branchId: string | undefined) {
   return http.get<T>({
     url: `/api/partyBranch/memberList`,
     params:{

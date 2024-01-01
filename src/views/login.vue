@@ -61,10 +61,8 @@ export default {
         return;
       }
       this.loginLoading = true;
-            console.log(88888888)
       login({ account: this.account, pass: this.password })
         .then(({ data: { code: code, msg: msg }, ...res }) => {
-            console.log(9999999)
           if (code === 0) {
             ElMessage.success("登录成功");
             setToken(res.headers["token"]);

@@ -22,7 +22,7 @@
 import Navtree from "@/components/Navtree.vue";
 import MainHeader from "@/components/MainHeader.vue";
 import { ref, reactive, provide } from 'vue'
-import { getToken, setToken } from "@/utils/auth";
+import { getToken, setToken, setBranchId } from "@/utils/auth";
 import { getInfo } from "@/api/login";
 import { getBranchInfo } from "@/api/branch";
 
@@ -38,6 +38,7 @@ if (getToken()) {
         if (!v.code) {
             Object.assign(USER_INFO, v.data)
             const partybranchId = USER_INFO.partybranchId
+            setBranchId(USER_INFO.partybranchId)
             getBranchInfo(partybranchId).then(v => {
                 Object.assign(BRANCH_INFO, v.data)
             })
