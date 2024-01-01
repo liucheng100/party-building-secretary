@@ -11,3 +11,12 @@ export function getFileDetail<T>(id:any){
         url: `/api/file/htd/?id=${id}`
     })
 }
+
+export function approvalFile<T>(status:number,id:string,comment:string){
+    return http.post<T>({
+        url:`/api/file/htd/${id}/approval`,
+        params:{
+            status,comment
+        }
+    })
+}

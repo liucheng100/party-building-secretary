@@ -9,7 +9,7 @@
   <div class="head">
     <el-radio-group
       v-model="tabPosition"
-      @change="handleTabChange"
+      @change="handleTabChange()"
       style="margin-bottom: 30px"
     >
       <el-radio-button label="已分组"></el-radio-button>
@@ -88,7 +88,7 @@ import { ElMessage } from 'element-plus';
 const router = useRouter();
 const route = useRoute();
 const tabPosition = ref("已分组");
-let BRANCH_INFO = inject('BRANCH_INFO');
+let BRANCH_INFO: {'partybranchName':string} = JSON.parse(JSON.stringify(inject('BRANCH_INFO'))); //ts的类型检测能不能死啊
 let createDialogVisible = ref(false);
 let manageDialogVisible = ref(false);
 let createGroupLeader = ref('');
@@ -136,7 +136,7 @@ const handleEdit = (index:any) => {
     window.location.reload();
 }
 const handleDelete = async (index:any) => {
-  await getDeleteGroup(index).then((res) => {
+  await getDeleteGroup(index).then((res:any) => {
         if(res.code == 0){
           ElMessage.success("删除成功");
           manageDialogVisible.value = false
@@ -174,7 +174,7 @@ const createGroup = async () =>{
 }
 
 const List = async () => {
-  await getList().then((res) => {
+  await getList().then((res:any) => {
         let result : Blob = res;
         let blob = new Blob([result], { type: "application/x-download" });
         let url = window.URL.createObjectURL(blob);
@@ -196,8 +196,8 @@ watch(
 initTabPosition();
 
 // 处理选项卡变化
-const handleTabChange = (value:string) => {
-  if (value === "已分组") {
+const handleTabChange = () => {
+  if (tabPosition.value === "已分组") {
     router.push("/p_management/learnGroup/grouped");
   } else {
     router.push("/p_management/learnGroup/ungrouped");

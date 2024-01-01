@@ -49,10 +49,8 @@
         <el-table-column property="sno" label="学号" />
         <el-table-column property="type" label="文件类型">
           <template #default="scope">
-            <div class="icon_state">
-              <div class="state_row">
-                {{(scope.row.type<100)?(scope.row.type == 0?'入党申请书':'个人自传'):(scope.row.type<200?'思想报告':'个人总结')}}
-              </div>
+            <div class="state_row">
+              {{(scope.row.type<100)?(scope.row.type == 0?'入党申请书':'个人自传'):(scope.row.type<200?'思想报告':'个人总结')}}
             </div>
           </template>
         </el-table-column>
@@ -70,7 +68,7 @@
                 <i
                   class="dotClass"
                   style="background-color: #21b339"
-                  v-if="scope.row.status == 1"
+                  v-if="scope.row.status > 0"
                 ></i>
                 <i
                   class="dotClass"
@@ -256,6 +254,7 @@
   align-items: center;
   border-radius: 100px;
   background-color: #fafafa;
+  justify-content: center;
 }
 .dotClass {
   width: 6px;

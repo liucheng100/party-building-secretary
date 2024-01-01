@@ -20,7 +20,7 @@ export function setBranchId(Id: string) {
   return Cookies.set(BranchId, Id);
 }
 
-export function getBranchId():string {
+export function getBranchId() {
   return Cookies.get(BranchId);
 }
 

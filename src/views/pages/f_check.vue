@@ -12,33 +12,34 @@
     <!-- 个人信息部分 -->
     <el-row class="personal-info">
       <el-col :span="6"
-        ><div>{{ userInfo.userName }}</div></el-col
+        ><div>{{ fileInfo.userName }}</div></el-col
       >
       <el-col :span="6"
-        ><div>{{ userInfo.sno }}</div></el-col
+        ><div>{{ fileInfo.sno }}</div></el-col
       >
       <el-col :span="6"
-        ><div>{{ userInfo.type }}</div></el-col
+        ><div>{{ fileInfo.type }}</div></el-col
       >
       <el-col :span="6"
         ><div>{{ 
-          new Date(Date.parse(userInfo.createAt)).getFullYear()+'-'+
-          (new Date(Date.parse(userInfo.createAt)).getMonth()+1) + '-'+
-          new Date(Date.parse(userInfo.createAt)).getDate()}}</div></el-col
+          new Date(Date.parse(fileInfo.createAt)).getFullYear()+'-'+
+          (new Date(Date.parse(fileInfo.createAt)).getMonth()+1) + '-'+
+          new Date(Date.parse(fileInfo.createAt)).getDate()}}</div></el-col
       >
     </el-row>
 
     <!-- 文章标题 -->
-    <div class="article-title">{{ userInfo.title }}</div>
+    <div class="article-title">{{ fileInfo.title }}</div>
 
     <!-- 正文 -->
-    <div class="article-content">{{ userInfo.content }}</div>
+    <div class="article-content">{{ fileInfo.content }}</div>
 
     <!--审批意见-->
     <el-input
       type="textarea"
       placeholder="审批意见（选填）"
       class="approval-comment"
+      v-model="approvalComment"
     ></el-input>
 
     <!-- 底部按钮 -->
@@ -51,8 +52,12 @@
   
   <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { approvalFile } from "../../api/manageFile";
+import { useRouter } from "vue-router";
 
-interface User {
+const $router = useRouter();
+
+interface File {
   userName: string;
   sno: string;
   type: string;
@@ -61,9 +66,10 @@ interface User {
   createAt: string;
   status: string;
   id: number;
+  file_id: string;
 }
 
-const userInfo = ref<User>({
+const fileInfo = ref<File>({
   userName: '',
   sno: '',
   type: '',
@@ -71,12 +77,15 @@ const userInfo = ref<User>({
   content: '',
   createAt: '',
   status: '',
-  id: 0
+  id: 0,
+  file_id: ''
 });
 
+let approvalComment = ref('')
+
 onMounted(async () =>{
-  userInfo.value = history.state.params
-  console.log(userInfo.value)
+  fileInfo.value = history.state.params
+  console.log(fileInfo.value)
 })
 
 
@@ -85,14 +94,15 @@ const article = ref({
   content: "这是文章的正文内容...",
 });
 
-const approve = () => {
-  console.log("通过");
+const approve = async () => {
+  await approvalFile(1,fileInfo.value.file_id,approvalComment.value)
+  $router.back();
   // 处理通过
 };
 
-const reject = () => {
-  console.log("不通过");
-  // 处理不通过
+const reject = async () => {
+  await approvalFile(2,fileInfo.value.file_id,approvalComment.value)
+  $router.back();
 };
 </script>
   

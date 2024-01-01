@@ -713,7 +713,7 @@ const Cn = ref(zhCn);
 var statueList = ref<boolean[]>([]);
 const tableData = ref([]);
 const situationType = ['待审','通过','未通过']
-let BRANCH_INFO = inject('BRANCH_INFO');
+let BRANCH_INFO: {'partybranchName':string} = JSON.parse(JSON.stringify(inject('BRANCH_INFO'))); //ts的类型检测能不能死啊
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);
