@@ -13,3 +13,4 @@ export function downloadFile<T>(parmas:any){
         responseType: "blob",
     })
 }
+

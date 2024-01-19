@@ -45,12 +45,8 @@ class MYRequest {
     this.instance.interceptors.response.use(
       (res) => {
         const data = res.data as any;
-        if (data.returnCode === "-1001") {
-          console.log("请求失败,错误信息");
-        } else {
-          if (this.needHeader) return res;
-          return data;
-        }
+        if (this.needHeader) return res;
+        return data;
       },
       (err) => {
         console.log("所有实例的拦拦截器:响应拦截失败");

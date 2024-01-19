@@ -7,20 +7,20 @@
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
       >
-        <el-table-column label="组号" width="50">
+        <el-table-column label="组号" width="60">
           <template #default="scope">
-            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.groupid }}</span>
+            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" property="name">
           <template #default="scope">
             <div class="red-dot-container">
               <span>{{ scope.row.name }}</span>
-              <span v-if="scope.row.groupid" class="red-dot"></span>
+              <span v-if="scope.row.isLeader" class="red-dot"></span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="学号" property="stu_number" />
+        <el-table-column label="学号" property="sno" />
         <el-table-column label="专业" property="major" show-overflow-tooltip />
       </el-table>
     </div>
@@ -32,20 +32,20 @@
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
       >
-        <el-table-column label="组号" width="50">
+        <el-table-column label="组号" width="60">
           <template #default="scope">
-            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.groupid }}</span>
+            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" property="name">
           <template #default="scope">
             <div class="red-dot-container">
               <span>{{ scope.row.name }}</span>
-              <span v-if="scope.row.groupid" class="red-dot"></span>
+              <span v-if="scope.row.isLeader" class="red-dot"></span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="学号" property="stu_number" />
+        <el-table-column label="学号" property="sno" />
         <el-table-column label="专业" property="major" show-overflow-tooltip />
       </el-table>
     </div>
@@ -53,13 +53,12 @@
   <el-config-provider :locale="zhCn">
     <el-pagination
       class="el-pagination"
-      v-model:current-page="currentPage"
+      v-model:current-page="PageNum"
       v-model:page-size="pageSize"
-      :page-sizes="[14]"
       :style="{ margin: '20px' }"
       background
       layout="total, ->,sizes, prev, pager, next, jumper"
-      :total="400"
+      :total="GroupNum"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
@@ -68,90 +67,76 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import { getGroup } from "@/api/learngroup";
 
-const currentPage = ref(1);
-const pageSize = ref(14);
+const pageSize = ref(<number>10);//每页组别
+let GroupsData = ref(<GroupedUser[]>[])
+let GroupNum = ref(0)  //总长度
+let PageNum = ref(1)  //当前页码
+
+let tableDataLeft = ref(<GroupedMember[]>[])
+let tableDataRight = ref(<GroupedMember[]>[])
 
 interface Member {
   name: string;
-  stu_number: string;
+  sno: string;
   major: string;
+  isLeader: boolean;
+  userId: number;
 }
 
 interface GroupedUser {
-  groupid: number;
+  id: number;  //组别Id
   members: Member[];
+  userId : number;  //每个学生都有对应的userId
 }
 
 interface GroupedMember extends Member {
-  groupid?: number;
+  id?: number; //组别Id
 }
 
 onMounted(async () => {
-  const groupData = await getGroup();
-  console.log(groupData);
+  let GroupsRawData:{code:number,data:[]} = await getGroup()
+  if(GroupsRawData.code == 0){
+    GroupsData.value = GroupsRawData.data;
+    processGroupData(GroupsData.value);
+  }
 })
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  pageSize.value = val
+  processGroupData(GroupsData.value);
 };
 
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  processGroupData(GroupsData.value);
 };
 
-// 假数据
-const groups: GroupedUser[] = [
-  {
-    groupid: 1,
-    members: [
-      { name: "张三", stu_number: "1001", major: "专业A" },
-      { name: "李四", stu_number: "1002", major: "专业B" },
-      { name: "王五", stu_number: "1003", major: "专业C" },
-    ],
-  },
-  {
-    groupid: 2,
-    members: [
-      { name: "张三三", stu_number: "2001", major: "专业A" },
-      { name: "李四四", stu_number: "2002", major: "专业B" },
-      { name: "王五五", stu_number: "2003", major: "专业C" },
-    ],
-  },
-  // more...
-];
-
-const processGroupData = (groups: GroupedUser[]): GroupedMember[] => {
-  let tableData: GroupedMember[] = [];
-
-  groups.forEach((group) => {
-    group.members.forEach((member, index) => {
-      let row: GroupedMember = { ...member };
-      if (index === 0) {
-        row.groupid = group.groupid; // 只有每组的第一个成员有组号
-      }
-      tableData.push(row);
-    });
+const processGroupData = (groups: GroupedUser[]) => {
+  tableDataLeft.value = []
+  tableDataRight.value = []
+  let nowGroups = groups.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value)
+  GroupNum.value = groups.length;
+  nowGroups.forEach((group,Groupindex) => {
+    if(group.members != null)//判断下是不是空组别
+      group.members.forEach((member) => {
+        let row: GroupedMember = { ...member };
+        if(member != null){
+          if (member.isLeader === true) {
+            row.id = group.id; // 只有每组的第一个成员有组号
+          }
+          if(Groupindex < nowGroups.length/2)
+            tableDataLeft.value.push(row);
+          else
+            tableDataRight.value.push(row)
+        }
+        else
+          GroupNum.value = GroupNum.value - 1;
+      });
   });
-
-  return tableData;
 };
-
-const processedData = processGroupData(groups);
-
-const totalRows = processedData.length;
-const half = Math.floor(totalRows / 2);
-
-const tableDataLeft =
-  totalRows % 2 === 0
-    ? processedData.slice(0, half)
-    : processedData.slice(0, half + 1);
-const tableDataRight = processedData.slice(
-  half + (totalRows % 2 === 0 ? 0 : 1)
-);
 </script>
 
 <style scoped>

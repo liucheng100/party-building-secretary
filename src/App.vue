@@ -8,7 +8,7 @@
 
 <script setup>
 import { ElConfigProvider } from "element-plus";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
 </script>
 
 <style scoped></style>

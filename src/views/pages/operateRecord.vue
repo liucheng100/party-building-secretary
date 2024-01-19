@@ -58,7 +58,7 @@
   import { ref } from "vue";
   import { useRoute, useRouter } from "vue-router";
   import { ElTable } from "element-plus";
-  import zhCn from "element-plus/lib/locale/lang/zh-cn";
+  import zhCn from "element-plus/es/locale/lang/zh-cn";
   import { reactive } from "vue";
   const $route = useRoute();
   const $router = useRouter();

@@ -1,4 +1,7 @@
 <template>
+    <div class="background">
+        <img src="../../assets/info/emblem.svg" alt="">
+    </div>
     <div class="main">
         <div class="info">
             <div class="font1">{{BRANCH_INFO.partybranchName}}</div>
@@ -12,11 +15,8 @@
             <div class="font1">{{BRANCH_INFO.partybranchOrganizer?.username}}、{{BRANCH_INFO.partybranchPropagator?.username}}</div>
 
         </div>
-        <div class="background">
-            <img src="../../assets/info/emblem.svg" alt="">
-        </div>
         <div class="detail">
-            <div ref="chart" style="width: 100%;height: 50%;"></div>
+            <div ref="chart" style="width: 100%;height: 250px;"></div>
             <div class="list">
                 <div v-for="item in list" class="list-item">
                     <div class="m">
@@ -145,7 +145,7 @@
     .main {
         position: relative;
         width: 100%;
-        height: 100%;
+        height: 800px;
     }
 
     .info {
@@ -157,7 +157,7 @@
 
     .info .font1 {
         color: #2F2F2F;
-        font-size: 36px;
+        font-size: clamp(2.5rem, 0.489rem + 1.05vw, 5rem);
     }
 
     .info .font2 {
@@ -183,8 +183,8 @@
         z-index: 1;
         position: absolute;
         right: 0;
-        width: 775px;
-        height: 100%;
+        width: 40%;
+        height:auto;
         box-shadow: 0px 4px 16px 0px #00000014;
         border-radius: 5px;
         background-color: #ffffff;
@@ -201,16 +201,20 @@
         flex: 1 1 calc(30% - 30px); 
         margin-left: 10px;
         margin-right: 10px;
-        height: 40%;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
     .m {
-        width: 70%;
+        width: 90%;
+        height: 90%;
+        background-color:#fafafa;
+        padding:20px;
+        padding-bottom:0px;
+        border-radius: 12px;
     }
     .m img{
-        height: 50%;
+        height: 40%;
     }
     .m .font1{
         font-size: 16px;

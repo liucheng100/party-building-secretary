@@ -3,7 +3,7 @@
     <div class="p_check_1">
       <div class="p_check_1_1">
         <div class="p_check_head_1">
-          <div>{{ branchName }}</div>
+          <div>{{ BRANCH_INFO.partybranchName }}</div>
           <div>
             <el-icon @click="$router.back()"><Close /></el-icon>
           </div>
@@ -38,7 +38,7 @@
           </el-table-column>
           <el-table-column property="class" label="类别">
             <template #default="scope">
-              {{ scope.row.class }}
+              {{(scope.row.type<100)?(scope.row.type == 0?'入党申请书':'个人自传'):(scope.row.type<200?'思想报告':'个人总结')}}
             </template>
           </el-table-column>
           <el-table-column property="situation" label="当前状态">
@@ -47,20 +47,20 @@
                 <i
                   class="dotClass"
                   style="background-color: #21b339"
-                  v-if="scope.row.situation == '已通过'"
+                  v-if="scope.row.status == 1"
                 ></i>
                 <i
                   class="dotClass"
                   style="background-color: #c7242f"
-                  v-if="scope.row.situation == '驳回'"
+                  v-if="scope.row.status == 2"
                 ></i>
                 <i
                   class="dotClass"
                   style="background-color: #fca235"
-                  v-if="scope.row.situation == '未审批'"
+                  v-if="scope.row.status == 0"
                 ></i>
                 <div class="situation_row">
-                  {{ scope.row.situation }}
+                  {{ situationType[scope.row.status] }}
                 </div>
               </div>
             </template>
@@ -71,7 +71,7 @@
               <el-button
                 style="color: #c7242f"
                 link
-                @click="handleCheck(scope.$index, scope.row)"
+                @click="handleCheck(scope.row)"
                 >查看</el-button
               >
             </template>
@@ -667,7 +667,7 @@
             </div>
           </div>
         </div>
-        <div class="sureBtn">
+        <!-- <div class="sureBtn">
           <el-button
             auto-insert-space
             @click="toSubmit"
@@ -675,99 +675,58 @@
             :loading="submitLoading"
             >确认修改</el-button
           >
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, inject } from "vue";
 import { ElTable } from "element-plus";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
-import $router from "@/router";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
+import $router from "@/router";//....
+import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
-import { getPersonProcess } from "../../api/p_management";
+import { getPersonProcess, updatePersonProcess, getFile, getSFileDetail } from "../../api/p_management";
 import { DefineComponent } from "vue";
 
 interface User {
   title: string;
   class: string;
   situation: string;
+  id: number;
 }
 
-const branchName = ref("XX支部");
+interface UserStatus {
+  userId: number,
+  processId: number,
+  status: boolean
+}
+
+interface File {
+  userName: string;
+  sno: string;
+  type: string;
+  title: string;
+  content: string;
+  createAt: string;
+  status: string;
+  id: string;
+  file_id: string;
+}
+
 const name = ref("taffy");
 const stu_id = ref("3022244000");
 const identity = ref("预备党员");
-const statues = ref(0);
+const user_id = ref("198492");
 const currentPage = ref<number>(1);
 const pageSize = ref(12);
 const Cn = ref(zhCn);
-const submitLoading = ref(false);
 var statueList = ref<boolean[]>([]);
-const tableData = ref([
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "驳回",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "驳回",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "驳回",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "驳回",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "未审批",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "已通过",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "已通过",
-  },
-  {
-    title: "强国有我",
-    class: "思想汇报",
-    situation: "已通过",
-  },
-]);
+const tableData = ref<File[]>([]);
+const situationType = ['待审','通过','未通过']
+let BRANCH_INFO: {'partybranchName':string} = JSON.parse(JSON.stringify(inject('BRANCH_INFO'))); //ts的类型检测能不能死啊
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);
@@ -777,8 +736,14 @@ const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`);
 };
 
-const handleCheck = (index: number, row: User) => {
-  console.log(index, row);
+const handleCheck = async (row: File) => {
+  let res:{code:number,data:File} = await getSFileDetail(row.id)
+  if(res.code == 0){
+    res.data.userName = history.state.params.name
+    res.data.sno = history.state.params.stu_id
+    let params:any = res.data
+    $router.push({name:'f_check',state: { params }});
+  }
 };
 const toSubmit = () => {
   // if (!this.statueList.length) {
@@ -787,28 +752,30 @@ const toSubmit = () => {
   // }
 };
 const changeStatue = (val: any) => {
+  updatePersonProcess(user_id.value,val,!statueList.value[val]?1:0)
   statueList.value[val] = !statueList.value[val];
+
 };
-onMounted(() => {
-  // for (let i = 0; i < 31; i++) {
-  //   statueList.push(false);
-  // }
-  // getPersonProcess("1")
-  //   .then((res: any) => {
-  //     if (res) {
-  //       console.log(res);
-  //       statues = res.data[0].status;
-  //       for (let i = 0; i < 31; i++) {
-  //         if (i < statues) statueList.push(true);
-  //         else statueList.push(false);
-  //       }
-  //     } else {
-  //       ElMessage.warning("未知错误");
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+onMounted(async () => {
+  let params = history.state.params
+  console.log(params)
+  stu_id.value = params.stu_id;
+  identity.value = params.identity;
+  //-----------------------------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------------------
+  // user_id.value = '198492'; //这里是方便调试的记得改------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------------------------------
+  user_id.value = params.user_id
+  name.value = params.name;
+
+  let PersonRawData:{code:number,data:[]} = await getPersonProcess(user_id.value)
+  for(let i = 0;i < PersonRawData.data.length;i++){
+    let data:UserStatus = PersonRawData.data[i]
+    statueList.value[data.processId] = data.status
+  }
+  let FileRawData:{code:number,data:File[]} = await getFile(user_id.value)
+  tableData.value = FileRawData.data  //status 0待审 1通过 2未通过
 });
 </script>
 
@@ -900,13 +867,13 @@ onMounted(() => {
 }
 .graphMain {
   width: 100%;
-  height: 800px;
+  height: 1000px;
   background: #ffffff;
   position: relative;
 }
 .chart-main {
   overflow: auto;
-  height: 800px;
+  height: 1000px;
   position: relative;
 }
 .chart-main::-webkit-scrollbar {
@@ -1400,7 +1367,7 @@ onMounted(() => {
 }
 
 .p_check {
-  height: 100%;
+  height: 1000px;
   display: flex;
   justify-content: space-around;
 }
@@ -1426,7 +1393,7 @@ onMounted(() => {
 }
 .p_check_head_1 {
   flex: 1;
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 400;
   display: flex;
   justify-content: space-between;
