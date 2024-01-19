@@ -62,13 +62,16 @@ export default {
       }
       this.loginLoading = true;
       login({ account: this.account, pass: this.password })
-        .then(({ data: { code: code, msg: msg }, ...res }) => {
-          if (code === 0) {
+        .then(({ data: { code: code, data: data, msg: msg }, ...res }) => {
+          if (code === 0 && data === 10) {
             ElMessage.success("登录成功");
             setToken(res.headers["token"]);
             this.loginLoading = false;
             this.$router.push("/info");
-          } else {
+          } else if (code === 0 && data === 0) {
+            ElMessage.error("非团支书");
+            this.loginLoading = false;
+          }else {
             ElMessage.error(msg);
             this.password = "";
             this.loginLoading = false;
