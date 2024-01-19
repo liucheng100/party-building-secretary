@@ -58,9 +58,9 @@
                     {name:"发展对象",num:BRANCH_INFO.developCount,icon:"icon3"},
                     {name:"预备党员",num:BRANCH_INFO.prepareCount,icon:"icon4"},
                     {name:"正式党员",num:BRANCH_INFO.regularCount,icon:"icon5"},
-                    {name:"团推优",num:BRANCH_INFO.greatCount,icon:"icon6"}]
+                    {name:"非申请人",num:BRANCH_INFO.nonApplicantCount,icon:"icon6"}]
             }
-            initChart(BRANCH_INFO.regularCount, BRANCH_INFO.prepareCount, BRANCH_INFO.developCount, BRANCH_INFO.activeCount, BRANCH_INFO.applicantCount, BRANCH_INFO.greatCount, BRANCH_INFO.totalCount)
+            initChart(BRANCH_INFO.regularCount, BRANCH_INFO.prepareCount, BRANCH_INFO.developCount, BRANCH_INFO.activeCount, BRANCH_INFO.applicantCount, BRANCH_INFO.nonApplicantCount, BRANCH_INFO.totalCount)
         });
     });
     function initChart(a,b,c,d,e,f,t) {
@@ -108,7 +108,7 @@
                         { value: c, name: '发展对象', itemStyle: { color: '#FA734A' } },
                         { value: d, name: '积极分子', itemStyle: { color: '#FF8B8E' } },
                         { value: e, name: '入党申请人', itemStyle: { color: '#FF416C' } },
-                        { value: f, name: '团推优', itemStyle: { color: '#FF6AB2' } },
+                        { value: f, name: '非申请人', itemStyle: { color: '#FF6AB2' } },
                     ]
                 }
             ]
