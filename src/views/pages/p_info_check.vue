@@ -38,7 +38,15 @@
           </el-table-column>
           <el-table-column property="class" label="类别">
             <template #default="scope">
-              {{(scope.row.type<100)?(scope.row.type == 0?'入党申请书':'个人自传'):(scope.row.type<200?'思想报告':'个人总结')}}
+              {{
+                scope.row.type < 100
+                  ? scope.row.type == 0
+                    ? "入党申请书"
+                    : "个人自传"
+                  : scope.row.type < 200
+                  ? "思想报告"
+                  : "个人总结"
+              }}
             </template>
           </el-table-column>
           <el-table-column property="situation" label="当前状态">
@@ -685,10 +693,15 @@
 import { defineComponent, ref, onMounted, inject } from "vue";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
-import $router from "@/router";//....
+import $router from "@/router"; //....
 import { useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
-import { getPersonProcess, updatePersonProcess, getFile, getSFileDetail } from "../../api/p_management";
+import {
+  getPersonProcess,
+  updatePersonProcess,
+  getFile,
+  getSFileDetail,
+} from "../../api/p_management";
 import { DefineComponent } from "vue";
 
 interface User {
@@ -699,9 +712,9 @@ interface User {
 }
 
 interface UserStatus {
-  userId: number,
-  processId: number,
-  status: boolean
+  userId: number;
+  processId: number;
+  status: boolean;
 }
 
 interface File {
@@ -725,8 +738,10 @@ const pageSize = ref(12);
 const Cn = ref(zhCn);
 var statueList = ref<boolean[]>([]);
 const tableData = ref<File[]>([]);
-const situationType = ['待审','通过','未通过']
-let BRANCH_INFO: {'partybranchName':string} = JSON.parse(JSON.stringify(inject('BRANCH_INFO'))); //ts的类型检测能不能死啊
+const situationType = ["待审", "通过", "未通过"];
+let BRANCH_INFO: { partybranchName: string } = JSON.parse(
+  JSON.stringify(inject("BRANCH_INFO"))
+); //ts的类型检测能不能死啊
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`);
@@ -737,12 +752,12 @@ const handleCurrentChange = (val: number) => {
 };
 
 const handleCheck = async (row: File) => {
-  let res:{code:number,data:File} = await getSFileDetail(row.id)
-  if(res.code == 0){
-    res.data.userName = history.state.params.name
-    res.data.sno = history.state.params.stu_id
-    let params:any = res.data
-    $router.push({name:'f_check',state: { params }});
+  let res: { code: number; data: File } = await getSFileDetail(row.id);
+  if (res.code == 0) {
+    res.data.userName = history.state.params.name;
+    res.data.sno = history.state.params.stu_id;
+    let params: any = res.data;
+    $router.push({ name: "f_check", state: { params } });
   }
 };
 const toSubmit = () => {
@@ -752,13 +767,12 @@ const toSubmit = () => {
   // }
 };
 const changeStatue = (val: any) => {
-  updatePersonProcess(user_id.value,val,!statueList.value[val]?1:0)
+  updatePersonProcess(user_id.value, val, !statueList.value[val] ? 1 : 0);
   statueList.value[val] = !statueList.value[val];
-
 };
 onMounted(async () => {
-  let params = history.state.params
-  console.log(params)
+  let params = history.state.params;
+  console.log(params);
   stu_id.value = params.stu_id;
   identity.value = params.identity;
   //-----------------------------------------------------------------------------------------------------------------------
@@ -766,16 +780,20 @@ onMounted(async () => {
   // user_id.value = '198492'; //这里是方便调试的记得改------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------
-  user_id.value = params.user_id
+  user_id.value = params.user_id;
   name.value = params.name;
 
-  let PersonRawData:{code:number,data:[]} = await getPersonProcess(user_id.value)
-  for(let i = 0;i < PersonRawData.data.length;i++){
-    let data:UserStatus = PersonRawData.data[i]
-    statueList.value[data.processId] = data.status
+  let PersonRawData: { code: number; data: [] } = await getPersonProcess(
+    user_id.value
+  );
+  for (let i = 0; i < PersonRawData.data.length; i++) {
+    let data: UserStatus = PersonRawData.data[i];
+    statueList.value[data.processId] = data.status;
   }
-  let FileRawData:{code:number,data:File[]} = await getFile(user_id.value)
-  tableData.value = FileRawData.data  //status 0待审 1通过 2未通过
+  let FileRawData: { code: number; data: File[] } = await getFile(
+    user_id.value
+  );
+  tableData.value = FileRawData.data; //status 0待审 1通过 2未通过
 });
 </script>
 

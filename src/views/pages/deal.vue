@@ -290,14 +290,15 @@ const options_little = [
       value: 0,
       stage: 16,
     },
-    {
-      label: "撰写个人自传",
-      value: 1,
-      stage: 17,
-    },
+
     {
       label: "政审",
       value: 2,
+      stage: 17,
+    },
+    {
+      label: "撰写个人自传",
+      value: 1,
       stage: 18,
     },
     {
