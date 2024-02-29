@@ -437,6 +437,11 @@ const keyNode = [
     stage: 15,
   },
   {
+    label: "政审",
+    value: 2,
+    stage: 17,
+  },
+  {
     label: "党员发展大会",
     value: 8,
     stage: 24,
