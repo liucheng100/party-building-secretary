@@ -7,7 +7,7 @@
         class="m-2"
         placeholder="Select"
         style="margin-left: 30px"
-        @change = "filterUser()"
+        @change="filterUser()"
       >
         <el-option
           v-for="item in options"
@@ -25,8 +25,14 @@
         style="display: inline; margin-left: 30px"
         placeholder="输入需要查找的学号"
         v-model="snoInput"
+        @change="searchBySno()"
       ></el-input>
-      <el-button style="margin-left: 30px" color="#c7242f" @click = "searchBySno()">搜索</el-button>
+      <el-button
+        style="margin-left: 30px"
+        color="#c7242f"
+        @click="searchBySno()"
+        >搜索</el-button
+      >
     </div>
   </div>
   <div class="Main">
@@ -38,12 +44,12 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" />
-      <el-table-column property="userName" label="姓名">
-      </el-table-column>
+      <el-table-column property="userName" label="姓名"> </el-table-column>
       <el-table-column property="sno" label="学号" />
       <el-table-column property="type" label="身份">
         <template #default="scope">
-          {{ types[scope.row.type + 1 ] }} <!--后端的身份type从-1开始的-->
+          {{ types[scope.row.type + 1] }}
+          <!--后端的身份type从-1开始的-->
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -113,12 +119,19 @@ const options = [
     value: 4,
   },
 ];
-const types = ['入党申请人前','入党申请人','入党积极分子','发展对象','中共预备党员','中共党员']
+const types = [
+  "入党申请人前",
+  "入党申请人",
+  "入党积极分子",
+  "发展对象",
+  "中共预备党员",
+  "中共党员",
+];
 const tableData = ref<User[]>([]);
 const pageSize = ref(<number>15); //每页显示学生数量
-let UserRawData = ref(<User[]>[])
-let UserNum = ref(0)  //总长度
-let PageNum = ref(1)  //当前页码
+let UserRawData = ref(<User[]>[]);
+let UserNum = ref(0); //总长度
+let PageNum = ref(1); //当前页码
 
 interface User {
   userName: string;
@@ -128,40 +141,57 @@ interface User {
 }
 
 const filterUser = async () => {
-  let MemberList:{code:number,data:User[]} = await getMemberList(filterValue.value)
-  UserRawData.value = MemberList.data
-  tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
-  UserNum.value = MemberList.data.length
-}
+  let MemberList: { code: number; data: User[] } = await getMemberList(
+    filterValue.value
+  );
+  UserRawData.value = MemberList.data;
+  tableData.value = UserRawData.value.slice(
+    (PageNum.value - 1) * pageSize.value,
+    PageNum.value * pageSize.value
+  );
+  UserNum.value = MemberList.data.length;
+};
 
 const searchBySno = async () => {
-  tableData.value = []
+  tableData.value = [];
   filterValue.value = 0;
-  let MemberList:{code:number,data:User} = await searchByNum(snoInput.value)
-  if(MemberList.data){
-    UserRawData.value = [MemberList.data]
-    tableData.value = UserRawData.value
-    UserNum.value = 1
+  let MemberList: { code: number; data: User } = await searchByNum(
+    snoInput.value
+  );
+  if (MemberList.data) {
+    UserRawData.value = [MemberList.data];
+    tableData.value = UserRawData.value;
+    UserNum.value = 1;
   }
-}
+};
 
 const handleSizeChange = () => {
-  tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
+  tableData.value = UserRawData.value.slice(
+    (PageNum.value - 1) * pageSize.value,
+    PageNum.value * pageSize.value
+  );
 };
 
 const handleCurrentChange = () => {
-  tableData.value = UserRawData.value.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value);
+  tableData.value = UserRawData.value.slice(
+    (PageNum.value - 1) * pageSize.value,
+    PageNum.value * pageSize.value
+  );
 };
 
 onMounted(async () => {
-  filterUser()
-})
-
+  filterUser();
+});
 
 const handleCheck = (index: number, row: User) => {
-  let params = {name:row.userName,stu_id:row.sno,identity:types[row.type + 1],user_id:row.id} //后端的身份type从-1开始的
-  $router.push({name:'p_info_check',state: { params }});
-}
+  let params = {
+    name: row.userName,
+    stu_id: row.sno,
+    identity: types[row.type + 1],
+    user_id: row.id,
+  }; //后端的身份type从-1开始的
+  $router.push({ name: "p_info_check", state: { params } });
+};
 
 const formInline = reactive({
   user: "",
@@ -172,7 +202,6 @@ const formInline = reactive({
 const onSubmit = () => {
   console.log("submit!");
 };
-
 
 const multipleTableRef = ref<InstanceType<typeof ElTable>>();
 const multipleSelection = ref<User[]>([]);
@@ -192,8 +221,6 @@ const toggleSelection = (rows?: User[]) => {
 const handleSelectionChange = (val: User[]) => {
   multipleSelection.value = val;
 };
-
-
 </script>
 
 <style>

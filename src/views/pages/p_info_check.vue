@@ -4,9 +4,6 @@
       <div class="p_check_1_1">
         <div class="p_check_head_1">
           <div>{{ BRANCH_INFO.partybranchName }}</div>
-          <div>
-            <el-icon @click="$router.back()"><Close /></el-icon>
-          </div>
         </div>
 
         <div class="p_check_head_2">
@@ -31,12 +28,12 @@
           style="width: 100%"
           :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
         >
-          <el-table-column property="title" label="标题">
+          <el-table-column property="title" label="标题" min-width="70%">
             <template #default="scope">
               {{ scope.row.title }}
             </template>
           </el-table-column>
-          <el-table-column property="class" label="类别">
+          <el-table-column property="class" label="类别" min-width="70%">
             <template #default="scope">
               {{
                 scope.row.type < 100
@@ -49,7 +46,11 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column property="situation" label="当前状态">
+          <el-table-column
+            property="situation"
+            label="当前状态"
+            min-width="50%"
+          >
             <template #default="scope">
               <div class="icon_situation">
                 <i
@@ -74,7 +75,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作">
+          <el-table-column label="操作" min-width="30%">
             <template #default="scope">
               <el-button
                 style="color: #c7242f"
@@ -119,14 +120,19 @@
               <div
                 :class="
                   (statueList[0] ? 'statue-3' : 'statue-0') +
-                  ' square noSelect shadow step-1 tab-home'
+                  ' square noSelect shadow step-1 tab-home keyNode'
                 "
                 @click="changeStatue(0)"
                 id="tabHome0"
               >
-                <div class="tab-point" id="tab0"></div>
-                <div :class="statueList[0] ? 'dot-1' : 'dot-0'"></div>
-                递交入党申请书
+                <div>
+                  <div class="tab-point" id="tab0"></div>
+                  <div :class="statueList[0] ? 'dot-1' : 'dot-0'"></div>
+                  递交入党申请书
+                </div>
+                <div class="changeTime" v-if="changeTimeList[0]">
+                  上次变更：{{ changeTimeList[0] }}
+                </div>
               </div>
               <div class="line-v"></div>
               <div
@@ -163,12 +169,17 @@
                 <div
                   :class="
                     (statueList[3] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-1'
+                    ' square noSelect shadow step-4-1 keyNode'
                   "
                   @click="changeStatue(3)"
                 >
-                  <div :class="statueList[3] ? 'dot-1' : 'dot-0'"></div>
-                  群团组织推优
+                  <div>
+                    <div :class="statueList[3] ? 'dot-1' : 'dot-0'"></div>
+                    群团组织推优
+                  </div>
+                  <div class="changeTime" v-if="changeTimeList[1]">
+                    上次变更：{{ changeTimeList[1] }}
+                  </div>
                 </div>
                 <div
                   :class="
@@ -199,36 +210,46 @@
               <div
                 :class="
                   (statueList[6] ? 'statue-3' : 'statue-0') +
-                  ' capsule noSelect shadow step-3'
+                  ' capsule noSelect shadow step-3 keyNode'
                 "
                 @click="changeStatue(6)"
               >
-                <img
-                  class="img-2"
-                  src="../../assets/party-icon-2.png"
-                  v-if="!statueList[6]"
-                />
-                <img class="img-2" src="../../assets/party-icon.png" v-else />
-                入党积极分子
+                <div>
+                  <img
+                    class="img-2"
+                    src="../../assets/party-icon-2.png"
+                    v-if="!statueList[6]"
+                  />
+                  <img class="img-2" src="../../assets/party-icon.png" v-else />
+                  入党积极分子
+                </div>
+                <div class="changeTime" v-if="changeTimeList[2]">
+                  上次变更：{{ changeTimeList[2] }}
+                </div>
               </div>
               <!-- 第二部分 -->
 
               <div
                 :class="
                   (statueList[6] ? 'statue-3' : 'statue-0') +
-                  ' capsule noSelect shadow step-b-1 tab-home'
+                  ' capsule noSelect shadow step-b-1 tab-home keyNode'
                 "
                 @click="changeStatue(6)"
                 id="tabHome1"
               >
-                <div class="tab-point" id="tab1"></div>
-                <img
-                  class="img-2"
-                  src="../../assets/party-icon-2.png"
-                  v-if="!statueList[6]"
-                />
-                <img class="img-2" src="../../assets/party-icon.png" v-else />
-                入党积极分子
+                <div>
+                  <div class="tab-point" id="tab1"></div>
+                  <img
+                    class="img-2"
+                    src="../../assets/party-icon-2.png"
+                    v-if="!statueList[6]"
+                  />
+                  <img class="img-2" src="../../assets/party-icon.png" v-else />
+                  入党积极分子
+                </div>
+                <div class="changeTime" v-if="changeTimeList[2]">
+                  上次变更：{{ changeTimeList[2] }}
+                </div>
               </div>
               <div class="line-v">
                 <div class="polygon-1"></div>
@@ -332,35 +353,45 @@
               <div
                 :class="
                   (statueList[15] ? 'statue-3' : 'statue-0') +
-                  ' capsule noSelect shadow step-3'
+                  ' capsule noSelect shadow step-3 keyNode'
                 "
                 @click="changeStatue(15)"
               >
-                <img
-                  class="img-2"
-                  src="../../assets/party-icon-2.png"
-                  v-if="!statueList[15]"
-                />
-                <img class="img-2" src="../../assets/party-icon.png" v-else />
-                发展对象
+                <div>
+                  <img
+                    class="img-2"
+                    src="../../assets/party-icon-2.png"
+                    v-if="!statueList[15]"
+                  />
+                  <img class="img-2" src="../../assets/party-icon.png" v-else />
+                  发展对象
+                  <div class="changeTime" v-if="changeTimeList[3]">
+                    上次变更：{{ changeTimeList[3] }}
+                  </div>
+                </div>
               </div>
               <!-- 第三部分 -->
               <div
                 :class="
                   (statueList[15] ? 'statue-3' : 'statue-0') +
-                  ' capsule noSelect shadow step-b-1 tab-home'
+                  ' capsule noSelect shadow step-b-1 tab-home keyNode'
                 "
                 @click="changeStatue(15)"
                 id="tabHome2"
               >
-                <div class="tab-point" id="tab2"></div>
-                <img
-                  class="img-2"
-                  src="../../assets/party-icon-2.png"
-                  v-if="!statueList[15]"
-                />
-                <img class="img-2" src="../../assets/party-icon.png" v-else />
-                发展对象
+                <div>
+                  <div class="tab-point" id="tab2"></div>
+                  <img
+                    class="img-2"
+                    src="../../assets/party-icon-2.png"
+                    v-if="!statueList[15]"
+                  />
+                  <img class="img-2" src="../../assets/party-icon.png" v-else />
+                  发展对象
+                </div>
+                <div class="changeTime" v-if="changeTimeList[3]">
+                  上次变更：{{ changeTimeList[3] }}
+                </div>
               </div>
               <div class="line-v">
                 <div class="polygon-1"></div>
@@ -380,31 +411,46 @@
                 <div
                   :class="
                     (statueList[17] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-2 offset-1'
+                    ' square noSelect shadow step-4-2-1 offset-1 keyNode'
                   "
                   @click="changeStatue(17)"
                 >
-                  <div :class="statueList[17] ? 'dot-1' : 'dot-0'"></div>
-                  撰写个人自传
+                  <div>
+                    <div :class="statueList[17] ? 'dot-1' : 'dot-0'"></div>
+                    政审
+                  </div>
+                  <div class="changeTime" v-if="changeTimeList[4]">
+                    上次变更：{{ changeTimeList[4] }}
+                  </div>
                 </div>
                 <div
                   :class="
                     (statueList[18] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-4'
+                    ' square noSelect shadow step-4-2-2 offset-1'
                   "
                   @click="changeStatue(18)"
                 >
                   <div :class="statueList[18] ? 'dot-1' : 'dot-0'"></div>
-                  通过发展对象党校培训
+                  撰写个人自传
                 </div>
                 <div
                   :class="
                     (statueList[19] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-3'
+                    ' square noSelect shadow step-4-4'
                   "
                   @click="changeStatue(19)"
                 >
                   <div :class="statueList[19] ? 'dot-1' : 'dot-0'"></div>
+                  通过发展对象党校培训
+                </div>
+                <div
+                  :class="
+                    (statueList[20] ? 'statue-3' : 'statue-0') +
+                    ' square noSelect shadow step-4-2-3'
+                  "
+                  @click="changeStatue(20)"
+                >
+                  <div :class="statueList[20] ? 'dot-1' : 'dot-0'"></div>
                   材料齐全
                 </div>
               </div>
@@ -414,24 +460,13 @@
               </div>
               <div
                 :class="
-                  (statueList[20] ? 'statue-3' : 'statue-0') +
-                  ' square noSelect shadow'
-                "
-                @click="changeStatue(20)"
-              >
-                <div :class="statueList[20] ? 'dot-1' : 'dot-0'"></div>
-                支部综合审查
-              </div>
-              <div class="line-v"></div>
-              <div
-                :class="
                   (statueList[21] ? 'statue-3' : 'statue-0') +
                   ' square noSelect shadow'
                 "
                 @click="changeStatue(21)"
               >
                 <div :class="statueList[21] ? 'dot-1' : 'dot-0'"></div>
-                上级党委预审并公示
+                支部综合审查
               </div>
               <div class="line-v"></div>
               <div
@@ -442,7 +477,7 @@
                 @click="changeStatue(22)"
               >
                 <div :class="statueList[22] ? 'dot-1' : 'dot-0'"></div>
-                填写入党申请书
+                上级党委预审并公示
               </div>
               <div class="line-v"></div>
               <div
@@ -453,18 +488,23 @@
                 @click="changeStatue(23)"
               >
                 <div :class="statueList[23] ? 'dot-1' : 'dot-0'"></div>
-                党员发展大会
+                填写入党申请书
               </div>
               <div class="line-v"></div>
               <div
                 :class="
                   (statueList[24] ? 'statue-3' : 'statue-0') +
-                  ' square noSelect shadow'
+                  ' square noSelect shadow keyNode'
                 "
                 @click="changeStatue(24)"
               >
-                <div :class="statueList[24] ? 'dot-1' : 'dot-0'"></div>
-                党委谈话、审批
+                <div>
+                  <div :class="statueList[24] ? 'dot-1' : 'dot-0'"></div>
+                  党员发展大会
+                </div>
+                <div class="changeTime" v-if="changeTimeList[5]">
+                  上次变更：{{ changeTimeList[5] }}
+                </div>
               </div>
               <div class="line-v"></div>
               <div
@@ -475,20 +515,31 @@
                 @click="changeStatue(25)"
               >
                 <div :class="statueList[25] ? 'dot-1' : 'dot-0'"></div>
-                报再上一级党委组织部门备案
+                党委谈话、审批
               </div>
               <div class="line-v"></div>
               <div
                 :class="
                   (statueList[26] ? 'statue-3' : 'statue-0') +
-                  ' capsule noSelect shadow step-3'
+                  ' square noSelect shadow'
                 "
                 @click="changeStatue(26)"
+              >
+                <div :class="statueList[26] ? 'dot-1' : 'dot-0'"></div>
+                报再上一级党委组织部门备案
+              </div>
+              <div class="line-v"></div>
+              <div
+                :class="
+                  (statueList[27] ? 'statue-3' : 'statue-0') +
+                  ' capsule noSelect shadow step-3'
+                "
+                @click="changeStatue(27)"
               >
                 <img
                   class="img-2"
                   src="../../assets/party-icon-2.png"
-                  v-if="!statueList[26]"
+                  v-if="!statueList[27]"
                 />
                 <img class="img-2" src="../../assets/party-icon.png" v-else />
                 中共预备党员
@@ -496,17 +547,17 @@
               <!-- 第四部分 -->
               <div
                 :class="
-                  (statueList[26] ? 'statue-3' : 'statue-0') +
+                  (statueList[27] ? 'statue-3' : 'statue-0') +
                   ' capsule noSelect shadow step-b-1 tab-home'
                 "
-                @click="changeStatue(26)"
+                @click="changeStatue(27)"
                 id="tabHome3"
               >
                 <div class="tab-point" id="tab3"></div>
                 <img
                   class="img-2"
                   src="../../assets/party-icon-2.png"
-                  v-if="!statueList[26]"
+                  v-if="!statueList[27]"
                 />
                 <img class="img-2" src="../../assets/party-icon.png" v-else />
                 中共预备党员
@@ -514,12 +565,12 @@
               <div class="line-v"></div>
               <div
                 :class="
-                  (statueList[27] ? 'statue-3' : 'statue-0') +
+                  (statueList[28] ? 'statue-3' : 'statue-0') +
                   ' square noSelect shadow'
                 "
-                @click="changeStatue(27)"
+                @click="changeStatue(28)"
               >
-                <div :class="statueList[27] ? 'dot-1' : 'dot-0'"></div>
+                <div :class="statueList[28] ? 'dot-1' : 'dot-0'"></div>
                 入党宣誓
               </div>
               <div class="line-v">
@@ -530,42 +581,42 @@
                 <div class="line-v-sub"></div>
                 <div
                   :class="
-                    (statueList[28] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-1 offset-1'
-                  "
-                  @click="changeStatue(28)"
-                >
-                  <div :class="statueList[28] ? 'dot-1' : 'dot-0'"></div>
-                  通过预备<br />党员培训
-                </div>
-                <div
-                  :class="
                     (statueList[29] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-0 offset-1'
+                    ' square noSelect shadow step-4-1 offset-1'
                   "
                   @click="changeStatue(29)"
                 >
                   <div :class="statueList[29] ? 'dot-1' : 'dot-0'"></div>
-                  季度递交<br />个人小结
+                  通过预备<br />党员培训
                 </div>
                 <div
                   :class="
                     (statueList[30] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-2 offset-1'
+                    ' square noSelect shadow step-4-0 offset-1'
                   "
                   @click="changeStatue(30)"
                 >
                   <div :class="statueList[30] ? 'dot-1' : 'dot-0'"></div>
-                  参加组织生活
+                  季度递交<br />个人小结
                 </div>
                 <div
                   :class="
                     (statueList[31] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-3'
+                    ' square noSelect shadow step-4-2 offset-1'
                   "
                   @click="changeStatue(31)"
                 >
                   <div :class="statueList[31] ? 'dot-1' : 'dot-0'"></div>
+                  参加组织生活
+                </div>
+                <div
+                  :class="
+                    (statueList[32] ? 'statue-3' : 'statue-0') +
+                    ' square noSelect shadow step-4-3'
+                  "
+                  @click="changeStatue(32)"
+                >
+                  <div :class="statueList[32] ? 'dot-1' : 'dot-0'"></div>
                   支部按季度进行考察
                 </div>
               </div>
@@ -575,12 +626,12 @@
               </div>
               <div
                 :class="
-                  (statueList[32] ? 'statue-3' : 'statue-0') +
+                  (statueList[33] ? 'statue-3' : 'statue-0') +
                   ' square noSelect shadow'
                 "
-                @click="changeStatue(32)"
+                @click="changeStatue(33)"
               >
-                <div :class="statueList[32] ? 'dot-1' : 'dot-0'"></div>
+                <div :class="statueList[33] ? 'dot-1' : 'dot-0'"></div>
                 提出转正申请
               </div>
               <div class="line-v">
@@ -590,22 +641,22 @@
               <div class="square-line-c">
                 <div
                   :class="
-                    (statueList[33] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-1'
-                  "
-                  @click="changeStatue(33)"
-                >
-                  <div :class="statueList[33] ? 'dot-1' : 'dot-0'"></div>
-                  征求党员、群众意见
-                </div>
-                <div
-                  :class="
                     (statueList[34] ? 'statue-3' : 'statue-0') +
-                    ' square noSelect shadow step-4-2'
+                    ' square noSelect shadow step-4-1'
                   "
                   @click="changeStatue(34)"
                 >
                   <div :class="statueList[34] ? 'dot-1' : 'dot-0'"></div>
+                  征求党员、群众意见
+                </div>
+                <div
+                  :class="
+                    (statueList[35] ? 'statue-3' : 'statue-0') +
+                    ' square noSelect shadow step-4-2'
+                  "
+                  @click="changeStatue(35)"
+                >
+                  <div :class="statueList[35] ? 'dot-1' : 'dot-0'"></div>
                   听取党小组、<br />入党介绍人意见
                 </div>
               </div>
@@ -615,24 +666,13 @@
               </div>
               <div
                 :class="
-                  (statueList[35] ? 'statue-3' : 'statue-0') +
-                  ' square noSelect shadow'
-                "
-                @click="changeStatue(35)"
-              >
-                <div :class="statueList[35] ? 'dot-1' : 'dot-0'"></div>
-                转正公示
-              </div>
-              <div class="line-v"></div>
-              <div
-                :class="
                   (statueList[36] ? 'statue-3' : 'statue-0') +
                   ' square noSelect shadow'
                 "
                 @click="changeStatue(36)"
               >
                 <div :class="statueList[36] ? 'dot-1' : 'dot-0'"></div>
-                转正大会
+                转正公示
               </div>
               <div class="line-v"></div>
               <div
@@ -643,7 +683,7 @@
                 @click="changeStatue(37)"
               >
                 <div :class="statueList[37] ? 'dot-1' : 'dot-0'"></div>
-                党委审批
+                转正大会
               </div>
               <div class="line-v"></div>
               <div
@@ -654,20 +694,31 @@
                 @click="changeStatue(38)"
               >
                 <div :class="statueList[38] ? 'dot-1' : 'dot-0'"></div>
-                支部书记谈话
+                党委审批
               </div>
               <div class="line-v"></div>
               <div
                 :class="
                   (statueList[39] ? 'statue-3' : 'statue-0') +
-                  ' capsule noSelect shadow step-last'
+                  ' square noSelect shadow'
                 "
                 @click="changeStatue(39)"
+              >
+                <div :class="statueList[39] ? 'dot-1' : 'dot-0'"></div>
+                支部书记谈话
+              </div>
+              <div class="line-v"></div>
+              <div
+                :class="
+                  (statueList[40] ? 'statue-3' : 'statue-0') +
+                  ' capsule noSelect shadow step-last'
+                "
+                @click="changeStatue(40)"
               >
                 <img
                   class="img-2"
                   src="../../assets/party-icon-2.png"
-                  v-if="!statueList[39]"
+                  v-if="!statueList[40]"
                 />
                 <img class="img-2" src="../../assets/party-icon.png" v-else />
                 中共党员
@@ -686,6 +737,9 @@
         </div> -->
       </div>
     </div>
+    <div style="position: absolute; right: 6%">
+      <el-icon @click="$router.back()" :size="30"><Close /></el-icon>
+    </div>
   </div>
 </template>
 
@@ -703,6 +757,7 @@ import {
   getSFileDetail,
 } from "../../api/p_management";
 import { DefineComponent } from "vue";
+import { Position } from "@element-plus/icons-vue";
 
 interface User {
   title: string;
@@ -715,6 +770,7 @@ interface UserStatus {
   userId: number;
   processId: number;
   status: boolean;
+  passAt: String;
 }
 
 interface File {
@@ -739,6 +795,34 @@ const Cn = ref(zhCn);
 var statueList = ref<boolean[]>([]);
 const tableData = ref<File[]>([]);
 const situationType = ["待审", "通过", "未通过"];
+//关键节点时间表示
+const keyNode = [
+  {
+    label: "递交入党申请书",
+    stage: 0,
+  },
+  {
+    label: "群团组织推优",
+    stage: 3,
+  },
+  {
+    label: "入党积极分子",
+    stage: 6,
+  },
+  {
+    label: "发展对象",
+    stage: 15,
+  },
+  {
+    label: "政审",
+    stage: 17,
+  },
+  {
+    label: "党员发展大会",
+    stage: 24,
+  },
+];
+var changeTimeList = ref<String[]>([]);
 let BRANCH_INFO: { partybranchName: string } = JSON.parse(
   JSON.stringify(inject("BRANCH_INFO"))
 ); //ts的类型检测能不能死啊
@@ -772,7 +856,7 @@ const changeStatue = (val: any) => {
 };
 onMounted(async () => {
   let params = history.state.params;
-  console.log(params);
+  // console.log(params);
   stu_id.value = params.stu_id;
   identity.value = params.identity;
   //-----------------------------------------------------------------------------------------------------------------------
@@ -786,9 +870,16 @@ onMounted(async () => {
   let PersonRawData: { code: number; data: [] } = await getPersonProcess(
     user_id.value
   );
+  let k = 0;
   for (let i = 0; i < PersonRawData.data.length; i++) {
     let data: UserStatus = PersonRawData.data[i];
     statueList.value[data.processId] = data.status;
+    for (let j = 0; j < keyNode.length; j++) {
+      if (data.processId == keyNode[j].stage) {
+        //不为null
+        if (data.passAt) changeTimeList.value[k++] = data.passAt.split("T")[0];
+      }
+    }
   }
   let FileRawData: { code: number; data: File[] } = await getFile(
     user_id.value
@@ -1100,7 +1191,9 @@ onMounted(async () => {
   align-items: center;
   white-space: nowrap;
   cursor: pointer;
+  position: relative;
 }
+
 .step-1 {
   margin-top: 77px;
 }
@@ -1181,7 +1274,7 @@ onMounted(async () => {
 }
 .square-line-c-2 {
   width: 280px;
-  height: 220px;
+  height: 280px;
   border: 1px solid #c7242f;
   border-radius: 32px;
   display: flex;
@@ -1223,6 +1316,24 @@ onMounted(async () => {
   position: absolute;
   right: 0;
   transform: translateX(50%);
+}
+.step-4-2-1 {
+  position: absolute;
+  top: 43%;
+  right: 0;
+  transform: translateX(50%);
+}
+.step-4-2-2 {
+  position: absolute;
+  right: 0;
+  bottom: 35%;
+  transform: translateX(50%);
+}
+.step-4-2-3 {
+  position: absolute;
+  right: 0;
+  transform: translateX(50%);
+  bottom: 10%;
 }
 .step-4-3 {
   position: absolute;
@@ -1390,12 +1501,12 @@ onMounted(async () => {
   justify-content: space-around;
 }
 .p_check_1 {
-  width: 48%;
+  width: 40%;
   display: flex;
   flex-direction: column;
 }
 .p_check_2 {
-  width: 48%;
+  width: 55%;
   background-color: #fff;
   display: flex;
   position: relative;
@@ -1403,13 +1514,14 @@ onMounted(async () => {
 }
 
 .p_check_1_1 {
-  width: 592px;
+  width: 100%;
   flex: 3;
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
 }
 .p_check_head_1 {
+  width: 100%;
   flex: 1;
   font-size: 30px;
   font-weight: 400;
@@ -1417,6 +1529,7 @@ onMounted(async () => {
   justify-content: space-between;
 }
 .p_check_head_2 {
+  width: 100%;
   flex: 1;
   display: flex;
   justify-content: space-between;
@@ -1459,5 +1572,14 @@ onMounted(async () => {
 
 .el-paginatio.is-background .el-pager li {
   border-radius: 50%;
+}
+
+.keyNode {
+  flex-direction: column;
+}
+.changeTime {
+  height: 15px;
+  font-size: 12px;
+  position: relative;
 }
 </style>
