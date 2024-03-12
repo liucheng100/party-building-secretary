@@ -130,8 +130,10 @@
                   <div :class="statueList[0] ? 'dot-1' : 'dot-0'"></div>
                   递交入党申请书
                 </div>
-                <div class="changeTime" v-if="changeTimeList[0]">
-                  上次变更：{{ changeTimeList[0] }}
+                <div class="changeTime">
+                  上次变更：{{
+                    changeTimeList[0] ? changeTimeList[0] : "时间暂无"
+                  }}
                 </div>
               </div>
               <div class="line-v"></div>
@@ -177,8 +179,10 @@
                     <div :class="statueList[3] ? 'dot-1' : 'dot-0'"></div>
                     群团组织推优
                   </div>
-                  <div class="changeTime" v-if="changeTimeList[1]">
-                    上次变更：{{ changeTimeList[1] }}
+                  <div class="changeTime">
+                    上次变更：{{
+                      changeTimeList[1] ? changeTimeList[1] : "时间暂无"
+                    }}
                   </div>
                 </div>
                 <div
@@ -223,8 +227,10 @@
                   <img class="img-2" src="../../assets/party-icon.png" v-else />
                   入党积极分子
                 </div>
-                <div class="changeTime" v-if="changeTimeList[2]">
-                  上次变更：{{ changeTimeList[2] }}
+                <div class="changeTime">
+                  上次变更：{{
+                    changeTimeList[2] ? changeTimeList[2] : "时间暂无"
+                  }}
                 </div>
               </div>
               <!-- 第二部分 -->
@@ -247,8 +253,10 @@
                   <img class="img-2" src="../../assets/party-icon.png" v-else />
                   入党积极分子
                 </div>
-                <div class="changeTime" v-if="changeTimeList[2]">
-                  上次变更：{{ changeTimeList[2] }}
+                <div class="changeTime">
+                  上次变更：{{
+                    changeTimeList[3] ? changeTimeList[3] : "时间暂无"
+                  }}
                 </div>
               </div>
               <div class="line-v">
@@ -365,8 +373,10 @@
                   />
                   <img class="img-2" src="../../assets/party-icon.png" v-else />
                   发展对象
-                  <div class="changeTime" v-if="changeTimeList[3]">
-                    上次变更：{{ changeTimeList[3] }}
+                  <div class="changeTime">
+                    上次变更：{{
+                      changeTimeList[3] ? changeTimeList[3] : "时间暂无"
+                    }}
                   </div>
                 </div>
               </div>
@@ -389,8 +399,10 @@
                   <img class="img-2" src="../../assets/party-icon.png" v-else />
                   发展对象
                 </div>
-                <div class="changeTime" v-if="changeTimeList[3]">
-                  上次变更：{{ changeTimeList[3] }}
+                <div class="changeTime">
+                  上次变更：{{
+                    changeTimeList[3] ? changeTimeList[3] : "时间暂无"
+                  }}
                 </div>
               </div>
               <div class="line-v">
@@ -417,10 +429,12 @@
                 >
                   <div>
                     <div :class="statueList[17] ? 'dot-1' : 'dot-0'"></div>
-                    政审
+                    政审通过
                   </div>
-                  <div class="changeTime" v-if="changeTimeList[4]">
-                    上次变更：{{ changeTimeList[4] }}
+                  <div class="changeTime">
+                    上次变更：{{
+                      changeTimeList[4] ? changeTimeList[4] : "时间暂无"
+                    }}
                   </div>
                 </div>
                 <div
@@ -502,8 +516,10 @@
                   <div :class="statueList[24] ? 'dot-1' : 'dot-0'"></div>
                   党员发展大会
                 </div>
-                <div class="changeTime" v-if="changeTimeList[5]">
-                  上次变更：{{ changeTimeList[5] }}
+                <div class="changeTime">
+                  上次变更：{{
+                    changeTimeList[5] ? changeTimeList[5] : "时间暂无"
+                  }}
                 </div>
               </div>
               <div class="line-v"></div>
@@ -785,6 +801,7 @@ interface File {
   file_id: string;
 }
 
+const currentStatu = ref(0);
 const name = ref("taffy");
 const stu_id = ref("3022244000");
 const identity = ref("预备党员");
@@ -811,10 +828,11 @@ const keyNode = [
   },
   {
     label: "发展对象",
+
     stage: 15,
   },
   {
-    label: "政审",
+    label: "政审通过",
     stage: 17,
   },
   {
@@ -851,8 +869,18 @@ const toSubmit = () => {
   // }
 };
 const changeStatue = (val: any) => {
-  updatePersonProcess(user_id.value, val, !statueList.value[val] ? 1 : 0);
-  statueList.value[val] = !statueList.value[val];
+  // updatePersonProcess(user_id.value, val, !statueList.value[val] ? 1 : 0);
+  // statueList.value[val] = !statueList.value[val];
+  //------------------------------------------------仅ui修改，能否修改待定-----------------------------------------------------------//
+  if (statueList.value[val]) {
+    if (val == currentStatu.value) {
+      for (let i = 0; i <= currentStatu.value; i++) statueList.value[i] = false;
+      currentStatu.value = 0;
+    }
+  } else {
+    currentStatu.value = val;
+    for (let i = 0; i <= currentStatu.value; i++) statueList.value[i] = true;
+  }
 };
 onMounted(async () => {
   let params = history.state.params;
@@ -1501,12 +1529,12 @@ onMounted(async () => {
   justify-content: space-around;
 }
 .p_check_1 {
-  width: 40%;
+  width: 48%;
   display: flex;
   flex-direction: column;
 }
 .p_check_2 {
-  width: 55%;
+  width: 48%;
   background-color: #fff;
   display: flex;
   position: relative;
