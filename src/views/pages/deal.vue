@@ -1,77 +1,80 @@
 <template>
-  <div class="head">
-    <div>
-      <span>当前阶段 </span
-      ><el-select
-        v-model="stageValue"
-        class="m-2"
-        placeholder="Select"
-        style="margin-left: 30px"
-        @change="filterMember(true)"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </div>
-    <div>
-      <span>欲通过的阶段 </span>
-      <el-select
-        v-model="subStageValue"
-        class="m-2"
-        placeholder="Select"
-        style="margin-left: 30px"
-        @change="filterMember(false)"
-      >
-        <el-option
-          v-for="item in options_little[stageValue]"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterMember()">筛选</el-button>
+  <div class="container">
+    <div class="head">
+      <div>
+        <span>当前阶段 </span
+        ><el-select
+          v-model="stageValue"
+          class="m-2"
+          placeholder="Select"
+          style="margin-left: 30px"
+          @change="filterMember(true)"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
+      <div>
+        <span>欲通过的阶段 </span>
+        <el-select
+          v-model="subStageValue"
+          class="m-2"
+          placeholder="Select"
+          style="margin-left: 30px"
+          @change="filterMember(false)"
+        >
+          <el-option
+            v-for="item in options_little[stageValue]"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterMember()">筛选</el-button>
       疑似反人类按钮 我先给扣了 用上面的@change="filterMember" -->
-      <el-button
-        style="margin-left: 30px"
-        color="#c7242f"
-        @click="multiProcessAccess()"
-        >通过选中成员</el-button
-      >
+        <el-button
+          style="margin-left: 30px"
+          color="#c7242f"
+          @click="multiProcessAccess()"
+          >通过选中成员</el-button
+        >
+      </div>
     </div>
-  </div>
-  <div class="Main">
-    <el-table
-      ref="multipleTableRef"
-      :data="tableData"
-      style="width: 100%; margin-top: 20px"
-      :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" />
-      <el-table-column label="姓名">
-        <template #default="scope">{{ scope.row.userName }}</template>
-      </el-table-column>
-      <el-table-column property="sno" label="学号" />
-      <el-table-column property="identity" label="身份">
-        {{ options[stageValue].label }}
-      </el-table-column>
-      <el-table-column label="操作">
-        <template #default="scope">
-          <el-button
-            style="color: #21b339"
-            link
-            @click="processAcsess(scope.row)"
-            >通过</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-config-provider :locale="zhCn">
+    <div class="Main">
+      <el-table
+        ref="multipleTableRef"
+        :data="tableData"
+        style="width: 100%; height: 100%"
+        :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" />
+        <el-table-column label="姓名">
+          <template #default="scope">{{ scope.row.userName }}</template>
+        </el-table-column>
+        <el-table-column property="sno" label="学号" />
+        <el-table-column property="identity" label="身份">
+          {{ options[stageValue].label }}
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button
+              style="color: #21b339"
+              link
+              @click="processAcsess(scope.row)"
+              >通过</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-config-provider :locale="zhCn" class="tail">
       <el-pagination
+        small
         class="el-pagination"
         v-model:current-page="PageNum"
         v-model:page-size="pageSize"
@@ -83,14 +86,10 @@
         @current-change="handleCurrentChange"
       />
     </el-config-provider>
-  </div>
-  <!----------------------------------------弹窗------------------------------------------->>
-  <div class="modal" v-if="visible">
-    <div class="modal-content">
-      <span class="close" @click="closeModal">&times;</span>
-      <div class="modal-right">
-        <div class="font-1">请填写以下成员本次状态变更时间：</div>
-        <div style="margin-top: 20px; display: flex" v-if="showMuti">
+    <!----------------------------------------弹窗------------------------------------------->
+    <el-dialog v-model="visible" title="请填写以下成员变更时间：" width="35%">
+      <div class="modal">
+        <div style="display: flex" v-if="showMuti">
           <div class="font-4">批量填写：</div>
           <el-date-picker
             v-model="date"
@@ -108,8 +107,8 @@
           >
         </div>
         <el-table
-          style="width: 90%; margin-top: 20px; margin-left: 20px"
-          max-height="500px"
+          style="width: 90%; margin: 20px"
+          max-height="50vh"
           size="small"
           :cell-style="{ padding: '2px', fontSize: '13px' }"
           :data="selectData"
@@ -132,16 +131,17 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
-      <div class="modal-tail">
-        <el-button color="#c7242f" @click="confirmUpdateBatch(true)"
-          >确认更改</el-button
-        >
-        <div style="color: #c7242f; margin-top: 5px">
-          *本操作无法回退，请确认无误后再操作
+
+        <div class="modal-tail">
+          <el-button color="#c7242f" @click="confirmUpdateBatch(true)"
+            >确认更改</el-button
+          >
+          <div style="color: #c7242f; margin-top: 5px">
+            *本操作无法回退，请确认无误后再操作
+          </div>
         </div>
       </div>
-    </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -576,44 +576,31 @@ const batchFilling = () => {
 };
 const showModal = () => {
   visible.value = true;
-  stop();
 };
 const closeModal = () => {
   visible.value = false;
-  move();
 };
-
-// 记录页面滚动位置
-const pageLocation = ref();
-
-// 遮罩层外禁止滚动
-function stop() {
-  let scrollTop = window.scrollY;
-  pageLocation.value = scrollTop;
-  document.body.style.position = "fixed";
-  document.body.style.top = "-" + scrollTop + "px";
-}
-
-// 取消滑动限制
-function move() {
-  document.body.style.position = "static";
-  window.scrollTo(0, pageLocation.value);
-}
 </script>
 
 <style scoped>
-.Main {
-  height: 779px;
+.container {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .head {
+  width: 79%;
+  height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  justify-content: space-around;
+}
+.Main {
+  margin-top: 20px;
+  flex: 1;
+  overflow: auto;
 }
 
 .el-pagination.is-background .el-pager li {
@@ -623,45 +610,26 @@ function move() {
 .modal {
   width: 100%;
   height: 100%;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-.modal-content {
-  position: relative;
-  background-color: #fff;
-  border: 1px solid #888;
-  margin: 5% auto;
-  width: 600px;
-  height: 700px;
-  z-index: 1001;
   display: flex;
+  flex-direction: column;
 }
 
-.modal-right {
-  width: 90%;
-  margin-left: 10%;
-}
 .modal-tail {
   width: 100%;
   height: 70px;
-  position: absolute;
-  bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 10;
 }
 .font-1 {
-  margin-top: 20px;
   margin-left: 20px;
-  font-size: 20px;
+  font-size: 1.5em;
   font-weight: 400;
 }
 .font-2 {
   margin-left: 20px;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 400;
 }
 .font-3 {
@@ -671,20 +639,5 @@ function move() {
 }
 .font-4 {
   margin-left: 20px;
-}
-
-.close {
-  position: absolute;
-  right: 20px;
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
 }
 </style>

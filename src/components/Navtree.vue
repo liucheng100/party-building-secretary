@@ -178,8 +178,8 @@ onMounted(() => {
 
 .logo {
   width: 15vw;
-  margin-top: 24px;
-  margin-bottom: 58px;
+  margin-top: 3vh;
+  margin-bottom: 4vh;
   cursor: pointer;
 }
 
@@ -191,11 +191,12 @@ onMounted(() => {
 
 .item {
   height: auto;
-  margin-bottom: 30px;
+
+  margin-bottom: 2vh;
 }
 
 .nav-1 {
-  height: 92px;
+  height: 9vh;
   display: flex;
   border-radius: 0px 4px 4px 0px;
   transition: 0.12s;
@@ -230,7 +231,7 @@ onMounted(() => {
   opacity: 1;
 }
 .nav-2 {
-  height: 92px;
+  height: 9vh;
   display: flex;
   cursor: pointer;
 }
