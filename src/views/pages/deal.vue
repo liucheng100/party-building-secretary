@@ -95,7 +95,6 @@
             v-model="date"
             type="datetime"
             size="small"
-            placeholder="Select date and time"
             format="YYYY-MM-DD-HH:mm"
             value-format="YYYY-MM-DDTHH:mm:ss.sss"
           />
@@ -123,7 +122,6 @@
               <el-date-picker
                 type="datetime"
                 size="small"
-                placeholder="Select date and time"
                 v-model="scope.row.passAt"
                 format="YYYY-MM-DD-HH:mm"
                 value-format="YYYY-MM-DDTHH:mm:ss.sss"
