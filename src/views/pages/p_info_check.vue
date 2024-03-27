@@ -1585,6 +1585,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
 }
 
 .icon_situation {

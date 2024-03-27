@@ -41,10 +41,18 @@
     <div class="article-title">{{ fileInfo.title }}</div>
 
     <!-- 正文 -->
-    <div class="article-content">{{ fileInfo.content }}</div>
+    <div class="article-content" v-html="fileInfo.content"></div>
+    <!-- 附件 -->
+    <div style="width: 80%" v-if="fileInfo.attachment">
+      <div class="file_name">
+        {{ fileInfo.attachment }}
+      </div>
+    </div>
     <!-- 下载附件 -->
     <div style="width: 80%">
-      <el-button class="downloadBtn" color="#C7242F">下载附件</el-button>
+      <el-button class="downloadBtn" color="#C7242F" @click="download"
+        >下载附件</el-button
+      >
     </div>
 
     <!--审批意见-->
@@ -82,7 +90,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { approvalFile } from "../../api/manageFile";
+import { downloadFile } from "../../api/file";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 
 const $router = useRouter();
 
@@ -96,6 +106,7 @@ interface File {
   status: string;
   id: number;
   file_id: string;
+  attachment: string;
 }
 
 const fileInfo = ref<File>({
@@ -108,6 +119,7 @@ const fileInfo = ref<File>({
   status: "",
   id: 0,
   file_id: "",
+  attachment: "",
 });
 
 const changeTime = ref("");
@@ -131,14 +143,48 @@ const article = ref({
   content: "这是文章的正文内容...",
 });
 
+const download = async () => {
+  if (!fileInfo.value.attachment) {
+    ElMessage.warning("无附件");
+  }
+  await downloadFile(fileInfo.value.attachment).then((res: any) => {
+    console.log(res);
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    let tmp = fileInfo.value.attachment.split("/");
+    link.setAttribute("download", tmp[tmp.length - 1]);
+    document.body.appendChild(link);
+    link.click();
+  });
+};
+
 const approve = async () => {
-  await approvalFile(1, fileInfo.value.file_id, approvalComment.value);
+  if (!changeTime.value) {
+    ElMessage.warning("请填写时间");
+    return;
+  }
+  await approvalFile(
+    1,
+    fileInfo.value.file_id,
+    approvalComment.value,
+    changeTime.value
+  );
   $router.back();
   // 处理通过
 };
 
 const reject = async () => {
-  await approvalFile(2, fileInfo.value.file_id, approvalComment.value);
+  if (!changeTime.value) {
+    ElMessage.warning("请填写时间");
+    return;
+  }
+  await approvalFile(
+    2,
+    fileInfo.value.file_id,
+    approvalComment.value,
+    changeTime.value
+  );
   $router.back();
 };
 </script>
@@ -193,6 +239,11 @@ const reject = async () => {
   justify-content: space-between;
   width: 30%;
   margin-top: 20px;
+}
+.file_name {
+  font-size: 14px;
+  padding: 8px 0;
+  align-items: flex-start;
 }
 .downloadBtn {
   font-size: 14px;

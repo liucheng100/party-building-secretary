@@ -56,7 +56,11 @@
                 scope.row.type < 100
                   ? scope.row.type == 0
                     ? "入党申请书"
-                    : "个人自传"
+                    : scope.row.type == 1
+                    ? "个人自传"
+                    : scope.row.type == 2
+                    ? "入党志愿书"
+                    : "转正申请书"
                   : scope.row.type < 200
                   ? "思想报告"
                   : "个人总结"
@@ -82,15 +86,26 @@
               <i
                 class="dotClass"
                 style="background-color: #21b339"
-                v-if="scope.row.status > 0"
+                v-if="scope.row.status == 1"
               ></i>
               <i
                 class="dotClass"
                 style="background-color: #c7242f"
+                v-if="scope.row.status == 2"
+              ></i>
+              <i
+                class="dotClass"
+                style="background-color: #fca235"
                 v-if="scope.row.status == 0"
               ></i>
               <div class="state_row">
-                {{ scope.row.status == 0 ? "未处理" : "已处理" }}
+                {{
+                  scope.row.status == 0
+                    ? "未审核"
+                    : scope.row.status == 1
+                    ? "已通过"
+                    : "未通过"
+                }}
               </div>
             </div>
           </template>
@@ -147,7 +162,7 @@ const options = [
     value: 0,
   },
   {
-    label: "思想汇报",
+    label: "个人自传",
     value: 1,
   },
   {
@@ -155,8 +170,12 @@ const options = [
     value: 2,
   },
   {
-    label: "个人自传",
+    label: "转正申请书",
     value: 3,
+  },
+  {
+    label: "个人总结",
+    value: 4,
   },
 ];
 const options_2 = [
@@ -184,6 +203,7 @@ const fetchAllFiles = async (type: number, hasRead: number) => {
     type,
     hasRead
   ); //type:hasRead:0全部1已审2未审
+  console.log(fileList);
   fileRawData.value = fileList.data;
   tableData.value = fileList.data;
 };
@@ -209,6 +229,7 @@ const handleCheck = (index: number, row: User) => {
     file_id: row.id,
     title: row.title,
     content: row.content,
+    attachment: row.attachment,
   };
   $router.push({ name: "f_check", state: { params } });
 };
@@ -232,6 +253,7 @@ interface User {
   createAt: string;
   status: string;
   id: number;
+  attachment: string;
 }
 
 const multipleTableRef = ref<InstanceType<typeof ElTable>>();
