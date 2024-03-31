@@ -122,16 +122,44 @@ const fileInfo = ref<File>({
   attachment: "",
 });
 
+const options = [
+  {
+    label: "全部",
+    value: -1,
+  },
+  {
+    label: "入党申请书",
+    value: 1,
+  },
+  {
+    label: "思想汇报",
+    value: 2,
+  },
+  {
+    label: "个人自传",
+    value: 3,
+  },
+  {
+    label: "入党志愿书",
+    value: 4,
+  },
+  {
+    label: "转正申请书",
+    value: 5,
+  },
+
+  {
+    label: "个人小结",
+    value: 6,
+  },
+];
+
 const changeTime = ref("");
 let approvalComment = ref("");
 const fileName = computed(() => {
-  return fileInfo.value.type < 100
-    ? fileInfo.value.type == 0
-      ? "入党申请书"
-      : "个人自传"
-    : fileInfo.value.type < 200
-    ? "思想报告"
-    : "个人总结";
+  if (fileInfo.value.type <= 6) {
+    return options[fileInfo.value.type].label;
+  }
 });
 onMounted(async () => {
   fileInfo.value = history.state.params;

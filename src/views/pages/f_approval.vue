@@ -52,19 +52,7 @@
         <el-table-column property="type" label="文件类型">
           <template #default="scope">
             <div class="state_row">
-              {{
-                scope.row.type < 100
-                  ? scope.row.type == 0
-                    ? "入党申请书"
-                    : scope.row.type == 1
-                    ? "个人自传"
-                    : scope.row.type == 2
-                    ? "入党志愿书"
-                    : "转正申请书"
-                  : scope.row.type < 200
-                  ? "思想报告"
-                  : "个人总结"
-              }}
+              {{ scope.row.type <= 6 ? options[scope.row.type].label : "" }}
             </div>
           </template>
         </el-table-column>
@@ -160,27 +148,28 @@ const options = [
   },
   {
     label: "入党申请书",
-    value: 0,
-  },
-  {
-    label: "个人自传",
     value: 1,
   },
   {
-    label: "入党志愿书",
+    label: "思想汇报",
     value: 2,
   },
   {
-    label: "转正申请书",
+    label: "个人自传",
     value: 3,
   },
   {
-    label: "思想报告",
-    value: 100,
+    label: "入党志愿书",
+    value: 4,
   },
   {
-    label: "个人总结",
-    value: 200,
+    label: "转正申请书",
+    value: 5,
+  },
+
+  {
+    label: "个人小结",
+    value: 6,
   },
 ];
 const options_2 = [
