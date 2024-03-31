@@ -185,7 +185,7 @@ const addMember = (groupId: number) => {
 const addToGroup = async () => {
   tableData = ref(<GroupedMember[]>[]);
   let GroupsRawData: { code: number; data: [] } = await getGroup();
-  if (GroupsRawData.code == 0) processGroupData(GroupsRawData.data);
+  if (GroupsRawData.code === 0) processGroupData(GroupsRawData.data);
   addVisible.value = true;
 };
 // 根据路由初始化选项卡位置
@@ -200,7 +200,7 @@ const initTabPosition = () => {
 const manageGroup = async () => {
   tableData = ref(<GroupedMember[]>[]);
   let GroupsRawData: { code: number; data: [] } = await getGroup();
-  if (GroupsRawData.code == 0) processGroupData(GroupsRawData.data);
+  if (GroupsRawData.code === 0) processGroupData(GroupsRawData.data);
   manageDialogVisible.value = true;
 };
 
@@ -212,7 +212,7 @@ const handleEdit = (index: any) => {
 const handleDelete = async (index: any) => {
   await getDeleteGroup(index)
     .then((res: any) => {
-      if (res.code == 0) {
+      if (res.code === 0) {
         ElMessage.success("删除成功");
         manageDialogVisible.value = false;
         window.location.reload(); //刷新页面 跟它爆了
@@ -241,7 +241,7 @@ const createGroup = async () => {
   let GroupsRawData: { code: number; data: [] } = await addGroup(
     createGroupLeader.value
   );
-  if (GroupsRawData.code == 0) {
+  if (GroupsRawData.code === 0) {
     ElMessage.success({ message: "创建成功", offset: 150 });
     createDialogVisible.value = false;
   } else {

@@ -143,7 +143,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElTable } from "element-plus";
+import { ElTable, ElMessage } from "element-plus";
+
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { getAllFiles } from "../../api/manageFile";
 import { reactive } from "vue";
@@ -174,8 +175,12 @@ const options = [
     value: 3,
   },
   {
+    label: "思想报告",
+    value: 100,
+  },
+  {
     label: "个人总结",
-    value: 4,
+    value: 200,
   },
 ];
 const options_2 = [
@@ -199,13 +204,16 @@ const tableData = ref<User[]>([]);
 const fileRawData = ref<User[]>([]);
 
 const fetchAllFiles = async (type: number, hasRead: number) => {
-  let fileList: { code: number; data: User[] } = await getAllFiles(
+  let fileList: { code: number; data: User[]; msg: string } = await getAllFiles(
     type,
     hasRead
   ); //type:hasRead:0全部1已审2未审
-  console.log(fileList);
-  fileRawData.value = fileList.data;
-  tableData.value = fileList.data;
+  console.log(tableData);
+  if (fileList.code === 0) {
+    tableData.value = fileList.data;
+  } else {
+    ElMessage.error(fileList.msg + ":" + fileList.code);
+  }
 };
 
 onMounted(async () => {
@@ -247,7 +255,7 @@ const onSubmit = () => {
 interface User {
   userName: string;
   sno: string;
-  type: string;
+  type: number;
   title: string;
   content: string;
   createAt: string;

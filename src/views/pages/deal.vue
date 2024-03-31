@@ -456,16 +456,18 @@ let PageNum = ref(1); //当前页码
 
 const filterMember = async (init: boolean) => {
   if (init) subStageValue.value = 0; //不加这个会有bug
-  let RawData: { code: number; data: [] } = await processFilter(
+  let RawData: { code: number; data: []; msg: string } = await processFilter(
     options_little[stageValue.value][subStageValue.value].stage
   );
-  if (RawData.code == 0) {
+  if (RawData.code === 0) {
     memberRawData.value = RawData.data;
     memberNum.value = RawData.data.length;
     tableData.value = memberRawData.value.slice(
       (PageNum.value - 1) * pageSize.value,
       PageNum.value * pageSize.value
     );
+  } else {
+    ElMessage.error(RawData.msg + ":" + RawData.code);
   }
 };
 
@@ -489,7 +491,7 @@ const multiProcessAccess = async () => {
 };
 
 //个人
-const processAcsess = async (row: User) => {
+const processAcsess = (row: User) => {
   selectData.value = [row];
   showMuti.value = false;
   for (let item of keyNode) {
@@ -525,11 +527,13 @@ const confirmUpdateBatch = async (isKeyNode: boolean) => {
       passAt: member.passAt,
     });
   });
-  let res: { code: number } = await updateBatch(data);
+  let res: { code: number; msg: string } = await updateBatch(data);
   if (res.code == 0) {
     ElMessage.success("修改成功");
     filterMember(false);
     closeModal();
+  } else {
+    ElMessage.error(res.msg + ":" + res.code);
   }
 };
 const handleSizeChange = () => {
@@ -546,7 +550,7 @@ const handleCurrentChange = () => {
   );
 };
 
-onMounted(async () => {
+onMounted(() => {
   filterMember(true);
 });
 

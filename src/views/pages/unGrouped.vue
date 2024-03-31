@@ -75,8 +75,8 @@ let UserNum = ref(0); //总长度
 let PageNum = ref(1); //当前页码
 
 const fetchUser = async () => {
-  let RawData: { code: number; data: [] } = await getUnGroup();
-  if (RawData.code == 0) {
+  let RawData: { code: number; data: []; msg: string } = await getUnGroup();
+  if (RawData.code === 0) {
     // 将数据分割为左右两部分
     UserRawData.value = RawData.data;
     UserNum.value = RawData.data.length;
@@ -89,6 +89,8 @@ const fetchUser = async () => {
       (-0.5 + PageNum.value) * pageSize.value,
       PageNum.value * pageSize.value
     );
+  } else {
+    ElMessage.error(RawData.msg + ":" + RawData.code);
   }
 };
 
@@ -103,11 +105,13 @@ const addNewMember = async (groupId: number) => {
   multipleSelection.value.forEach((member) => {
     ids.push(member.userId);
   });
-  let res: { code: number } = await addGroupMember(ids, groupId);
+  let res: { code: number; msg: string } = await addGroupMember(ids, groupId);
   if (res.code == 0) {
     ElMessage.success("添加成功");
     emit("addComplete");
     fetchUser();
+  } else {
+    ElMessage.error(res.msg + ":" + res.code);
   }
 };
 

@@ -861,12 +861,16 @@ const handleCurrentChange = (val: number) => {
 };
 
 const handleCheck = async (row: File) => {
-  let res: { code: number; data: File } = await getSFileDetail(row.id);
-  if (res.code == 0) {
+  let res: { code: number; data: File; msg: string } = await getSFileDetail(
+    row.id
+  );
+  if (res.code === 0) {
     res.data.userName = history.state.params.name;
     res.data.sno = history.state.params.stu_id;
     let params: any = res.data;
     $router.push({ name: "f_check", state: { params } });
+  } else {
+    ElMessage.error(res.msg + ":" + res.code);
   }
 };
 const toSubmit = () => {
@@ -902,24 +906,28 @@ onMounted(async () => {
   user_id.value = params.user_id;
   name.value = params.name;
 
-  let PersonRawData: { code: number; data: [] } = await getPersonProcess(
-    user_id.value
-  );
-  let k = 0;
-  for (let i = 0; i < PersonRawData.data.length; i++) {
-    let data: UserStatus = PersonRawData.data[i];
-    statueList.value[data.processId] = data.status;
-    for (let j = 0; j < keyNode.length; j++) {
-      if (data.processId == keyNode[j].stage) {
-        //不为null
-        if (data.passAt) changeTimeList.value[k++] = data.passAt.split("T")[0];
+  let PersonRawData: { code: number; data: []; msg: string } =
+    await getPersonProcess(user_id.value);
+  if (PersonRawData.code === 0) {
+    let k = 0;
+    for (let i = 0; i < PersonRawData.data.length; i++) {
+      let data: UserStatus = PersonRawData.data[i];
+      statueList.value[data.processId] = data.status;
+      for (let j = 0; j < keyNode.length; j++) {
+        if (data.processId == keyNode[j].stage) {
+          //不为null
+          if (data.passAt)
+            changeTimeList.value[k++] = data.passAt.split("T")[0];
+        }
       }
     }
+    let FileRawData: { code: number; data: File[] } = await getFile(
+      user_id.value
+    );
+    tableData.value = FileRawData.data; //status 0待审 1通过 2未通过
+  } else {
+    ElMessage.error(PersonRawData.msg + ":" + PersonRawData.code);
   }
-  let FileRawData: { code: number; data: File[] } = await getFile(
-    user_id.value
-  );
-  tableData.value = FileRawData.data; //status 0待审 1通过 2未通过
 });
 </script>
 

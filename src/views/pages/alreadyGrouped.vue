@@ -75,6 +75,7 @@ import { ref, onMounted } from "vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import { getGroup } from "@/api/learngroup";
+import { ElMessage } from "element-plus";
 
 const pageSize = ref(<number>10); //每页组别
 let GroupsData = ref(<GroupedUser[]>[]);
@@ -103,10 +104,12 @@ interface GroupedMember extends Member {
 }
 
 onMounted(async () => {
-  let GroupsRawData: { code: number; data: [] } = await getGroup();
-  if (GroupsRawData.code == 0) {
+  let GroupsRawData: { code: number; data: []; msg: string } = await getGroup();
+  if (GroupsRawData.code === 0) {
     GroupsData.value = GroupsRawData.data;
     processGroupData(GroupsData.value);
+  } else {
+    ElMessage.error(GroupsRawData.msg + ":" + GroupsRawData.code);
   }
 });
 

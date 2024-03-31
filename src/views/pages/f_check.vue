@@ -144,19 +144,25 @@ const article = ref({
 });
 
 const download = async () => {
+  console.log(fileInfo.value.attachment);
   if (!fileInfo.value.attachment) {
     ElMessage.warning("无附件");
+    return;
   }
-  await downloadFile(fileInfo.value.attachment).then((res: any) => {
-    console.log(res);
-    const url = window.URL.createObjectURL(new Blob([res.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    let tmp = fileInfo.value.attachment.split("/");
-    link.setAttribute("download", tmp[tmp.length - 1]);
-    document.body.appendChild(link);
-    link.click();
-  });
+  await downloadFile(fileInfo.value.attachment)
+    .then((res: any) => {
+      console.log(res);
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      let tmp = fileInfo.value.attachment.split("/");
+      link.setAttribute("download", tmp[tmp.length - 1]);
+      document.body.appendChild(link);
+      link.click();
+    })
+    .catch((err) => {
+      ElMessage.error(err);
+    });
 };
 
 const approve = async () => {
@@ -169,9 +175,15 @@ const approve = async () => {
     fileInfo.value.file_id,
     approvalComment.value,
     changeTime.value
-  );
-  $router.back();
-  // 处理通过
+  )
+    .then(() => {
+      ElMessage.success("处理成功");
+      $router.back();
+      // 处理通过
+    })
+    .catch((err) => {
+      ElMessage.error(err);
+    });
 };
 
 const reject = async () => {
@@ -184,8 +196,14 @@ const reject = async () => {
     fileInfo.value.file_id,
     approvalComment.value,
     changeTime.value
-  );
-  $router.back();
+  )
+    .then(() => {
+      ElMessage.success("处理成功");
+      $router.back();
+    })
+    .catch((err) => {
+      ElMessage.error(err);
+    });
 };
 </script>
 

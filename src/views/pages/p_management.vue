@@ -84,7 +84,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElTable } from "element-plus";
+import { ElTable, ElMessage } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { reactive } from "vue";
 import { getMemberList, searchByNum } from "../../api/p_management";
@@ -143,27 +143,34 @@ interface User {
 }
 
 const filterUser = async () => {
-  let MemberList: { code: number; data: User[] } = await getMemberList(
-    filterValue.value
-  );
-  UserRawData.value = MemberList.data;
-  tableData.value = UserRawData.value.slice(
-    (PageNum.value - 1) * pageSize.value,
-    PageNum.value * pageSize.value
-  );
-  UserNum.value = MemberList.data.length;
+  let MemberList: { code: number; data: User[]; msg: string } =
+    await getMemberList(filterValue.value);
+  if (MemberList.code === 0) {
+    UserRawData.value = MemberList.data;
+    tableData.value = UserRawData.value.slice(
+      (PageNum.value - 1) * pageSize.value,
+      PageNum.value * pageSize.value
+    );
+    UserNum.value = MemberList.data.length;
+  } else {
+    ElMessage.error(MemberList.msg + ":" + MemberList.code);
+  }
 };
 
 const searchBySno = async () => {
   tableData.value = [];
   filterValue.value = 0;
-  let MemberList: { code: number; data: User } = await searchByNum(
+  let MemberList: { code: number; data: User; msg: string } = await searchByNum(
     snoInput.value
   );
-  if (MemberList.data) {
-    UserRawData.value = [MemberList.data];
-    tableData.value = UserRawData.value;
-    UserNum.value = 1;
+  if (MemberList.code === 0) {
+    if (MemberList.data) {
+      UserRawData.value = [MemberList.data];
+      tableData.value = UserRawData.value;
+      UserNum.value = 1;
+    }
+  } else {
+    ElMessage.error(MemberList.msg + ":" + MemberList.code);
   }
 };
 
