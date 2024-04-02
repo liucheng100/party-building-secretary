@@ -9,7 +9,7 @@
   <div class="main">
     <Navtree class="nav" />
     <div class="content">
-      <MainHeader />
+      <MainHeader style="height: 75px" />
       <div id="screen" class="screen">
         <div class="decor">
           <router-view></router-view>
@@ -48,6 +48,7 @@ if (getToken()) {
 </script>
 <style scoped>
 .main {
+  height: 100vh;
   background-color: #fafafa;
   display: grid;
   grid-template-columns: 20vw auto;
@@ -60,7 +61,8 @@ if (getToken()) {
 }
 
 .screen {
-  padding: 10px 10px;
+  flex: 1;
+  padding: 0px 30px 0px 30px;
   overflow: hidden;
 }
 
@@ -68,14 +70,18 @@ if (getToken()) {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  padding: 40px 20px 0 70px;
+  padding: 10px;
   /* padding-bottom: 25px; */
   overflow: overlay;
 }
 
 .content {
-  display: grid;
-  grid-template-rows: 90px auto;
-  padding: 0 32px 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: hidden;
+}
+::v-deep .el-table th .cell {
+  font-weight: 400;
 }
 </style>

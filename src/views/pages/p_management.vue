@@ -1,70 +1,72 @@
 <template>
-  <div class="head">
-    <div>
-      <span>身份 </span
-      ><el-select
-        v-model="filterValue"
-        class="m-2"
-        placeholder="Select"
-        style="margin-left: 30px"
-        @change="filterUser()"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterUser()">筛选</el-button>
+  <div class="container">
+    <div class="head">
+      <div>
+        <span>身份 </span
+        ><el-select
+          v-model="filterValue"
+          class="m-2"
+          placeholder="Select"
+          style="margin-left: 30px"
+          @change="filterUser()"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterUser()">筛选</el-button>
       疑似反人类按钮 我先给扣了 用上面的@change="filterMember" -->
+      </div>
+      <div>
+        <span>学号 </span>
+        <el-input
+          style="display: inline; margin-left: 30px"
+          placeholder="输入需要查找的学号"
+          v-model="snoInput"
+          @change="searchBySno()"
+        ></el-input>
+        <el-button
+          style="margin-left: 30px"
+          color="#c7242f"
+          @click="searchBySno()"
+          >搜索</el-button
+        >
+      </div>
     </div>
-    <div>
-      <span>学号 </span>
-      <el-input
-        style="display: inline; margin-left: 30px"
-        placeholder="输入需要查找的学号"
-        v-model="snoInput"
-        @change="searchBySno()"
-      ></el-input>
-      <el-button
-        style="margin-left: 30px"
-        color="#c7242f"
-        @click="searchBySno()"
-        >搜索</el-button
+    <div class="Main">
+      <el-table
+        ref="multipleTableRef"
+        :data="tableData"
+        style="width: 100%; height: 100%"
+        :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
       >
+        <el-table-column width="48"></el-table-column>
+        <el-table-column property="userName" label="姓名"> </el-table-column>
+        <el-table-column property="sno" label="学号" />
+        <el-table-column property="type" label="身份">
+          <template #default="scope">
+            {{ types[scope.row.type + 1] }}
+            <!--后端的身份type从-1开始的-->
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button
+              style="color: #c7242f"
+              link
+              @click="handleCheck(scope.$index, scope.row)"
+              >查看</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
-  </div>
-  <div class="Main">
-    <el-table
-      ref="multipleTableRef"
-      :data="tableData"
-      style="width: 100%; margin-top: 20px"
-      :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" />
-      <el-table-column property="userName" label="姓名"> </el-table-column>
-      <el-table-column property="sno" label="学号" />
-      <el-table-column property="type" label="身份">
-        <template #default="scope">
-          {{ types[scope.row.type + 1] }}
-          <!--后端的身份type从-1开始的-->
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template #default="scope">
-          <el-button
-            style="color: #c7242f"
-            link
-            @click="handleCheck(scope.$index, scope.row)"
-            >查看</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
     <el-config-provider :locale="zhCn">
       <el-pagination
+        small
         class="el-pagination"
         v-model:current-page="PageNum"
         v-model:page-size="pageSize"
@@ -82,7 +84,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { ElTable } from "element-plus";
+import { ElTable, ElMessage } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { reactive } from "vue";
 import { getMemberList, searchByNum } from "../../api/p_management";
@@ -141,27 +143,34 @@ interface User {
 }
 
 const filterUser = async () => {
-  let MemberList: { code: number; data: User[] } = await getMemberList(
-    filterValue.value
-  );
-  UserRawData.value = MemberList.data;
-  tableData.value = UserRawData.value.slice(
-    (PageNum.value - 1) * pageSize.value,
-    PageNum.value * pageSize.value
-  );
-  UserNum.value = MemberList.data.length;
+  let MemberList: { code: number; data: User[]; msg: string } =
+    await getMemberList(filterValue.value);
+  if (MemberList.code === 0) {
+    UserRawData.value = MemberList.data;
+    tableData.value = UserRawData.value.slice(
+      (PageNum.value - 1) * pageSize.value,
+      PageNum.value * pageSize.value
+    );
+    UserNum.value = MemberList.data.length;
+  } else {
+    ElMessage.error(MemberList.msg + ":" + MemberList.code);
+  }
 };
 
 const searchBySno = async () => {
   tableData.value = [];
   filterValue.value = 0;
-  let MemberList: { code: number; data: User } = await searchByNum(
+  let MemberList: { code: number; data: User; msg: string } = await searchByNum(
     snoInput.value
   );
-  if (MemberList.data) {
-    UserRawData.value = [MemberList.data];
-    tableData.value = UserRawData.value;
-    UserNum.value = 1;
+  if (MemberList.code === 0) {
+    if (MemberList.data) {
+      UserRawData.value = [MemberList.data];
+      tableData.value = UserRawData.value;
+      UserNum.value = 1;
+    }
+  } else {
+    ElMessage.error(MemberList.msg + ":" + MemberList.code);
   }
 };
 
@@ -224,17 +233,24 @@ const handleSelectionChange = (val: User[]) => {
 </script>
 
 <style>
-.Main {
-  height: auto;
+.container {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .head {
+  width: 79%;
+  height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.Main {
+  margin-top: 20px;
+  flex: 1;
+  overflow: auto;
 }
 
 .el-pagination.is-background .el-pager li {

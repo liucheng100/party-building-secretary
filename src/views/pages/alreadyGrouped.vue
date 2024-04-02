@@ -9,7 +9,9 @@
       >
         <el-table-column label="组号" width="60">
           <template #default="scope">
-            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
+            <span style="color: #c7242f; font-weight: bold">{{
+              scope.row.id
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" property="name">
@@ -34,7 +36,9 @@
       >
         <el-table-column label="组号" width="60">
           <template #default="scope">
-            <span style="color:#c7242f;font-weight: bold;">{{ scope.row.id }}</span>
+            <span style="color: #c7242f; font-weight: bold">{{
+              scope.row.id
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column label="姓名" property="name">
@@ -52,6 +56,7 @@
   </div>
   <el-config-provider :locale="zhCn">
     <el-pagination
+      small
       class="el-pagination"
       v-model:current-page="PageNum"
       v-model:page-size="pageSize"
@@ -70,14 +75,15 @@ import { ref, onMounted } from "vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import { getGroup } from "@/api/learngroup";
+import { ElMessage } from "element-plus";
 
-const pageSize = ref(<number>10);//每页组别
-let GroupsData = ref(<GroupedUser[]>[])
-let GroupNum = ref(0)  //总长度
-let PageNum = ref(1)  //当前页码
+const pageSize = ref(<number>10); //每页组别
+let GroupsData = ref(<GroupedUser[]>[]);
+let GroupNum = ref(0); //总长度
+let PageNum = ref(1); //当前页码
 
-let tableDataLeft = ref(<GroupedMember[]>[])
-let tableDataRight = ref(<GroupedMember[]>[])
+let tableDataLeft = ref(<GroupedMember[]>[]);
+let tableDataRight = ref(<GroupedMember[]>[]);
 
 interface Member {
   name: string;
@@ -88,9 +94,9 @@ interface Member {
 }
 
 interface GroupedUser {
-  id: number;  //组别Id
+  id: number; //组别Id
   members: Member[];
-  userId : number;  //每个学生都有对应的userId
+  userId: number; //每个学生都有对应的userId
 }
 
 interface GroupedMember extends Member {
@@ -98,15 +104,17 @@ interface GroupedMember extends Member {
 }
 
 onMounted(async () => {
-  let GroupsRawData:{code:number,data:[]} = await getGroup()
-  if(GroupsRawData.code == 0){
+  let GroupsRawData: { code: number; data: []; msg: string } = await getGroup();
+  if (GroupsRawData.code === 0) {
     GroupsData.value = GroupsRawData.data;
     processGroupData(GroupsData.value);
+  } else {
+    ElMessage.error(GroupsRawData.msg + ":" + GroupsRawData.code);
   }
-})
+});
 
 const handleSizeChange = (val: number) => {
-  pageSize.value = val
+  pageSize.value = val;
   processGroupData(GroupsData.value);
 };
 
@@ -115,25 +123,25 @@ const handleCurrentChange = (val: number) => {
 };
 
 const processGroupData = (groups: GroupedUser[]) => {
-  tableDataLeft.value = []
-  tableDataRight.value = []
-  let nowGroups = groups.slice((PageNum.value - 1) * pageSize.value, PageNum.value * pageSize.value)
+  tableDataLeft.value = [];
+  tableDataRight.value = [];
+  let nowGroups = groups.slice(
+    (PageNum.value - 1) * pageSize.value,
+    PageNum.value * pageSize.value
+  );
   GroupNum.value = groups.length;
-  nowGroups.forEach((group,Groupindex) => {
-    if(group.members != null)//判断下是不是空组别
+  nowGroups.forEach((group, Groupindex) => {
+    if (group.members != null)
+      //判断下是不是空组别
       group.members.forEach((member) => {
         let row: GroupedMember = { ...member };
-        if(member != null){
+        if (member != null) {
           if (member.isLeader === true) {
             row.id = group.id; // 只有每组的第一个成员有组号
           }
-          if(Groupindex < nowGroups.length/2)
-            tableDataLeft.value.push(row);
-          else
-            tableDataRight.value.push(row)
-        }
-        else
-          GroupNum.value = GroupNum.value - 1;
+          if (Groupindex < nowGroups.length / 2) tableDataLeft.value.push(row);
+          else tableDataRight.value.push(row);
+        } else GroupNum.value = GroupNum.value - 1;
       });
   });
 };

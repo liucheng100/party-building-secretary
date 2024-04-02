@@ -8,15 +8,21 @@
 
         <div class="p_check_head_2">
           <div class="name" style="display: flex; flex-direction: column">
-            <div style="color: #9f9f9f; margin-bottom: 10px">姓名</div>
+            <div style="color: #9f9f9f; margin-bottom: 10px; font-size: 16px">
+              姓名
+            </div>
             <div style="font-size: 24px">{{ name }}</div>
           </div>
           <div class="stu_id" style="display: flex; flex-direction: column">
-            <div style="color: #9f9f9f; margin-bottom: 10px">学号</div>
+            <div style="color: #9f9f9f; margin-bottom: 10px; font-size: 16px">
+              学号
+            </div>
             <div style="font-size: 24px">{{ stu_id }}</div>
           </div>
           <div class="identity" style="display: flex; flex-direction: column">
-            <div style="color: #9f9f9f; margin-bottom: 10px">身份</div>
+            <div style="color: #9f9f9f; margin-bottom: 10px; font-size: 16px">
+              身份
+            </div>
             <div style="font-size: 24px">{{ identity }}</div>
           </div>
         </div>
@@ -26,31 +32,24 @@
           ref="multipleTableRef"
           :data="tableData"
           style="width: 100%"
-          :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
+          :cell-style="{ padding: '15px' }"
+          :header-cell-style="{
+            background: '#FFF8F9',
+            color: '#2F2F2F',
+            padding: '15px',
+          }"
         >
-          <el-table-column property="title" label="标题" min-width="70%">
+          <el-table-column property="title" label="标题" width="180">
             <template #default="scope">
               {{ scope.row.title }}
             </template>
           </el-table-column>
-          <el-table-column property="class" label="类别" min-width="70%">
+          <el-table-column property="class" label="类别" width="140">
             <template #default="scope">
-              {{
-                scope.row.type < 100
-                  ? scope.row.type == 0
-                    ? "入党申请书"
-                    : "个人自传"
-                  : scope.row.type < 200
-                  ? "思想报告"
-                  : "个人总结"
-              }}
+              {{ scope.row.type <= 6 ? options[scope.row.type].label : "" }}
             </template>
           </el-table-column>
-          <el-table-column
-            property="situation"
-            label="当前状态"
-            min-width="50%"
-          >
+          <el-table-column property="situation" label="当前状态">
             <template #default="scope">
               <div class="icon_situation">
                 <i
@@ -75,7 +74,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" min-width="30%">
+          <el-table-column label="操作">
             <template #default="scope">
               <el-button
                 style="color: #c7242f"
@@ -753,8 +752,8 @@
         </div> -->
       </div>
     </div>
-    <div style="position: absolute; right: 6%">
-      <el-icon @click="$router.back()" :size="30"><Close /></el-icon>
+    <div style="position: absolute; left: 43%; top: 0">
+      <img src="../../assets/back-icon.svg" @click="$router.back()" />
     </div>
   </div>
 </template>
@@ -811,7 +810,7 @@ const pageSize = ref(12);
 const Cn = ref(zhCn);
 var statueList = ref<boolean[]>([]);
 const tableData = ref<File[]>([]);
-const situationType = ["待审", "通过", "未通过"];
+const situationType = ["未审批", "已通过", "未通过"];
 //关键节点时间表示
 const keyNode = [
   {
@@ -840,6 +839,38 @@ const keyNode = [
     stage: 24,
   },
 ];
+
+const options = [
+  {
+    label: "全部",
+    value: -1,
+  },
+  {
+    label: "入党申请书",
+    value: 1,
+  },
+  {
+    label: "思想汇报",
+    value: 2,
+  },
+  {
+    label: "个人自传",
+    value: 3,
+  },
+  {
+    label: "入党志愿书",
+    value: 4,
+  },
+  {
+    label: "转正申请书",
+    value: 5,
+  },
+
+  {
+    label: "个人小结",
+    value: 6,
+  },
+];
 var changeTimeList = ref<String[]>([]);
 let BRANCH_INFO: { partybranchName: string } = JSON.parse(
   JSON.stringify(inject("BRANCH_INFO"))
@@ -854,12 +885,16 @@ const handleCurrentChange = (val: number) => {
 };
 
 const handleCheck = async (row: File) => {
-  let res: { code: number; data: File } = await getSFileDetail(row.id);
-  if (res.code == 0) {
+  let res: { code: number; data: File; msg: string } = await getSFileDetail(
+    row.id
+  );
+  if (res.code === 0) {
     res.data.userName = history.state.params.name;
     res.data.sno = history.state.params.stu_id;
     let params: any = res.data;
     $router.push({ name: "f_check", state: { params } });
+  } else {
+    ElMessage.error(res.msg + ":" + res.code);
   }
 };
 const toSubmit = () => {
@@ -895,30 +930,35 @@ onMounted(async () => {
   user_id.value = params.user_id;
   name.value = params.name;
 
-  let PersonRawData: { code: number; data: [] } = await getPersonProcess(
-    user_id.value
-  );
-  let k = 0;
-  for (let i = 0; i < PersonRawData.data.length; i++) {
-    let data: UserStatus = PersonRawData.data[i];
-    statueList.value[data.processId] = data.status;
-    for (let j = 0; j < keyNode.length; j++) {
-      if (data.processId == keyNode[j].stage) {
-        //不为null
-        if (data.passAt) changeTimeList.value[k++] = data.passAt.split("T")[0];
+  let PersonRawData: { code: number; data: []; msg: string } =
+    await getPersonProcess(user_id.value);
+  if (PersonRawData.code === 0) {
+    let k = 0;
+    for (let i = 0; i < PersonRawData.data.length; i++) {
+      let data: UserStatus = PersonRawData.data[i];
+      statueList.value[data.processId] = data.status;
+      for (let j = 0; j < keyNode.length; j++) {
+        if (data.processId == keyNode[j].stage) {
+          //不为null
+          if (data.passAt)
+            changeTimeList.value[k++] = data.passAt.split("T")[0];
+        }
       }
     }
+    let FileRawData: { code: number; data: File[] } = await getFile(
+      user_id.value
+    );
+    tableData.value = FileRawData.data; //status 0待审 1通过 2未通过
+  } else {
+    ElMessage.error(PersonRawData.msg + ":" + PersonRawData.code);
   }
-  let FileRawData: { code: number; data: File[] } = await getFile(
-    user_id.value
-  );
-  tableData.value = FileRawData.data; //status 0待审 1通过 2未通过
 });
 </script>
 
 <style scoped>
 .mainView {
   width: 100%;
+  display: flex;
 }
 .topBar {
   display: flex;
@@ -1004,13 +1044,13 @@ onMounted(async () => {
 }
 .graphMain {
   width: 100%;
-  height: 1000px;
+  height: 100%;
   background: #ffffff;
   position: relative;
 }
 .chart-main {
   overflow: auto;
-  height: 1000px;
+  height: 100%;
   position: relative;
 }
 .chart-main::-webkit-scrollbar {
@@ -1524,26 +1564,26 @@ onMounted(async () => {
 }
 
 .p_check {
-  height: 1000px;
+  height: 100%;
   display: flex;
+  position: relative;
   justify-content: space-around;
 }
 .p_check_1 {
-  width: 48%;
+  width: 45%;
   display: flex;
   flex-direction: column;
 }
 .p_check_2 {
-  width: 48%;
+  width: 52%;
   background-color: #fff;
   display: flex;
   position: relative;
-  box-shadow: 0 5px 15px 9px #e8e8e8;
 }
 
 .p_check_1_1 {
   width: 100%;
-  flex: 3;
+  flex: 2;
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
@@ -1551,13 +1591,13 @@ onMounted(async () => {
 .p_check_head_1 {
   width: 100%;
   flex: 1;
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 400;
   display: flex;
   justify-content: space-between;
 }
 .p_check_head_2 {
-  width: 100%;
+  width: 87%;
   flex: 1;
   display: flex;
   justify-content: space-between;
@@ -1572,11 +1612,12 @@ onMounted(async () => {
   width: 150px;
 }
 .p_check_1_2 {
-  flex: 7;
+  flex: 9;
   background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
 }
 
 .icon_situation {
