@@ -120,7 +120,7 @@ defineExpose({
 });
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  //console.log(`${val} items per page`);
 };
 
 const handleCurrentChange = (val: number) => {
@@ -133,7 +133,7 @@ const handleCurrentChange = (val: number) => {
     (-0.5 + PageNum.value) * pageSize.value,
     PageNum.value * pageSize.value
   );
-  // console.log(`current page: ${val}`);
+  //console.log(`current page: ${val}`);
 };
 
 const multipleSelection = ref<learnUser[]>([]);

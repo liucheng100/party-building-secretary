@@ -877,17 +877,19 @@ let BRANCH_INFO: { partybranchName: string } = JSON.parse(
 ); //ts的类型检测能不能死啊
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  //console.log(`${val} items per page`);
 };
 
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  //console.log(`current page: ${val}`);
 };
 
 const handleCheck = async (row: File) => {
   let res: { code: number; data: File; msg: string } = await getSFileDetail(
     row.id
   );
+  //console.log(res);
+  
   if (res.code === 0) {
     res.data.userName = history.state.params.name;
     res.data.sno = history.state.params.stu_id;
@@ -919,7 +921,7 @@ const changeStatue = (val: any) => {
 };
 onMounted(async () => {
   let params = history.state.params;
-  // console.log(params);
+  //console.log(params);
   stu_id.value = params.stu_id;
   identity.value = params.identity;
   //-----------------------------------------------------------------------------------------------------------------------
@@ -947,7 +949,11 @@ onMounted(async () => {
     }
     let FileRawData: { code: number; data: File[] } = await getFile(
       user_id.value
+      
     );
+    //console.log(user_id.value);
+    //console.log('file', FileRawData);
+    
     tableData.value = FileRawData.data; //status 0待审 1通过 2未通过
   } else {
     ElMessage.error(PersonRawData.msg + ":" + PersonRawData.code);

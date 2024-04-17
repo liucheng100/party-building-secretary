@@ -197,7 +197,7 @@ const fetchAllFiles = async (type: number, hasRead: number) => {
     type,
     hasRead
   ); //type:hasRead:0全部1已审2未审
-  console.log(tableData);
+  //console.log('文件',tableData);
   if (fileList.code === 0) {
     tableData.value = fileList.data;
   } else {
@@ -210,11 +210,11 @@ onMounted(async () => {
 });
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  //console.log(`${val} items per page`);
 };
 
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  //console.log(`current page: ${val}`);
 };
 
 const handleCheck = (index: number, row: User) => {
@@ -238,7 +238,7 @@ const formInline = reactive({
 });
 
 const onSubmit = () => {
-  console.log("submit!");
+  //console.log("submit!");
 };
 
 interface User {

@@ -16,14 +16,14 @@ const myRequest = new MYRequest({
       return config;
     },
     requestInterceptorCatch: (err) => {
-      console.log("请求拦截失败");
+      //console.log("请求拦截失败");
       return err;
     },
     responseInterceptor: (res) => {
       return res;
     },
     responseInterceptorCatch: (err) => {
-      console.log("响应失败的拦截");
+      //console.log("响应失败的拦截");
       return err;
     },
   },

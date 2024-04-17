@@ -31,14 +31,14 @@ class MYRequest {
     );
     this.instance.interceptors.request.use(
       (config) => {
-        // console.log("所有实例已经拦截");
+        //console.log("所有实例已经拦截");
         if (this.showLoading) {
-          // console.log("HERE IS THE LOADING");
+          //console.log("HERE IS THE LOADING");
         }
         return config;
       },
       (err) => {
-        console.log("请求拦截失败");
+        //console.log("请求拦截失败");
         return err;
       }
     );
@@ -49,9 +49,9 @@ class MYRequest {
         return data;
       },
       (err) => {
-        console.log("所有实例的拦拦截器:响应拦截失败");
+        //console.log("所有实例的拦拦截器:响应拦截失败");
         if (err.response.status === 404) {
-          console.log("404的错误");
+          //console.log("404的错误");
         }
         return err;
       }

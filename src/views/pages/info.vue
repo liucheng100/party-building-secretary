@@ -53,7 +53,7 @@ const chart = ref(null);
 onMounted(() => {
   watchEffect(() => {
     if (BRANCH_INFO) {
-      console.log(BRANCH_INFO);
+      //console.log(BRANCH_INFO);
       list.value = [
         { name: "入党申请人", num: BRANCH_INFO.applicantCount, icon: "icon1" },
         { name: "积极分子", num: BRANCH_INFO.activeCount, icon: "icon2" },

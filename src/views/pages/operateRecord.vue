@@ -89,15 +89,15 @@ const currentPage = ref(1);
 const pageSize = ref(14);
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  //console.log(`${val} items per page`);
 };
 
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  //console.log(`current page: ${val}`);
 };
 
 const handleCheck = (index: number, row: Record) => {
-  console.log(index, row);
+  //console.log(index, row);
   $router.push("/deal/fileApproval/fileCheck");
 };
 
@@ -108,7 +108,7 @@ const formInline = reactive({
 });
 
 const onSubmit = () => {
-  console.log("submit!");
+  //console.log("submit!");
 };
 
 interface Record {
