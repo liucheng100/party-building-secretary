@@ -219,7 +219,7 @@ const handleDelete = async (index: any) => {
       }
     })
     .catch((err) => {
-      console.log(err);
+      //console.log(err);
       ElMessage.warning("删除失败");
     });
 };

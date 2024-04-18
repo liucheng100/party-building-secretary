@@ -110,7 +110,7 @@
               <div class="progressLine">
                 <div class="line-1"></div>
                 <div class="line-2"></div>
-                <div class="point">
+                <div class="point" ref="point">
                   <img src="../../assets/point.png" />
                   <div></div>
                 </div>
@@ -759,7 +759,14 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, ref, onMounted, inject } from "vue";
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  inject,
+  watch,
+  watchEffect,
+} from "vue";
 import { ElTable } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import $router from "@/router"; //....
@@ -800,6 +807,7 @@ interface File {
   file_id: string;
 }
 
+const point = ref<any>(null);
 const currentStatu = ref(0);
 const name = ref("taffy");
 const stu_id = ref("3022244000");
@@ -810,7 +818,7 @@ const pageSize = ref(12);
 const Cn = ref(zhCn);
 var statueList = ref<boolean[]>([]);
 const tableData = ref<File[]>([]);
-const situationType = ["未审批", "已通过", "未通过"];
+const situationType = ["未审批", "已通过", "驳回"];
 //关键节点时间表示
 const keyNode = [
   {
@@ -877,17 +885,19 @@ let BRANCH_INFO: { partybranchName: string } = JSON.parse(
 ); //ts的类型检测能不能死啊
 
 const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+  //console.log(`${val} items per page`);
 };
 
 const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`);
+  //console.log(`current page: ${val}`);
 };
 
 const handleCheck = async (row: File) => {
   let res: { code: number; data: File; msg: string } = await getSFileDetail(
     row.id
   );
+  //console.log(res);
+  
   if (res.code === 0) {
     res.data.userName = history.state.params.name;
     res.data.sno = history.state.params.stu_id;
@@ -917,9 +927,10 @@ const changeStatue = (val: any) => {
     for (let i = 0; i <= currentStatu.value; i++) statueList.value[i] = true;
   }
 };
+
 onMounted(async () => {
   let params = history.state.params;
-  // console.log(params);
+  //console.log(params);
   stu_id.value = params.stu_id;
   identity.value = params.identity;
   //-----------------------------------------------------------------------------------------------------------------------
@@ -947,7 +958,11 @@ onMounted(async () => {
     }
     let FileRawData: { code: number; data: File[] } = await getFile(
       user_id.value
+      
     );
+    //console.log(user_id.value);
+    //console.log('file', FileRawData);
+    
     tableData.value = FileRawData.data; //status 0待审 1通过 2未通过
   } else {
     ElMessage.error(PersonRawData.msg + ":" + PersonRawData.code);

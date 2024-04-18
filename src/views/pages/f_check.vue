@@ -163,7 +163,7 @@ const fileName = computed(() => {
 });
 onMounted(async () => {
   fileInfo.value = history.state.params;
-  console.log(fileInfo.value);
+  //console.log(fileInfo.value);
 });
 
 const article = ref({
@@ -172,14 +172,14 @@ const article = ref({
 });
 
 const download = async () => {
-  console.log(fileInfo.value.attachment);
+  //console.log(fileInfo.value.attachment);
   if (!fileInfo.value.attachment) {
     ElMessage.warning("无附件");
     return;
   }
   await downloadFile(fileInfo.value.attachment)
     .then((res: any) => {
-      console.log(res);
+      //console.log(res);
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;

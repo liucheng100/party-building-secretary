@@ -28,7 +28,7 @@ const routes = [
             path: "/deal/operateRecord",
             component: () => import("@/views/pages/operateRecord.vue"),
             meta: {
-              title: "操作系统",
+              title: "操作记录",
             },
           },
           {
@@ -47,12 +47,12 @@ const routes = [
           },
           {
             path: "/deal/fileApproval/fileCheck",
-            name: 'f_check',
+            name: "f_check",
             component: () => import("@/views/pages/f_check.vue"),
             meta: {
               title: "查看文件",
             },
-          }
+          },
         ],
       },
       {
@@ -70,16 +70,15 @@ const routes = [
             },
           },
           {
-            name: 'p_info_check',
+            name: "p_info_check",
             path: "/p_management/p_info/p_info_check",
             component: () => import("@/views/pages/p_info_check.vue"),
             meta: {
               title: "个人详情",
             },
             params: {
-              row:{
-              }
-            }
+              row: {},
+            },
           },
           {
             path: "/p_management/learnGroup",
@@ -89,20 +88,27 @@ const routes = [
             },
             children: [
               {
-                path: '',
-                redirect: '/p_management/learnGroup/grouped'
+                path: "",
+                redirect: "/p_management/learnGroup/grouped",
               },
               {
-                path: 'grouped',
+                path: "grouped",
                 component: () => import("@/views/pages/alreadyGrouped.vue"),
               },
               {
-                path: 'ungrouped',
+                path: "ungrouped",
                 component: () => import("@/views/pages/unGrouped.vue"),
-              }
-            ]
+              },
+            ],
           },
         ],
+      },
+      {
+        path: "/authority",
+        component: () => import("@/views/pages/authority.vue"),
+        meta: {
+          title: "权限管理",
+        },
       },
     ],
   },
