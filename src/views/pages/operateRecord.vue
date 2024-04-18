@@ -141,15 +141,15 @@ const handleSelectionChange = (val: Record[]) => {
 };
 
 const tableData: Record[] = [
-  {
-    name: "东雪莲",
-    stu_number: "3022244001",
-    identity: "入党申请人",
-    operate_time: "2023-11-1",
-    operate_p: "西门",
-    operate_stu_number: "2203455",
-    operate_type: "状态变更",
-  },
+  // {
+  //   name: "东雪莲",
+  //   stu_number: "3022244001",
+  //   identity: "入党申请人",
+  //   operate_time: "2023-11-1",
+  //   operate_p: "西门",
+  //   operate_stu_number: "2203455",
+  //   operate_type: "状态变更",
+  // },
 ];
 </script>
 
