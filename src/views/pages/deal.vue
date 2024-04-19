@@ -1,49 +1,62 @@
 <template>
   <div class="container">
-    <div class="head">
-      <div>
-        <span>当前阶段 </span
-        ><el-select
-          v-model="stageValue"
-          class="m-2"
-          placeholder="Select"
-          style="margin-left: 30px"
-          @change="filterMember(true)"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </div>
-      <div>
-        <span>欲通过的阶段 </span>
-        <el-select
-          v-model="subStageValue"
-          class="m-2"
-          placeholder="Select"
-          style="margin-left: 30px"
-          @change="filterMember(false)"
-        >
-          <el-option
-            v-for="item in options_little[stageValue]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-        <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterMember()">筛选</el-button>
-      疑似反人类按钮 我先给扣了 用上面的@change="filterMember" -->
-        <el-button
-          style="margin-left: 30px"
-          color="#c7242f"
-          @click="multiProcessAccess()"
-          >通过选中成员</el-button
-        >
-      </div>
-    </div>
+    <el-row class="head">
+      <el-col :span="10" class="headbar">
+        <el-row style="width:100%;align-items:center">
+          <el-col :span="7">
+            <span>当前阶段 </span>
+          </el-col>
+          <el-col :span="10">
+            <el-select
+              v-model="stageValue"
+              class="m-2"
+              placeholder="Select"
+              @change="filterMember(true)"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="6" />
+      <el-col :span="8" class="headbar">
+        <el-row style="width:100%;align-items:center">
+          <el-col :span="8">
+            <span>欲通过的阶段 </span>
+          </el-col>
+          <el-col :span="10">
+            <el-select
+              v-model="subStageValue"
+              class="m-2"
+              placeholder="Select"
+              @change="filterMember(false)"
+            >
+              <el-option
+                v-for="item in options_little[stageValue]"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-col>
+            <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterMember()">筛选</el-button>
+          疑似反人类按钮 我先给扣了 用上面的@change="filterMember" -->
+          <el-col :span="2" />
+          <el-col :span="4">
+            <el-button
+              color="#c7242f"
+              @click="multiProcessAccess()"
+              >通过选中成员</el-button
+            >
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
     <div class="Main">
       <el-table
         ref="multipleTableRef"
@@ -57,7 +70,7 @@
           <template #default="scope">{{ scope.row.userName }}</template>
         </el-table-column>
         <el-table-column property="sno" label="学号" />
-        <el-table-column property="identity" label="身份">
+        <el-table-column property="identity" label="当前阶段">
           {{ options[stageValue].label }}
         </el-table-column>
         <el-table-column label="操作">
@@ -175,7 +188,7 @@ const showMuti = ref(true);
 const date = ref("");
 const options = [
   {
-    label: "入党申请人前",
+    label: "未提交入党申请书",
     value: 0,
   },
   {
@@ -593,11 +606,22 @@ const closeModal = () => {
 }
 
 .head {
-  width: 79%;
+  width: 80%;
   height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.headbar{
+  display: flex;
+  align-items: center;
+}
+:deep(.el-select__wrapper){
+  font-size:10px;
+}
+.headbar span{
+  width:160px;
+  font-size:14px;
 }
 .Main {
   margin-top: 20px;
