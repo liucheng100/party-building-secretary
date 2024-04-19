@@ -90,12 +90,11 @@
             class="el-paginatio"
             v-model:current-page="currentPage"
             v-model:page-size="pageSize"
-            :page-sizes="[12]"
             :style="{ margin: '20px' }"
             background
             small
             layout="total, ->,sizes, prev, pager, next, jumper"
-            :total="30"
+            :total="fileNum"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
           />
@@ -817,7 +816,9 @@ const currentPage = ref<number>(1);
 const pageSize = ref(12);
 const Cn = ref(zhCn);
 var statueList = ref<boolean[]>([]);
+const fileRawData = ref<File[]>([]);
 const tableData = ref<File[]>([]);
+const fileNum = ref(0);
 const situationType = ["未审批", "已通过", "驳回"];
 //关键节点时间表示
 const keyNode = [
@@ -886,10 +887,18 @@ let BRANCH_INFO: { partybranchName: string } = JSON.parse(
 
 const handleSizeChange = (val: number) => {
   //console.log(`${val} items per page`);
+  tableData.value = fileRawData.value.slice(
+    (currentPage.value - 1) * pageSize.value,
+    currentPage.value * pageSize.value
+  );
 };
 
 const handleCurrentChange = (val: number) => {
   //console.log(`current page: ${val}`);
+  tableData.value = fileRawData.value.slice(
+    (currentPage.value - 1) * pageSize.value,
+    currentPage.value * pageSize.value
+  );
 };
 
 const handleCheck = async (row: File) => {
@@ -897,7 +906,7 @@ const handleCheck = async (row: File) => {
     row.id
   );
   //console.log(res);
-  
+
   if (res.code === 0) {
     res.data.userName = history.state.params.name;
     res.data.sno = history.state.params.stu_id;
@@ -958,12 +967,16 @@ onMounted(async () => {
     }
     let FileRawData: { code: number; data: File[] } = await getFile(
       user_id.value
-      
     );
     //console.log(user_id.value);
     //console.log('file', FileRawData);
-    
-    tableData.value = FileRawData.data; //status 0待审 1通过 2未通过
+
+    fileRawData.value = FileRawData.data; //status 0待审 1通过 2未通过
+    fileNum.value = FileRawData.data.length;
+    tableData.value = fileRawData.value.slice(
+      (currentPage.value - 1) * pageSize.value,
+      currentPage.value * pageSize.value
+    );
   } else {
     ElMessage.error(PersonRawData.msg + ":" + PersonRawData.code);
   }
