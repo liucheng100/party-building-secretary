@@ -14,7 +14,7 @@
       <div class="font2">支部委员</div>
       <div class="font1">
         {{ BRANCH_INFO.partybranchOrganizer?.username
-        }}{{ BRANCH_INFO.partybranchPropagator?.username }}
+        }}&nbsp;&nbsp;&nbsp;{{ BRANCH_INFO.partybranchPropagator?.username }}
       </div>
     </div>
     <div class="detail">
