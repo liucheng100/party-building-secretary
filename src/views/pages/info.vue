@@ -20,7 +20,7 @@
     <div class="detail">
       <div ref="chart" style="width: 100%; height: 250px"></div>
       <div class="list">
-        <div v-for="item in list" class="list-item">
+        <div v-for="item in list" class="list-item" :key="item">
           <div class="m">
             <img :src="getIconPath(item.icon)" />
             <div class="font1">{{ item.name }}</div>
