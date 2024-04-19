@@ -133,7 +133,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ElTable, ElMessage } from "element-plus";
 
 import zhCn from "element-plus/es/locale/lang/zh-cn";
-import { getAllFiles } from "../../api/manageFile";
+import { getAllFiles, getFileDetailContent } from "../../api/manageFile";
 import { reactive } from "vue";
 const $route = useRoute();
 const $router = useRouter();
@@ -218,17 +218,21 @@ const handleCurrentChange = (val: number) => {
 };
 
 const handleCheck = (index: number, row: User) => {
-  let params = {
+  getFileDetailContent(row.id).then((res)=>{
+    let content = res.data.content;
+    let params = {
     userName: row.userName,
     sno: row.sno,
     createAt: row.createAt,
     type: row.type,
     file_id: row.id,
     title: row.title,
-    content: row.content,
+    content: content,
     attachment: row.attachment,
   };
   $router.push({ name: "f_check", state: { params } });
+  })
+
 };
 
 const formInline = reactive({

@@ -23,6 +23,12 @@ export function getFileDetail<T>(id: any) {
   });
 }
 
+export function getFileDetailContent<T>(id: any) {
+  return http.get<T>({
+    url: `/api/file/htd/${id}`,
+  });
+}
+
 export function approvalFile<T>(
   status: number,
   id: string,
