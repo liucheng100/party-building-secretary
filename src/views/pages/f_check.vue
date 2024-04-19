@@ -163,6 +163,7 @@ const fileName = computed(() => {
 });
 onMounted(async () => {
   fileInfo.value = history.state.params;
+  fileInfo.value.content = fileInfo.value.content.replace(/\\r\\n|\\n|\\r/g, '<br>');
   //console.log(fileInfo.value);
 });
 
@@ -241,7 +242,7 @@ const reject = async () => {
   flex-direction: column;
   align-items: center;
   background-color: white;
-  height: 100%;
+  height: auto;
   width: 100%;
 }
 
@@ -275,9 +276,14 @@ const reject = async () => {
 
 .article-content {
   margin-bottom: 10px;
-  height: 45%;
   background-color: #fafafa;
   width: 80%;
+}
+
+.article-content :deep(p){
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .action-buttons {
