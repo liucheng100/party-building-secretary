@@ -190,7 +190,8 @@ function initChart(a, b, c, d, e, f, t) {
   position: absolute;
   right: 0;
   width: 45%;
-  height: 90%;
+  /* height: 90%; */
+  padding-bottom: 40px;
   box-shadow: 0px 4px 16px 0px #00000014;
   border-radius: 5px;
   background-color: #ffffff;
