@@ -116,11 +116,10 @@
         class="el-pagination"
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :page-sizes="[14]"
         :style="{ margin: '20px' }"
         background
         layout="total, ->,sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="fileNum"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -188,18 +187,17 @@ const options_2 = [
 ];
 const currentPage = ref(1);
 const pageSize = ref(14);
-
+const fileNum = ref(0);
 const tableData = ref<User[]>([]);
-const fileRawData = ref<User[]>([]);
 
 const fetchAllFiles = async (type: number, hasRead: number) => {
-  let fileList: { code: number; data: User[]; msg: string } = await getAllFiles(
-    type,
-    hasRead
-  ); //type:hasRead:0全部1已审2未审
-  //console.log('文件',tableData);
+  let fileList: { code: number; data: User[]; page: Page; msg: string } =
+    await getAllFiles(type, hasRead, currentPage.value, pageSize.value); //type:hasRead:0全部1已审2未审
+
   if (fileList.code === 0) {
     tableData.value = fileList.data;
+    fileNum.value = fileList.page.itemTotalCount;
+    //console.log(tableData.value);
   } else {
     ElMessage.error(fileList.msg + ":" + fileList.code);
   }
@@ -211,10 +209,12 @@ onMounted(async () => {
 
 const handleSizeChange = (val: number) => {
   //console.log(`${val} items per page`);
+  fetchAllFiles(typeValue.value, hasReadValue.value);
 };
 
 const handleCurrentChange = (val: number) => {
   //console.log(`current page: ${val}`);
+  fetchAllFiles(typeValue.value, hasReadValue.value);
 };
 
 const handleCheck = (index: number, row: User) => {
@@ -238,8 +238,12 @@ const formInline = reactive({
 });
 
 const onSubmit = () => {
-  //console.log("submit!");
+  // console.log("submit!");
 };
+interface Page {
+  pageTotalCount: number;
+  itemTotalCount: number;
+}
 
 interface User {
   userName: string;
