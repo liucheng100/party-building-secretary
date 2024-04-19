@@ -1,1 +1,0 @@
-import{m as t}from"./index.ae692c96.js";function i(a,r){return t.get({url:"/api/file/htd/list",params:{type:a,hasRead:r}})}function s(a,r,e,l){return t.post({url:`/api/file/htd/${r}/approval`,params:{status:a,comment:e,approvalAt:l}})}export{s as a,i as g};
