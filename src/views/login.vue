@@ -69,7 +69,7 @@ export default {
             this.loginLoading = false;
             this.$router.push("/info");
           } else if (code === 0 && data === 0) {
-            ElMessage.error("非团支书");
+            ElMessage.error("非党支书");
             this.loginLoading = false;
           }else {
             ElMessage.error(msg);
