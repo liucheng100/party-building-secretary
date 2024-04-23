@@ -2,7 +2,7 @@
   <div class="container">
     <el-row class="head">
       <el-col :span="10" class="headbar">
-        <el-row style="width:100%;align-items:center">
+        <el-row style="width: 100%; align-items: center">
           <el-col :span="7">
             <span>当前阶段 </span>
           </el-col>
@@ -25,7 +25,7 @@
       </el-col>
       <el-col :span="6" />
       <el-col :span="8" class="headbar">
-        <el-row style="width:100%;align-items:center">
+        <el-row style="width: 100%; align-items: center">
           <el-col :span="8">
             <span>欲通过的阶段 </span>
           </el-col>
@@ -44,13 +44,11 @@
               />
             </el-select>
           </el-col>
-            <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterMember()">筛选</el-button>
+          <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterMember()">筛选</el-button>
           疑似反人类按钮 我先给扣了 用上面的@change="filterMember" -->
           <el-col :span="2" />
           <el-col :span="4">
-            <el-button
-              color="#c7242f"
-              @click="multiProcessAccess()"
+            <el-button color="#c7242f" @click="multiProcessAccess()"
               >通过选中成员</el-button
             >
           </el-col>
@@ -223,75 +221,55 @@ const options_little = [
   ],
   [
     {
-      label: "参加入党申请人学习小组",
-      value: 0,
-      stage: 2,
-    },
-    {
       label: "群团组织推优",
-      value: 1,
+      value: 0,
       stage: 3,
     },
     {
-      label: "通过网上申请人培训",
-      value: 2,
-      stage: 4,
-    },
-    {
       label: "支委会审议并上报支部党委组织",
-      value: 3,
+      value: 1,
       stage: 5,
     },
     {
       label: "入党积极分子",
-      value: 4,
+      value: 2,
       stage: 6,
     },
   ],
   [
     {
-      label: "通过院级积极分子培训",
-      value: 0,
-      stage: 7,
-    },
-    {
-      label: "按季度递交思想汇报",
-      value: 1,
-      stage: 8,
-    },
-    {
       label: "确定培养联系人",
-      value: 2,
+      value: 0,
       stage: 9,
     },
     {
       label: "支部考察",
-      value: 3,
+      value: 1,
       stage: 10,
     },
     {
       label: "听取党员意见",
-      value: 4,
+      value: 2,
       stage: 11,
     },
     {
       label: "征求群众意见",
-      value: 5,
+      value: 3,
       stage: 12,
     },
     {
       label: "征求党小组、联系人意见",
-      value: 6,
+      value: 4,
       stage: 13,
     },
     {
       label: "支部会讨论并上报上级党委备案",
-      value: 7,
+      value: 5,
       stage: 14,
     },
     {
       label: "发展对象",
-      value: 8,
+      value: 6,
       stage: 15,
     },
   ],
@@ -304,57 +282,52 @@ const options_little = [
 
     {
       label: "政审",
-      value: 2,
+      value: 1,
       stage: 17,
     },
     {
       label: "撰写个人自传",
-      value: 1,
+      value: 2,
       stage: 18,
     },
     {
-      label: "通过发展对象党校培训",
-      value: 3,
-      stage: 19,
-    },
-    {
       label: "材料齐全",
-      value: 4,
+      value: 3,
       stage: 20,
     },
     {
       label: "支部综合审查",
-      value: 5,
+      value: 4,
       stage: 21,
     },
     {
       label: "上级党委预审并公示",
-      value: 6,
+      value: 5,
       stage: 22,
     },
     {
       label: "填写入党申请书",
-      value: 7,
+      value: 6,
       stage: 23,
     },
     {
       label: "党员发展大会",
-      value: 8,
+      value: 7,
       stage: 24,
     },
     {
       label: "党委谈话、审批",
-      value: 9,
+      value: 8,
       stage: 25,
     },
     {
       label: "报再上一级党委组织部门备案",
-      value: 10,
+      value: 9,
       stage: 26,
     },
     {
       label: "中共预备党员",
-      value: 11,
+      value: 10,
       stage: 27,
     },
   ],
@@ -365,63 +338,48 @@ const options_little = [
       stage: 28,
     },
     {
-      label: "通过预备党员培训",
-      value: 1,
-      stage: 29,
-    },
-    {
-      label: "季度递交个人小结",
-      value: 2,
-      stage: 30,
-    },
-    {
       label: "参加组织生活",
-      value: 3,
+      value: 1,
       stage: 31,
     },
     {
       label: "支部按季度进行考察",
-      value: 4,
+      value: 2,
       stage: 32,
     },
     {
-      label: "提出转正申请",
-      value: 5,
-      stage: 33,
-    },
-    {
       label: "征求党员、群众意见",
-      value: 6,
+      value: 3,
       stage: 34,
     },
     {
       label: "听取党小组、介绍人意见",
-      value: 7,
+      value: 4,
       stage: 35,
     },
     {
       label: "转正公示",
-      value: 8,
+      value: 5,
       stage: 36,
     },
     {
       label: "转正大会",
-      value: 9,
+      value: 6,
       stage: 37,
     },
     {
       label: "党委审批",
-      value: 10,
+      value: 7,
       stage: 38,
     },
     {
       label: "党员书记谈话",
-      value: 11,
+      value: 8,
       stage: 39,
     },
     {
       label: "中共党员",
-      value: 12,
+      value: 9,
       stage: 40,
     },
   ],
@@ -612,16 +570,16 @@ const closeModal = () => {
   justify-content: space-between;
   align-items: center;
 }
-.headbar{
+.headbar {
   display: flex;
   align-items: center;
 }
-:deep(.el-select__wrapper){
-  font-size:10px;
+:deep(.el-select__wrapper) {
+  font-size: 10px;
 }
-.headbar span{
-  width:160px;
-  font-size:14px;
+.headbar span {
+  width: 160px;
+  font-size: 14px;
 }
 .Main {
   margin-top: 20px;
