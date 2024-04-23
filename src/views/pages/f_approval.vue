@@ -218,21 +218,20 @@ const handleCurrentChange = (val: number) => {
 };
 
 const handleCheck = (index: number, row: User) => {
-  getFileDetailContent(row.id).then((res)=>{
+  getFileDetailContent(row.id).then((res: any) => {
     let content = res.data.content;
     let params = {
-    userName: row.userName,
-    sno: row.sno,
-    createAt: row.createAt,
-    type: row.type,
-    file_id: row.id,
-    title: row.title,
-    content: content,
-    attachment: row.attachment,
-  };
-  $router.push({ name: "f_check", state: { params } });
-  })
-
+      userName: row.userName,
+      sno: row.sno,
+      createAt: row.createAt,
+      type: row.type,
+      file_id: row.id,
+      title: row.title,
+      content: content,
+      attachment: row.attachment,
+    };
+    $router.push({ name: "f_check", state: { params } });
+  });
 };
 
 const formInline = reactive({
