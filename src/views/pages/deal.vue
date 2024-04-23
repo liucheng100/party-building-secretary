@@ -209,13 +209,8 @@ const options = [
 const options_little = [
   [
     {
-      label: "递交入党申请书",
-      value: 0,
-      stage: 0,
-    },
-    {
       label: "入党申请人",
-      value: 1,
+      value: 0,
       stage: 1,
     },
   ],
@@ -286,48 +281,38 @@ const options_little = [
       stage: 17,
     },
     {
-      label: "撰写个人自传",
-      value: 2,
-      stage: 18,
-    },
-    {
       label: "材料齐全",
-      value: 3,
+      value: 2,
       stage: 20,
     },
     {
       label: "支部综合审查",
-      value: 4,
+      value: 3,
       stage: 21,
     },
     {
       label: "上级党委预审并公示",
-      value: 5,
+      value: 4,
       stage: 22,
     },
     {
-      label: "填写入党申请书",
-      value: 6,
-      stage: 23,
-    },
-    {
       label: "党员发展大会",
-      value: 7,
+      value: 5,
       stage: 24,
     },
     {
       label: "党委谈话、审批",
-      value: 8,
+      value: 6,
       stage: 25,
     },
     {
       label: "报再上一级党委组织部门备案",
-      value: 9,
+      value: 7,
       stage: 26,
     },
     {
       label: "中共预备党员",
-      value: 10,
+      value: 8,
       stage: 27,
     },
   ],
