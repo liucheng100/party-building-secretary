@@ -925,16 +925,16 @@ const toSubmit = () => {
 const changeStatue = (val: any) => {
   // updatePersonProcess(user_id.value, val, !statueList.value[val] ? 1 : 0);
   // statueList.value[val] = !statueList.value[val];
-  //------------------------------------------------仅ui修改，能否修改待定-----------------------------------------------------------//
-  if (statueList.value[val]) {
-    if (val == currentStatu.value) {
-      for (let i = 0; i <= currentStatu.value; i++) statueList.value[i] = false;
-      currentStatu.value = 0;
-    }
-  } else {
-    currentStatu.value = val;
-    for (let i = 0; i <= currentStatu.value; i++) statueList.value[i] = true;
-  }
+  //------------------------------------------------仅ui展示，能否修改待定-----------------------------------------------------------//
+  // if (statueList.value[val]) {
+  //   if (val == currentStatu.value) {
+  //     for (let i = 0; i <= currentStatu.value; i++) statueList.value[i] = false;
+  //     currentStatu.value = 0;
+  //   }
+  // } else {
+  //   currentStatu.value = val;
+  //   for (let i = 0; i <= currentStatu.value; i++) statueList.value[i] = true;
+  // }
 };
 
 onMounted(async () => {
