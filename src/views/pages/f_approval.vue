@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <div class="head">
-      <div style="margin-right: 20px">
+      <div>
         <span>文件类型 </span
         ><el-select
           v-model="typeValue"
           class="m-2"
           placeholder="Select"
           style="margin-left: 30px"
-          @change="fetchAllFiles(typeValue, hasReadValue)"
+          @change="fetchAllFiles(typeValue, hasReadValue, true)"
         >
           <el-option
             v-for="item in options"
@@ -26,7 +26,7 @@
           class="m-2"
           placeholder="Select"
           style="margin-left: 30px"
-          @change="fetchAllFiles(typeValue, hasReadValue)"
+          @change="fetchAllFiles(typeValue, hasReadValue, true)"
         >
           <el-option
             v-for="item in options_2"
@@ -190,7 +190,12 @@ const pageSize = ref(14);
 const fileNum = ref(0);
 const tableData = ref<User[]>([]);
 
-const fetchAllFiles = async (type: number, hasRead: number) => {
+const fetchAllFiles = async (
+  type: number,
+  hasRead: number,
+  backToFirstPage: boolean
+) => {
+  if (backToFirstPage) currentPage.value = 1;
   let fileList: { code: number; data: User[]; page: Page; msg: string } =
     await getAllFiles(type, hasRead, currentPage.value, pageSize.value); //type:hasRead:0全部1已审2未审
 
@@ -204,17 +209,17 @@ const fetchAllFiles = async (type: number, hasRead: number) => {
 };
 
 onMounted(async () => {
-  fetchAllFiles(-1, -1);
+  fetchAllFiles(-1, -1, false);
 });
 
 const handleSizeChange = (val: number) => {
   //console.log(`${val} items per page`);
-  fetchAllFiles(typeValue.value, hasReadValue.value);
+  fetchAllFiles(typeValue.value, hasReadValue.value, false);
 };
 
 const handleCurrentChange = (val: number) => {
   //console.log(`current page: ${val}`);
-  fetchAllFiles(typeValue.value, hasReadValue.value);
+  fetchAllFiles(typeValue.value, hasReadValue.value, false);
 };
 
 const handleCheck = (index: number, row: User) => {

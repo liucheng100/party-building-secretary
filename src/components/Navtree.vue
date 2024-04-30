@@ -119,19 +119,18 @@ const navList = reactive([
       },
     ],
   },
-  //-------------------后端说先藏起来
-  //  {
-  //    title: "权限管理",
-  //    routePath: "/authority",
-  //    icon: "ljc/kuangjia/quan.svg",
-  //    icon_: "ljc/kuangjia/quan_.svg",
-  //    children: [
-  //      {
-  //        title: "权限管理",
-  //        routePath: "/authority",
-  //      },
-  //    ],
-  //  },
+  {
+    title: "权限管理",
+    routePath: "/authority",
+    icon: "ljc/kuangjia/quan.svg",
+    icon_: "ljc/kuangjia/quan_.svg",
+    children: [
+      {
+        title: "权限管理",
+        routePath: "/authority",
+      },
+    ],
+  },
 ]);
 
 let domList = {};
