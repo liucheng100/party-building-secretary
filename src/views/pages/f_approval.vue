@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="head">
-      <div>
+      <el-row style="width: 100%; align-items: center">
         <span>文件类型 </span
         ><el-select
           v-model="typeValue"
@@ -18,8 +18,8 @@
           />
         </el-select>
         <!-- <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button> -->
-      </div>
-      <div>
+      </el-row>
+      <el-row style="width: 100%; align-items: center">
         <span>处理状态 </span>
         <el-select
           v-model="hasReadValue"
@@ -36,7 +36,7 @@
           />
         </el-select>
         <!-- <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button> -->
-      </div>
+      </el-row>
     </div>
     <div class="Main">
       <el-table
