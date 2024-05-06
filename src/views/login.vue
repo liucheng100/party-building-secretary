@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="content">
-      <p class="title">天津大学党建系统后台</p>
+      <p class="title">天津大学党建系统后台支书端</p>
       <p class="hint">欢迎回来，请登录您的账号</p>
       <p class="tag">用户名</p>
       <el-input v-model="account" placeholder="请输入您的用户名" class="input">
@@ -41,9 +41,7 @@
 import { getToken, setToken } from "@/utils/auth";
 import { login } from "@/api/login";
 export default {
-  
   data() {
-    
     return {
       account: "",
       password: "",
@@ -71,7 +69,7 @@ export default {
           } else if (code === 0 && data === 0) {
             ElMessage.error("非党支书");
             this.loginLoading = false;
-          }else {
+          } else {
             ElMessage.error(msg);
             this.password = "";
             this.loginLoading = false;
@@ -85,7 +83,7 @@ export default {
   },
   created() {
     if (getToken()) {
-        this.$router.push("/info");
+      this.$router.push("/info");
     }
   },
 };
