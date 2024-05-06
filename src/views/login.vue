@@ -3,7 +3,7 @@
     <div class="content">
       <p class="title">天津大学党建系统后台支书端</p>
       <p class="hint">欢迎回来，请登录您的账号</p>
-      <p class="tag">用户名</p>
+      <p class="tag">学工号</p>
       <el-input v-model="account" placeholder="请输入您的用户名" class="input">
         <template #prefix>
           <el-icon class="el-input__icon"
