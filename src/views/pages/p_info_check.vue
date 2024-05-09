@@ -905,11 +905,12 @@ const handleCheck = async (row: File) => {
   let res: { code: number; data: File; msg: string } = await getSFileDetail(
     row.id
   );
-  //console.log(res);
+  console.log(res);
 
   if (res.code === 0) {
     res.data.userName = history.state.params.name;
     res.data.sno = history.state.params.stu_id;
+    res.data.file_id = res.data.id;
     let params: any = res.data;
     $router.push({ name: "f_check", state: { params } });
   } else {

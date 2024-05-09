@@ -163,8 +163,11 @@ const fileName = computed(() => {
 });
 onMounted(async () => {
   fileInfo.value = history.state.params;
-  fileInfo.value.content = fileInfo.value.content.replace(/\\r\\n|\\n|\\r/g, '<br>');
-  //console.log(fileInfo.value);
+  fileInfo.value.content = fileInfo.value.content.replace(
+    /\\r\\n|\\n|\\r/g,
+    "<br>"
+  );
+  console.log(fileInfo.value);
 });
 
 const article = ref({
@@ -280,7 +283,7 @@ const reject = async () => {
   width: 80%;
 }
 
-.article-content :deep(p){
+.article-content :deep(p) {
   white-space: normal;
   overflow: visible;
   text-overflow: clip;

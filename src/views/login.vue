@@ -61,7 +61,7 @@ export default {
       this.loginLoading = true;
       login({ account: this.account, pass: this.password })
         .then(({ data: { code: code, data: data, msg: msg }, ...res }) => {
-          if (code === 0 && data === 10) {
+          if (code === 0 && (data === 10 || data == 30)) {
             ElMessage.success("登录成功");
             setToken(res.headers["token"]);
             this.loginLoading = false;
