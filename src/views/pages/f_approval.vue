@@ -2,39 +2,43 @@
   <div class="container">
     <div class="head">
       <el-row style="width: 100%; align-items: center">
-        <span>文件类型 </span
-        ><el-select
-          v-model="typeValue"
-          class="m-2"
-          placeholder="Select"
-          style="margin-left: 30px"
-          @change="fetchAllFiles(typeValue, hasReadValue, true)"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+        <el-col :span="3">文件类型</el-col
+        ><el-col :span="15">
+          <el-select
+            v-model="typeValue"
+            class="m-2"
+            placeholder="Select"
+            style="margin-left: 30px"
+            @change="fetchAllFiles(typeValue, hasReadValue, true)"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-col>
         <!-- <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button> -->
       </el-row>
       <el-row style="width: 100%; align-items: center">
-        <span>处理状态 </span>
-        <el-select
-          v-model="hasReadValue"
-          class="m-2"
-          placeholder="Select"
-          style="margin-left: 30px"
-          @change="fetchAllFiles(typeValue, hasReadValue, true)"
-        >
-          <el-option
-            v-for="item in options_2"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+        <el-col :span="3">处理状态</el-col>
+        <el-col :span="15">
+          <el-select
+            v-model="hasReadValue"
+            class="m-2"
+            placeholder="Select"
+            style="margin-left: 30px"
+            @change="fetchAllFiles(typeValue, hasReadValue, true)"
+          >
+            <el-option
+              v-for="item in options_2"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-col>
         <!-- <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button> -->
       </el-row>
     </div>
