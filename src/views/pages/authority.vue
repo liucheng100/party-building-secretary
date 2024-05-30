@@ -158,7 +158,7 @@ onMounted(() => {
 const update = () => {
   if (BRANCH_INFO.partybranchId) {
     getBranchInfo(BRANCH_INFO.partybranchId).then((res: any) => {
-      console.log(res);
+      //console.log(res);
       assets.value = res.data;
       let Organizer = assets.value.partybranchOrganizer;
       let Propagator = assets.value.partybranchPropagator;
