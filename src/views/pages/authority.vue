@@ -4,7 +4,7 @@
       说明：支部管理员除“权限管理”以外，有与支部书记有相同的权限
     </div>
     <div class="head">
-      <div class="font-2">当前支部管理员</div>
+      <div class="font-2">当前支部管理员：</div>
       <el-button class="add" color="#c7242f" @click="showAdd = true"
         >添加支部管理员</el-button
       >
@@ -20,28 +20,28 @@
         <el-table-column prop="position" label="职位" width="220" />
         <el-table-column label="管理">
           <template #default="scope">
-            <el-button class="cancel" style="color: #c7242f" link
+            <el-button
+              v-if="scope.row.status"
+              class="cancel"
+              style="color: #c7242f"
+              link
+              @click="toCancel(scope.row)"
               >撤销</el-button
+            >
+            <el-button
+              v-if="!scope.row.status"
+              class="cancel"
+              style="color: green"
+              link
+              @click="toAdd(scope.row.value)"
+              >添加</el-button
             >
           </template>
         </el-table-column>
       </el-table>
     </div>
   </div>
-  <el-config-provider :locale="zhCn">
-    <el-pagination
-      small
-      class="el-pagination"
-      v-model:current-page="PageNum"
-      v-model:page-size="pageSize"
-      :style="{ margin: '20px' }"
-      background
-      layout="total, ->,sizes, prev, pager, next, jumper"
-      :total="GroupNum"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-  </el-config-provider>
+  <!--添加弹窗-->
   <el-dialog v-model="showAdd" title="" width="500">
     <div class="dialog">
       <div class="dialog_head">
@@ -49,7 +49,6 @@
           placeholder="输入需要查找的学工号"
           v-model="snoInput"
           clearable
-          @change="searchBySno()"
         ></el-input>
         <el-button
           @click="searchBySno()"
@@ -68,7 +67,7 @@
         </div>
       </div>
       <el-select
-        v-model="position"
+        v-model="selectedPosition"
         placeholder="选择职位"
         style="width: 50%; margin-top: 20px"
       >
@@ -82,223 +81,161 @@
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="showAdd = false"> 添加 </el-button>
+        <el-button type="primary" @click="confirmAdd"> 添加 </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
+  <!--删除弹窗-->
+  <el-dialog v-model="showCancel" width="300" center>
+    <div style="font-size: 20px; text-align: center">确认删除</div>
+    <template #footer>
+      <div style="display: flex; justify-content: space-around">
+        <el-button type="primary" @click="confrimCancel"> 确认 </el-button>
+        <el-button @click="showCancel = false">取消</el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { getInfoBySno } from "@/api/authority";
-import zhCn from "element-plus/es/locale/lang/zh-cn";
+import { ref, inject, onMounted, watchEffect } from "vue";
+import { getInfoBySno, update3Person, getBranchInfo } from "@/api/authority";
 import { ElMessage } from "element-plus";
 
-const pageSize = ref(<number>10); //每页组别
-let GroupNum = ref(0); //总长度
-let PageNum = ref(1); //当前页码
-const handleSizeChange = () => {
-  tableData.value = tableData.value.slice(
-    (PageNum.value - 1) * pageSize.value,
-    PageNum.value * pageSize.value
-  );
-};
-
-const handleCurrentChange = () => {
-  tableData.value = tableData.value.slice(
-    (PageNum.value - 1) * pageSize.value,
-    PageNum.value * pageSize.value
-  );
-};
-
 interface Manager {
-  name: string;
-  uid: number;
+  name: any;
+  uid: any;
   position: string;
+  value: number;
+  status: number;
 }
 
+const BRANCH_INFO: any = inject("BRANCH_INFO");
+const assets: any = ref();
 const name = ref<string>("");
-const position = ref<string>("");
+const selectedPosition = ref<number>(1);
 const showAdd = ref<boolean>(false);
+const showCancel = ref<boolean>(false);
+const cancelValue = ref<number>(1);
 const snoInput = ref<string>("");
 const tableData = ref<Manager[]>([
   {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
+    name: "-",
+    uid: "-",
+    position: "组织委员",
+    value: 1,
+    status: 0,
   },
   {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
-  },
-  {
-    name: "张三",
-    uid: 123123,
-    position: "组织委员/宣传委员",
+    name: "-",
+    uid: "-",
+    position: "宣传委员",
+    value: 2,
+    status: 0,
   },
 ]);
 
 const options = [
   {
-    value: 0,
+    value: 1,
     label: "组织委员",
   },
   {
-    value: 1,
+    value: 2,
     label: "宣传委员",
   },
 ];
 
-const add = () => {
-  showAdd.value = true;
+onMounted(() => {
+  watchEffect(() => {
+    if (BRANCH_INFO.partybranchId) {
+      update();
+    }
+  });
+});
+
+const update = () => {
+  if (BRANCH_INFO.partybranchId) {
+    getBranchInfo(BRANCH_INFO.partybranchId).then((res: any) => {
+      console.log(res);
+      assets.value = res.data;
+      let Organizer = assets.value.partybranchOrganizer;
+      let Propagator = assets.value.partybranchPropagator;
+      tableData.value = [
+        {
+          name: Organizer ? Organizer.username : "-",
+          uid: Organizer ? Organizer.sno : "-",
+          position: "组织委员",
+          value: 1,
+          status: Organizer ? 1 : 0,
+        },
+        {
+          name: Propagator ? Propagator.username : "-",
+          uid: Propagator ? Propagator.sno : "-",
+          position: "宣传委员",
+          value: 2,
+          status: Propagator ? 1 : 0,
+        },
+      ];
+    });
+  }
 };
+
 const searchBySno = () => {
   getInfoBySno(snoInput.value).then((res: any) => {
     if (res.data) name.value = res.data.uname;
     else {
       ElMessage.error("目标不存在");
       name.value = "";
+    }
+  });
+};
+
+const toAdd = (index: any) => {
+  selectedPosition.value = index;
+  showAdd.value = true;
+};
+
+const confirmAdd = () => {
+  if (!name.value) {
+    ElMessage.warning("请搜索以确认信息");
+    return;
+  }
+  update3Person({
+    branchId: assets.value.partybranchId,
+    index: selectedPosition.value,
+    newStuNum: snoInput.value,
+  }).then((res: any) => {
+    if (res.code == 0) {
+      ElMessage.success("添加成功");
+      snoInput.value = "";
+      name.value = "";
+      showAdd.value = false;
+      update();
+    } else {
+      ElMessage.error(res.msg);
+    }
+  });
+};
+
+const toCancel = (e: any) => {
+  showCancel.value = true;
+  cancelValue.value = e.value;
+};
+
+const confrimCancel = () => {
+  update3Person({
+    branchId: assets.value.partybranchId,
+    index: cancelValue.value,
+    newStuNum: "",
+  }).then((res: any) => {
+    if (res.code == 0) {
+      ElMessage.success("删除成功");
+      showCancel.value = false;
+      update();
+    } else {
+      ElMessage.error(res.msg);
     }
   });
 };
@@ -317,7 +254,7 @@ const searchBySno = () => {
   color: #c7242f;
 }
 .head {
-  width: 60%;
+  width: 50%;
   margin-top: 30px;
   display: flex;
   align-items: center;
@@ -341,7 +278,6 @@ const searchBySno = () => {
 .table {
   margin-top: 50px;
   width: 650px;
-  overflow: auto;
 }
 .dialog_head {
   width: 50%;
