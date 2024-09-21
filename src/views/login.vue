@@ -61,7 +61,7 @@ export default {
       this.loginLoading = true;
       login({ account: this.account, pass: this.password })
         .then(({ data: { code: code, data: data, msg: msg }, ...res }) => {
-          if (code === 0 && (data == 30)) {
+          if (code === 0 && data > 0) {
             ElMessage.success("登录成功");
             setToken(res.headers["token"]);
             this.loginLoading = false;
@@ -70,7 +70,7 @@ export default {
             ElMessage.error("非党支书");
             this.loginLoading = false;
           } else {
-            ElMessage.error(msg);
+            ElMessage.error("登陆失败");
             this.password = "";
             this.loginLoading = false;
           }
