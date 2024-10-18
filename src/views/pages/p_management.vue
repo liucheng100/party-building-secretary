@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <div class="head">
-      <div>
-        <span>身份 </span
+      <div style="width: 200px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="flex: 1; font-size: 16px;">身份 </span
         ><el-select
           v-model="filterValue"
           class="m-2"
           placeholder="Select"
-          style="margin-left: 30px"
+          style="margin-left: 30px; flex: 4"
           @change="filterUser()"
         >
           <el-option
