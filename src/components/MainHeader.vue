@@ -1,8 +1,6 @@
 <template>
     <div class="header noSelect">
-        <div class="openbar" style="display: none;">
-            <img class="icon-user" src="@/assets/ljc/kuangjia/user.svg" />
-        </div>
+        
         <div class="prompt r-box">
             <img class="icon-user" src="@/assets/ljc/kuangjia/user.svg" />
             <div class="prompt-info">
@@ -16,6 +14,9 @@
                 <div class="logout">
                     退出登录
                 </div>
+                <div class="openbar" style="display: none; ">
+            <img class="icon-user" src="@/assets/ljc/kuangjia/user.svg" />
+            </div>
             </template>
         </el-popconfirm>
     </div>
