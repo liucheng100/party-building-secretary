@@ -1,24 +1,39 @@
 <template>
+  <div class="all">
   <div class="background">
     <img src="../../assets/info/emblem.svg" alt="" />
   </div>
   <div class="main">
     <div class="info">
-      <div class="font1">{{ BRANCH_INFO.partybranchName }}</div>
-      <div class="font2">所属</div>
-      <div class="font1">{{ BRANCH_INFO.collegeName }}</div>
-      <div class="font2">支部编号</div>
-      <div class="font1">{{ BRANCH_INFO.partybranchId }}</div>
-      <div class="font2">支部书记</div>
-      <div class="font1">{{ BRANCH_INFO.partybranchSecretary?.username }}</div>
-      <div class="font2">支部委员</div>
-      <div class="font1">
-        {{ BRANCH_INFO.partybranchOrganizer?.username
-        }}&nbsp;&nbsp;&nbsp;{{ BRANCH_INFO.partybranchPropagator?.username }}
+      <div class="title">{{ BRANCH_INFO.partybranchName }}</div>
+
+      <div class="info-item">
+        <div class="font2">所属</div>
+        <div class="font1">{{ BRANCH_INFO.collegeName }}</div>
+      </div>
+      <div class="info-item">
+        <div class="font2">支部编号</div>
+        <div class="font1">{{ BRANCH_INFO.partybranchId }}</div>
+      </div>
+      <div class="info-item">
+        <div class="font2">支部书记</div>
+        <div class="font1">{{ BRANCH_INFO.partybranchSecretary?.username }}</div>
+      </div>
+
+      <div class="info-item">
+        <div class="font2">支部委员</div>
+        <div class="font1">
+          {{ BRANCH_INFO.partybranchOrganizer?.username
+          }}
+          {{ BRANCH_INFO.partybranchOrganizer ? '&nbsp;&nbsp;&nbsp;' : '' }}
+          {{
+            BRANCH_INFO.partybranchPropagator?.username
+          }}
+        </div>
       </div>
     </div>
     <div class="detail">
-      <div ref="chart" style="width: 100%; height: 250px"></div>
+      <div class="chart" style="width: calc(100% );padding-right: calc(10%);" ref="chart"></div>
       <div class="list">
         <div v-for="item in list" class="list-item" :key="item">
           <div class="m">
@@ -29,6 +44,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -83,7 +99,8 @@ function initChart(a, b, c, d, e, f, t) {
     },
     legend: {
       orient: "vertical",
-      left: "63%",
+      // left: "63%",
+      right: "30px",
       top: "middle",
       itemWidth: 10,
       itemHeight: 10,
@@ -149,29 +166,60 @@ function initChart(a, b, c, d, e, f, t) {
 </script>
 
 <style scoped>
+.all{
+  flex-grow: 1;
+}
+@media screen and (max-width=765px) {
+  .chart{
+    padding-right: 0px !important;
+  }
+}
 .main {
+  transition: all .25s ease-in-out;
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 30px;
+  flex-wrap: wrap;
 }
 
 .info {
   z-index: 1;
-  position: absolute;
-  width: 700px;
-  height: 552px;
+  flex: 1;
+  min-width: 300px;
+}
+
+.info-item{
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.title{
+  font-size: 26px !important;
+}
+
+.font1{
+  min-width: 300px;
+  color: #2f2f2f;
 }
 
 .info .font1 {
-  color: #2f2f2f;
-  font-size: clamp(2.5rem, 0.489rem + 1.05vw, 5rem);
+  font-size: 20px;
 }
 
 .info .font2 {
+  min-width: 200px;
   color: #9f9f9f;
   font-size: 24px;
   margin-top: 15px;
 }
+
+
 
 .background {
   position: absolute;
@@ -185,26 +233,33 @@ function initChart(a, b, c, d, e, f, t) {
   filter: blur(40px);
 }
 
+.chart {
+  margin: 0 30px;
+  height: 250px;
+}
+
 .detail {
+  min-width: 300px;
+  transition: all .25s ease-in-out;
   z-index: 1;
-  position: absolute;
   right: 0;
-  width: 45%;
-  /* height: 90%; */
-  padding-bottom: 40px;
+  flex: 2;
+  padding-bottom: 30px;
   box-shadow: 0px 4px 16px 0px #00000014;
   border-radius: 5px;
   background-color: #ffffff;
   overflow: hidden;
 }
+
 .list {
   width: 100%;
   height: 50%;
-  display: flex;
   flex-wrap: wrap;
-  padding-left: 30px;
-  padding-right: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  padding: 0 30px;
 }
+
 .list-item {
   flex: 1 1 calc(30% - 30px);
   margin-left: 10px;
@@ -213,6 +268,7 @@ function initChart(a, b, c, d, e, f, t) {
   flex-direction: column;
   align-items: center;
 }
+
 .m {
   width: 90%;
   height: 90%;
@@ -221,13 +277,16 @@ function initChart(a, b, c, d, e, f, t) {
   padding-bottom: 0px;
   border-radius: 12px;
 }
+
 .m img {
   height: 40%;
 }
+
 .m .font1 {
   font-size: 16px;
   color: #505050;
 }
+
 .m .font2 {
   font-size: 24px;
   color: #c7242f;
