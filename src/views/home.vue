@@ -7,14 +7,27 @@
 -->
 <template>
   <div class="main">
-    <Navtreep class="nav nav-small" />
+    
     <Navtree  class="nav nav-big" />
+    <el-drawer v-model="drawer"
+    
+    @close="drawerVisible = false"
+    :style="{  height: '100%' }">
+    <Navtreep class="nav nav-small"  />
+    
+  </el-drawer>
     <div class="content">
-      <MainHeader style="height: 75px" />
+      <div style="height: 75px; display: flex;" >
+      <MainHeader style="height: 75px"    />
+      <div class="openbar" style="display: none; height: 75px; justify-content: center;">
+            <img class="open" src="@/assets/ljc/kuangjia/user.svg" />
+         </div>
+        </div>
       <div id="screen" class="screen">
         <div class="decor">
           <router-view></router-view>
         </div>
+        
       </div>
     </div>
   </div>
@@ -27,6 +40,7 @@ import { ref, onMounted, onBeforeUnmount,reactive, provide } from "vue";
 import { getToken, setToken, setBranchId } from "@/utils/auth";
 import { getInfo } from "@/api/login";
 import { getBranchInfo } from "@/api/branch";
+import { ElDrawer, ElButton } from 'element-plus';
 
 // 这里发请求获取支部信息
 const USER_INFO = reactive({});
@@ -47,6 +61,7 @@ if (getToken()) {
     }
   });
 }
+const drawer = ref(true);
 const windowWidth = ref(window.innerWidth);
 
 const handleResize = () => {
@@ -74,6 +89,7 @@ onBeforeUnmount(() => {
 .nav {
   z-index: 99;
   min-height: 100vh;
+  width: 100px;
 }
 
 .screen {
@@ -110,6 +126,9 @@ onBeforeUnmount(() => {
 .nav-big{
   display: block;
 }
+.open{
+  margin-top: 20px;
+}
 
 @media screen and (max-width:768px) {
   .nav-small {
@@ -118,6 +137,12 @@ onBeforeUnmount(() => {
 
   .nav-big {
     display: none;
+  }
+  .main{
+    display: flex ;
+  }
+  .openbar{
+    display: block !important;
   }
 }
 </style>
