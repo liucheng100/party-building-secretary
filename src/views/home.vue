@@ -7,7 +7,8 @@
 -->
 <template>
   <div class="main">
-    <Navtree class="nav" />
+    <Navtreep class="nav nav-small" />
+    <Navtree  class="nav nav-big" />
     <div class="content">
       <MainHeader style="height: 75px" />
       <div id="screen" class="screen">
@@ -20,8 +21,9 @@
 </template>
 <script setup>
 import Navtree from "@/components/Navtree.vue";
+import Navtreep from "@/components/Navtreep.vue";
 import MainHeader from "@/components/MainHeader.vue";
-import { ref, reactive, provide } from "vue";
+import { ref, onMounted, onBeforeUnmount,reactive, provide } from "vue";
 import { getToken, setToken, setBranchId } from "@/utils/auth";
 import { getInfo } from "@/api/login";
 import { getBranchInfo } from "@/api/branch";
@@ -45,6 +47,20 @@ if (getToken()) {
     }
   });
 }
+const windowWidth = ref(window.innerWidth);
+
+const handleResize = () => {
+  windowWidth.value = window.innerWidth;
+  window.location.reload(); // 刷新页面
+};
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 <style scoped>
 .main {
@@ -62,7 +78,8 @@ if (getToken()) {
 
 .screen {
   flex: 1;
-  padding: 0px 30px 0px 30px;
+  /* padding: 0px 30px 0px 30px; */
+  /* margin: 0 30px; */
   overflow: hidden;
 }
 
@@ -70,7 +87,7 @@ if (getToken()) {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 10px 40px;
   /* padding-bottom: 25px; */
   overflow: overlay;
 }
@@ -81,7 +98,26 @@ if (getToken()) {
   padding: 10px;
   overflow: hidden;
 }
+
 ::v-deep .el-table th .cell {
   font-weight: 400;
+}
+
+.nav-small {
+  display: none;
+}
+
+.nav-big{
+  display: block;
+}
+
+@media screen and (max-width:768px) {
+  .nav-small {
+    display: block;
+  }
+
+  .nav-big {
+    display: none;
+  }
 }
 </style>
