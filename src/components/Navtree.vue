@@ -1,6 +1,8 @@
 <template>
   <div class="navTree noSelect">
+    <div  class="boxer">
     <img src="../assets/logo.png" class="logo" />
+  </div>
     <div class="item-box">
       <div v-for="(i, idx) in navList" class="item">
         <div
@@ -182,11 +184,16 @@ onMounted(() => {
   border-right: 3px solid rgba(199, 36, 47, 1);
 }
 
+.boxer{
+  display: flex;
+  justify-content: center;
+}
 .logo {
   width: 15vw;
   margin-top: 3vh;
   margin-bottom: 4vh;
   cursor: pointer;
+  
 }
 
 .item-box {

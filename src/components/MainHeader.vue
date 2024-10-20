@@ -1,24 +1,23 @@
 <template>
     <div class="header noSelect">
-        <p class="title">
-            <!-- <span>{{ $route.matched[1]?.meta.title }}</span> -
-            <span style="cursor: pointer" @click="goBack">{{
-                $route.meta.title
-            }}</span> -->
-        </p>
-        <div class="r-box">
+        <div class="openbar" style="display: none;">
             <img class="icon-user" src="@/assets/ljc/kuangjia/user.svg" />
-            <p class="text">当前支部</p>
-            <p class="name">{{ BRANCH_INFO.partybranchName }}</p>
-            <el-popconfirm title="您确定要退出登录吗？" confirm-button-text="确认" cancel-button-text="取消" @confirm="logout"
-                width="200px">
-                <template #reference>
-                    <div class="logout">
-                        退出登录
-                    </div>
-                </template>
-            </el-popconfirm>
         </div>
+        <div class="prompt r-box">
+            <img class="icon-user" src="@/assets/ljc/kuangjia/user.svg" />
+            <div class="prompt-info">
+                <p class="text">当前支部</p>
+                <p class="name">{{ BRANCH_INFO.partybranchName }}</p>
+            </div>
+        </div>
+        <el-popconfirm title="您确定要退出登录吗？" confirm-button-text="确认" cancel-button-text="取消" @confirm="logout"
+            width="200px">
+            <template #reference>
+                <div class="logout">
+                    退出登录
+                </div>
+            </template>
+        </el-popconfirm>
     </div>
 </template>
 
@@ -54,9 +53,11 @@ const goBack = () => {
 
 <style scoped>
 .header {
+    padding: 0 40px;
     width: 100%;
     height: 100%;
     display: flex;
+    gap: 10px;
     align-items: center;
     justify-content: space-between;
 }
@@ -72,6 +73,17 @@ const goBack = () => {
     cursor: pointer;
 }
 
+.text {
+    margin-right: 10px;
+}
+
+.prompt-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-start;
+}
+
 .logout {
     width: 132px;
     height: 48px;
@@ -84,8 +96,9 @@ const goBack = () => {
     user-select: none;
     cursor: pointer;
     transition: .2s;
-    margin-left: 52px;
     font-size: 20px;
+
+    text-wrap: nowrap;
 
 }
 
@@ -99,21 +112,31 @@ const goBack = () => {
     display: flex;
     align-items: center;
     font-size: 24px;
+    transition: all .25s ease-in-out;
     color: rgba(80, 80, 80, 1);
 
 }
 
-.name {
-    margin-left: 20px;
-}
-
-.text {
-    margin-left: 28px;
-}
 
 .icon-user {
     width: 36px;
     height: 36px;
-    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+@media screen and (max-width: 1080px) {
+    .r-box {
+        font-size: 18px;
+    }
+
+    .logout {
+        font: 18px !important;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .name {
+        display: none;
+    }
 }
 </style>
