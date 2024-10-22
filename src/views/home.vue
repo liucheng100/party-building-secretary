@@ -9,19 +9,21 @@
   <div class="main">
     
     <Navtree  class="nav nav-big" />
-    <el-drawer v-model="drawer"
-    
+    <el-drawer v-model="drawer"  class="drawer"
+    :with-header="false"
+    :with-footer="false"
+    size="50%"
     @close="drawerVisible = false"
-    :style="{  height: '100%' }">
+    >
     <Navtreep class="nav nav-small"  />
     
-  </el-drawer>
+    </el-drawer>
     <div class="content">
       <div style="height: 75px; display: flex;" >
-      <MainHeader style="height: 75px"    />
-      <div class="openbar" style="display: none; height: 75px; justify-content: center;">
+      <MainHeader style="height: 75px; width: 80%;"    />
+      <div class="openbar" style="display: none; height: 75px; width: 20%;" @click="drawer=true">
             <img class="open" src="@/assets/ljc/kuangjia/user.svg" />
-         </div>
+        </div>
         </div>
       <div id="screen" class="screen">
         <div class="decor">
@@ -61,7 +63,7 @@ if (getToken()) {
     }
   });
 }
-const drawer = ref(true);
+const drawer = ref(false);
 const windowWidth = ref(window.innerWidth);
 
 const handleResize = () => {
@@ -88,8 +90,8 @@ onBeforeUnmount(() => {
 
 .nav {
   z-index: 99;
-  min-height: 100vh;
-  width: 100px;
+  height: 100vh;
+  width: 100%;
 }
 
 .screen {
@@ -129,7 +131,10 @@ onBeforeUnmount(() => {
 .open{
   margin-top: 20px;
 }
+:deep(.el-drawer__body) {
 
+    overflow: hidden ;
+}
 @media screen and (max-width:768px) {
   .nav-small {
     display: block;
