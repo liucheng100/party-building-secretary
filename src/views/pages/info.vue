@@ -100,7 +100,7 @@ function initChart(a, b, c, d, e, f, t) {
     legend: {
       orient: "vertical",
       // left: "63%",
-      right: "30px",
+      right: "0px",
       top: "middle",
       itemWidth: 10,
       itemHeight: 10,
@@ -171,7 +171,7 @@ function initChart(a, b, c, d, e, f, t) {
 }
 @media screen and (max-width=765px) {
   .chart{
-    padding-right: 0px !important;
+    padding-left: 100px !important;
   }
 }
 .main {
