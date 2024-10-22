@@ -95,7 +95,7 @@ const goBack = () => {
     user-select: none;
     cursor: pointer;
     transition: .2s;
-    font-size: clamp(1.8rem, 1.5rem + 1.05vw, 6.0rem);
+    font-size:2.5rem;
 
     text-wrap: nowrap;
 
