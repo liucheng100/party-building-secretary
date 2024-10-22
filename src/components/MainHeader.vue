@@ -14,9 +14,7 @@
                 <div class="logout">
                     退出登录
                 </div>
-                <div class="openbar" style="display: none; ">
-            <img class="icon-user" src="@/assets/ljc/kuangjia/user.svg" />
-            </div>
+                
             </template>
         </el-popconfirm>
     </div>
@@ -97,7 +95,7 @@ const goBack = () => {
     user-select: none;
     cursor: pointer;
     transition: .2s;
-    font-size: 20px;
+    font-size: clamp(1.8rem, 1.5rem + 1.05vw, 6.0rem);
 
     text-wrap: nowrap;
 
@@ -130,14 +128,15 @@ const goBack = () => {
         font-size: 18px;
     }
 
-    .logout {
-        font: 18px !important;
-    }
+    
 }
 
 @media screen and (max-width: 700px) {
     .name {
         display: none;
+    }
+    .logout {
+        font-size: clamp(2.0rem, 2.5rem + 1.05vw, 6.0rem) !important;
     }
 }
 </style>

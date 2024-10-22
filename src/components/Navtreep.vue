@@ -135,7 +135,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-right: 3px solid rgba(199, 36, 47, 1);
+  
 }
 
 .boxer{
@@ -143,7 +143,7 @@ onMounted(() => {
   justify-content: center;
 }
 .logo {
-  width: 15vw;
+  width: 100%;
   margin-top: 3vh;
   margin-bottom: 4vh;
   cursor: pointer;
@@ -243,7 +243,7 @@ onMounted(() => {
 }
 
 .title {
-  font-size: clamp(3.0rem, 3.0rem + 1.05vw, 6.0rem);
+  font-size: clamp(3.0rem, 5.0rem + 1.05vw, 9.0rem);
   color: rgba(159, 159, 159, 1);
   transition: 0.14s;
 }
