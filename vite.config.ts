@@ -21,13 +21,17 @@ export default defineConfig({
   },
   server: {
       host: "0.0.0.0",
-      // proxy: {
-      //   '/api': {
-      //     target: 'http://101.42.225.75:1234',
-      //     // changeOrigin: true,
-      //     rewrite: (path)=>path
-      //   }
-      // },
+      proxy: {
+        '/api': {
+          target: 'https://partybak.twt.edu.cn',
+          secure: false, 
+          changeOrigin: true, 
+          rewrite: (path) => {
+            // console.log("Rewriting path:", path.replace(/^\/api/, '')); 
+            return path.replace(/^\/api/, '');
+          },
+        },
+      },
   },
   define: {
     'process.env': {}
