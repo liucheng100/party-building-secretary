@@ -3,7 +3,7 @@
     <el-row class="head">
       <el-col :span="10" class="headbar">
         <el-row style="width: 100%; align-items: center">
-          <el-col :span="7">
+          <el-col :span="7"class="headfont">
             <span>当前阶段 </span>
           </el-col>
           <el-col :span="10">
@@ -14,6 +14,7 @@
               @change="filterMember(true)"
             >
               <el-option
+                class="option"
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
@@ -37,6 +38,7 @@
               @change="filterMember(false)"
             >
               <el-option
+                class="option"
                 v-for="item in options_little[stageValue]"
                 :key="item.value"
                 :label="item.label"
@@ -67,7 +69,7 @@
         <el-table-column label="姓名">
           <template #default="scope">{{ scope.row.userName }}</template>
         </el-table-column>
-        <el-table-column property="sno" label="学号" />
+        <el-table-column property="sno" label="学号" class-name= "son6"/>
         <el-table-column property="identity" label="当前阶段">
           {{ options[stageValue].label }}
         </el-table-column>
@@ -545,7 +547,7 @@ const closeModal = () => {
 };
 </script>
 
-<style scoped>
+<style >
 .container {
   width: 100%;
   height: 100%;
@@ -613,5 +615,64 @@ const closeModal = () => {
 }
 .font-4 {
   margin-left: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100%;
+    padding: 0px 0px;
+    display: flex;
+    flex-direction: column;
+  }
+  .font {
+    font-size: 3rem;
+  }
+  .head {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+  .headbar {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .headbar span {
+    width: 100%;
+    font-size: 3rem;
+    margin-left: 10px;
+  }
+  el-select{
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .el-button{
+    font-size: 3rem;
+  }
+  .Main{
+    margin-top: 10px;
+    flex: 1;
+    overflow: auto;
+  }
+  .son6{
+    display: none;
+  }
+  .el-pagination{
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+  padding-right: 0;
+}
+.el-pagination .el-pager,
+.el-pagination .el-pagination__total{
+  display:none;
+}
+.option{
+  font-size: 3rem;
+}
+
 }
 </style>

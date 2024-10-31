@@ -65,9 +65,9 @@
 
     <!-- 处理时间 -->
     <div style="width: 80%">
-      <div style="color: #c7242f">*该节点需要记录时间，请选择状态变更时间</div>
+      <div style="color: #c7242f" class="font1">*该节点需要记录时间，请选择状态变更时间</div>
     </div>
-    <div style="width: 80%">
+    <div style="width: 80%" class="change-time-section">
       <el-date-picker
         type="datetime"
         size="small"
@@ -314,5 +314,55 @@ const reject = async () => {
 .approval-comment {
   margin: 10px 0;
   width: 80%;
+}
+@media screen and (max-width: 768px) {
+  .personal-info-title,
+  .personal-info{
+    font-size: 3rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .personal-info-title div,
+  .personal-info div{
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .article-title {
+    font-size: 20px;
+  }
+  .downloadBtn,
+  .custom-button {
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 8px;
+  }
+  .action-buttons{
+    flex-direction: column;
+    align-items: center;
+  }
+  .font1{
+    font-size: 3rem;
+  }
+  .approval-comment,
+  .change-time-section,
+  .action-buttons {
+    width: 80%;
+    font-size: 3rem;
+  }
+  .article-content {
+    width: 80%;
+    font-size: 3rem;
+  }
+  .custom-button {
+    margin-top: 15px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
 }
 </style>
