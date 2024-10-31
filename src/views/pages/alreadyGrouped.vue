@@ -1,6 +1,6 @@
 <template>
   <div class="Main">
-    <div class="TableContainer">
+    <div class="TableContainer" v-if="!isMobile">
       <!-- 左边的表格 -->
       <el-table
         :data="tableDataLeft"
@@ -27,10 +27,37 @@
       </el-table>
     </div>
 
-    <div class="TableContainer">
+    <div class="TableContainer" v-if="!isMobile">
       <!-- 右边的表格 -->
       <el-table
         :data="tableDataRight"
+        style="width: 100%; margin-top: 20px"
+        :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
+      >
+        <el-table-column label="组号" width="60">
+          <template #default="scope">
+            <span style="color: #c7242f; font-weight: bold">{{
+              scope.row.id
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="姓名" property="name">
+          <template #default="scope">
+            <div class="red-dot-container">
+              <span>{{ scope.row.name }}</span>
+              <span v-if="scope.row.isLeader" class="red-dot"></span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="学号" property="sno" />
+        <el-table-column label="专业" property="major" show-overflow-tooltip />
+      </el-table>
+    </div>
+
+    <div class="TableContainer2" v-else>
+      <!-- 在移动端显示单个表格 -->
+      <el-table
+        :data="tableData"
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
       >
@@ -71,11 +98,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import { getGroup } from "@/api/learngroup";
 import { ElMessage } from "element-plus";
+
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+const isMobile = computed(() => isMobileStore.isMobile);
 
 const pageSize = ref(<number>10); //每页组别
 let GroupsData = ref(<GroupedUser[]>[]);
@@ -84,6 +116,7 @@ let PageNum = ref(1); //当前页码
 
 let tableDataLeft = ref(<GroupedMember[]>[]);
 let tableDataRight = ref(<GroupedMember[]>[]);
+let tableData = ref(<GroupedMember[]>[]);
 
 interface Member {
   name: string;
@@ -141,6 +174,7 @@ const processGroupData = (groups: GroupedUser[]) => {
           }
           if (Groupindex < nowGroups.length / 2) tableDataLeft.value.push(row);
           else tableDataRight.value.push(row);
+          tableData.value.push(row);
         } else GroupNum.value = GroupNum.value - 1;
       });
   });
@@ -174,5 +208,28 @@ const processGroupData = (groups: GroupedUser[]) => {
   height: 7px;
   border-radius: 50%;
   background-color: #c7242f;
+}
+@media screen and (max-width: 768px) {
+  .TableContainer2 {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+</style>
+
+<style>
+@media screen and (max-width: 768px) {
+  .el-pagination__jump {
+    display: none;
+  }
+  .el-pagination__sizes.is-first {
+    display: none;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  .el-pager {
+    display: none;
+  }
 }
 </style>

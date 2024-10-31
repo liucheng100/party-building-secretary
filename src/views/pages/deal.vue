@@ -206,7 +206,10 @@
         </el-table>
 
         <div class="modal-tail">
-          <el-button color="#c7242f" @click="confirmUpdateBatch(true)" style="font-size: 14px;"
+          <el-button
+            color="#c7242f"
+            @click="confirmUpdateBatch(true)"
+            style="font-size: 14px"
             >确认更改</el-button
           >
           <div style="color: #c7242f; margin-top: 5px">
@@ -613,7 +616,7 @@ const closeModal = () => {
 };
 </script>
 
-<style >
+<style scoped>
 .container {
   width: 100%;
   height: 100%;
@@ -720,22 +723,28 @@ const closeModal = () => {
   .font {
     font-size: 3rem;
   }
-  .el-pagination {
-    font-size: 3rem;
-    display: flex;
-    justify-content: center;
-    margin-top: 0;
-    padding-right: 0;
-  }
-  .el-pagination .el-pager,
-  .el-pagination .el-pagination__total {
-    display: none;
-  }
   .option {
     font-size: 3rem;
   }
   .popup {
     width: 90%;
+  }
+}
+</style>
+
+<style>
+@media screen and (max-width: 768px) {
+  .el-pagination__jump {
+    display: none;
+  }
+  .el-pagination__sizes.is-first {
+    display: none;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  .el-pager {
+    display: none;
   }
 }
 </style>

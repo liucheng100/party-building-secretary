@@ -1,6 +1,6 @@
 <template>
   <div class="Main">
-    <div class="TableContainer">
+    <div class="TableContainer" v-if="!isMobile">
       <!-- 左边的表格 -->
       <el-table
         ref="multipleTableRefLeft"
@@ -19,12 +19,29 @@
       </el-table>
     </div>
 
-    <div class="TableContainer">
+    <div class="TableContainer" v-if="!isMobile">
       <!-- 右边的表格 -->
       <el-table
         ref="multipleTableRefRight"
         row-key="userId"
         :data="tableDataRight"
+        style="width: 100%; margin-top: 20px"
+        :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" :reserve-selection="true" />
+        <el-table-column label="姓名">
+          <template #default="scope">{{ scope.row.name }}</template>
+        </el-table-column>
+        <el-table-column property="sno" label="学号" />
+        <el-table-column property="major" label="专业" show-overflow-tooltip />
+      </el-table>
+    </div>
+
+    <div class="TableContainer2" v-if="isMobile">
+      <el-table
+        row-key="userId"
+        :data="tableData"
         style="width: 100%; margin-top: 20px"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
         @selection-change="handleSelectionChange"
@@ -55,10 +72,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { getUnGroup, addGroupMember } from "@/api/learngroup";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { ElMessage } from "element-plus";
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+const isMobile = computed(() => isMobileStore.isMobile);
 
 interface learnUser {
   name: string;
@@ -70,6 +91,7 @@ interface learnUser {
 const pageSize = ref(<number>30); //每页显示学生数量
 let tableDataLeft = ref(<learnUser[]>[]);
 let tableDataRight = ref(<learnUser[]>[]);
+let tableData = ref(<learnUser[]>[]);
 let UserRawData = ref(<learnUser[]>[]);
 let UserNum = ref(0); //总长度
 let PageNum = ref(1); //当前页码
@@ -87,6 +109,10 @@ const fetchUser = async () => {
     //slice.( (当前页面-1) * 每页数字 ， (当前页面-0.5) * 每页数字) 下面逻辑相同
     tableDataRight.value = RawData.data.slice(
       (-0.5 + PageNum.value) * pageSize.value,
+      PageNum.value * pageSize.value
+    );
+    tableData.value = RawData.data.slice(
+      (PageNum.value - 1) * pageSize.value,
       PageNum.value * pageSize.value
     );
   } else {
@@ -134,6 +160,10 @@ const handleCurrentChange = (val: number) => {
     PageNum.value * pageSize.value
   );
   //console.log(`current page: ${val}`);
+  tableData.value = UserRawData.value.slice(
+    (PageNum.value - 1) * pageSize.value,
+    PageNum.value * pageSize.value
+  );
 };
 
 const multipleSelection = ref<learnUser[]>([]);
@@ -154,5 +184,28 @@ const handleSelectionChange = (val: learnUser[]) => {
 }
 .el-pagination.is-background .el-pager li {
   border-radius: 50%;
+}
+@media screen and (max-width: 768px) {
+  .TableContainer2 {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+</style>
+
+<style>
+@media screen and (max-width: 768px) {
+  .el-pagination__jump {
+    display: none;
+  }
+  .el-pagination__sizes.is-first {
+    display: none;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  .el-pager {
+    display: none;
+  }
 }
 </style>

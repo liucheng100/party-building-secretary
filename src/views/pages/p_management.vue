@@ -53,7 +53,7 @@
       >
         <el-table-column width="48" v-if="!isMobile"></el-table-column>
         <el-table-column property="userName" label="姓名"> </el-table-column>
-        <el-table-column property="sno" label="学号" v-if="!isMobile"/>
+        <el-table-column property="sno" label="学号" v-if="!isMobile" />
         <el-table-column property="type" label="身份">
           <template #default="scope">
             {{ types[scope.row.type + 1] }}
@@ -244,7 +244,7 @@ const handleSelectionChange = (val: User[]) => {
 };
 </script>
 
-<style>
+<style scoped>
 .container {
   width: 100%;
   height: 100%;
@@ -278,7 +278,7 @@ const handleSelectionChange = (val: User[]) => {
   }
 
   .head {
-    width: 100%; 
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
@@ -291,38 +291,42 @@ const handleSelectionChange = (val: User[]) => {
 
   .el-select {
     width: 100% !important;
-    font-size: 16px; 
+    font-size: 16px;
   }
 
   .sno-class {
-    display: flex; 
+    display: flex;
     align-items: center;
     font-size: 16px;
-    width: 100%; 
+    width: 100%;
   }
 
   .el-input {
-    font-size: 10px !important; 
-    flex: 4; 
-    height: 40px !important; 
+    font-size: 10px !important;
+    flex: 4;
+    height: 40px !important;
   }
 
   .el-button {
-    font-size: 14px; 
-    flex-shrink: 0; 
+    font-size: 14px;
+    flex-shrink: 0;
     flex: 1;
   }
+}
+</style>
 
-  .el-pagination {
-    font-size: 3rem;
-    display: flex;
-    justify-content: center;
-    margin-top: 0;
-    padding-right: 0;
+<style>
+@media screen and (max-width: 768px) {
+  .el-pagination__jump {
+    display: none;
   }
-
-  .el-pagination .el-pager,
-  .el-pagination .el-pagination__total {
+  .el-pagination__sizes.is-first {
+    display: none;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  .el-pager {
     display: none;
   }
 }

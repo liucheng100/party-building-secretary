@@ -311,7 +311,7 @@ const handleSelectionChange = (val: User[]) => {
 };
 </script>
 
-<style >
+<style scoped>
 .container {
   width: 100%;
   height: 100%;
@@ -369,15 +369,6 @@ const handleSelectionChange = (val: User[]) => {
     justify-content: space-between;
     align-items: center;
   }
-  .son2 {
-    display: none;
-  }
-  .son4 {
-    display: none;
-  }
-  .son5 {
-    display: none;
-  }
   .Main {
     width: 100%;
   }
@@ -391,19 +382,25 @@ const handleSelectionChange = (val: User[]) => {
   .button {
     font-size: 4rem;
   }
-  .el-pagination {
-    font-size: 16px;
-    display: flex;
-    justify-content: center;
-    margin-top: 0;
-    padding-right: 0;
-  }
-  .el-pagination .el-pager,
-  .el-pagination .el-pagination__total {
-    display: none;
-  }
   .option {
     font-size: 3rem;
+  }
+}
+</style>
+
+<style>
+@media screen and (max-width: 768px) {
+  .el-pagination__jump {
+    display: none;
+  }
+  .el-pagination__sizes.is-first {
+    display: none;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  .el-pager {
+    display: none;
   }
 }
 </style>

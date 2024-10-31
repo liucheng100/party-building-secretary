@@ -9,7 +9,7 @@
         >添加支部管理员</el-button
       >
     </div>
-    <div class="table">
+    <div class="table" v-if="!isMobile">
       <el-table
         :data="tableData"
         style="width: 100%; height: 95%"
@@ -32,6 +32,38 @@
               v-if="!scope.row.status"
               class="cancel"
               style="color: green"
+              link
+              @click="toAdd(scope.row.value)"
+              >添加</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div class="table" v-else>
+      <el-table
+        :data="tableData"
+        style="width: 100%; height: 95%"
+        :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
+      >
+        <el-table-column prop="name" label="姓名" />
+        <el-table-column prop="uid" label="学工号" />
+        <el-table-column prop="position" label="职位" />
+        <el-table-column label="管理">
+          <template #default="scope">
+            <el-button
+              v-if="scope.row.status"
+              class="cancel"
+              style="color: #c7242f; font-size: 12px;"
+              link
+              @click="toCancel(scope.row)"
+              >撤销</el-button
+            >
+            <el-button
+              v-if="!scope.row.status"
+              class="cancel"
+              style="color: green; font-size: 12px;"
               link
               @click="toAdd(scope.row.value)"
               >添加</el-button
@@ -99,9 +131,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, inject, onMounted, watchEffect } from "vue";
+import { ref, inject, onMounted, watchEffect, computed } from "vue";
 import { getInfoBySno, update3Person, getBranchInfo } from "@/api/authority";
 import { ElMessage } from "element-plus";
+
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+const isMobile = computed(() => isMobileStore.isMobile);
 
 interface Manager {
   name: any;
@@ -292,5 +329,43 @@ const confrimCancel = () => {
 }
 .el-pagination.is-background .el-pager li {
   border-radius: 50%;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100%;
+    margin-left: 0;
+    padding: 10px;
+  }
+  .head {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .table {
+    width: 100%;
+  }
+  .dialog {
+    width: 100%;
+    padding: 10px;
+  }
+  .dialog_head {
+    width: 100%;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .name {
+    justify-content: center;
+  }
+  .add {
+    margin-top: 10px;
+  }
+  .el-input {
+    font-size: 12px;
+    width: 60%;
+  }
+  .el-button {
+    font-size: 12px;
+  }
 }
 </style>
