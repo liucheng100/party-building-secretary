@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <el-row class="head">
+    <el-row class="head" v-if="!isMobile">
       <el-col :span="10" class="headbar">
         <el-row style="width: 100%; align-items: center">
-          <el-col :span="7"class="headfont">
+          <el-col :span="6" class="headfont">
             <span>当前阶段 </span>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="15">
             <el-select
               v-model="stageValue"
               class="m-2"
@@ -24,10 +24,9 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="6" />
-      <el-col :span="8" class="headbar">
+      <el-col :span="10" class="headbar">
         <el-row style="width: 100%; align-items: center">
-          <el-col :span="8">
+          <el-col :span="7">
             <span>欲通过的阶段 </span>
           </el-col>
           <el-col :span="10">
@@ -46,17 +45,75 @@
               />
             </el-select>
           </el-col>
-          <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterMember()">筛选</el-button>
-          疑似反人类按钮 我先给扣了 用上面的@change="filterMember" -->
-          <el-col :span="2" />
-          <el-col :span="4">
-            <el-button color="#c7242f" @click="multiProcessAccess()"
-              >通过选中成员</el-button
+          <el-col :span="7">
+            <el-button
+              style="width: 100%; font-size: 14px; margin-left: 10px;"
+              color="#c7242f"
+              @click="multiProcessAccess()"
             >
+              通过选中成员
+            </el-button>
           </el-col>
         </el-row>
       </el-col>
     </el-row>
+    <div class="mobile-head" v-else>
+      <el-col :span="24" class="headbar" style="margin-bottom: 10px;">
+        <el-row style="width: 100%; align-items: center">
+          <el-col :span="6" class="headfont">
+            <span>当前阶段:</span>
+          </el-col>
+          <el-col :span="18">
+            <el-select
+              v-model="stageValue"
+              class="m-2"
+              placeholder="Select"
+              @change="filterMember(true)"
+            >
+              <el-option
+                class="option"
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="24" class="headbar">
+        <el-row style="width: 100%; align-items: center">
+          <el-col :span="6">
+            <span>期望阶段:</span>
+          </el-col>
+          <el-col :span="18">
+            <el-select
+              v-model="subStageValue"
+              class="m-2"
+              placeholder="Select"
+              @change="filterMember(false)"
+            >
+              <el-option
+                class="option"
+                v-for="item in options_little[stageValue]"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="24">
+        <el-button
+          style="width: 100%; font-size: 16px; margin-top: 10px"
+          color="#c7242f"
+          @click="multiProcessAccess()"
+        >
+          通过选中成员
+        </el-button>
+      </el-col>
+    </div>
     <div class="Main">
       <el-table
         ref="multipleTableRef"
@@ -69,7 +126,12 @@
         <el-table-column label="姓名">
           <template #default="scope">{{ scope.row.userName }}</template>
         </el-table-column>
-        <el-table-column property="sno" label="学号" class-name= "son6"/>
+        <el-table-column
+          property="sno"
+          label="学号"
+          class-name="son6"
+          v-if="!isMobile"
+        />
         <el-table-column property="identity" label="当前阶段">
           {{ options[stageValue].label }}
         </el-table-column>
@@ -163,6 +225,10 @@ import { ElMessage, ElTable } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { reactive } from "vue";
 import { processFilter, updateBatch } from "../../api/stateControl";
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+const isMobile = isMobileStore.isMobile;
 
 interface User {
   userName: string;
@@ -617,6 +683,30 @@ const closeModal = () => {
   margin-left: 20px;
 }
 
+.mobile-head {
+  padding: 15px;
+}
+
+.el-pagination.is-background .el-pager li {
+  border-radius: 50%;
+}
+
+.modal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-tail {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
 @media screen and (max-width: 768px) {
   .container {
     width: 100%;
@@ -627,52 +717,19 @@ const closeModal = () => {
   .font {
     font-size: 3rem;
   }
-  .head {
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-  .headbar {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  .headbar span {
-    width: 100%;
+  .el-pagination {
     font-size: 3rem;
-    margin-left: 10px;
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+    padding-right: 0;
   }
-  el-select{
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  .el-button{
-    font-size: 3rem;
-  }
-  .Main{
-    margin-top: 10px;
-    flex: 1;
-    overflow: auto;
-  }
-  .son6{
+  .el-pagination .el-pager,
+  .el-pagination .el-pagination__total {
     display: none;
   }
-  .el-pagination{
-  font-size: 3rem;
-  display: flex;
-  justify-content: center;
-  margin-top: 0;
-  padding-right: 0;
-}
-.el-pagination .el-pager,
-.el-pagination .el-pagination__total{
-  display:none;
-}
-.option{
-  font-size: 3rem;
-}
-
+  .option {
+    font-size: 3rem;
+  }
 }
 </style>

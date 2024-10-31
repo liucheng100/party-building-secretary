@@ -324,3 +324,9 @@ p {
     font-size: 17px !important;
     color: #2F2F2F !important;
 }
+
+@media screen and (max-width: 768px) {
+    .el-table {
+        font-size: 14px !important;
+    }
+}

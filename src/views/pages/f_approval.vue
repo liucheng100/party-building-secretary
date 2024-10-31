@@ -2,7 +2,7 @@
   <div class="container">
     <div class="head">
       <el-row style="width: 100%; align-items: center">
-        <el-col :span="3" class = "font" >文件类型</el-col
+        <el-col :span="3" class="font">文件类型</el-col
         ><el-col :span="15">
           <el-select
             v-model="typeValue"
@@ -23,7 +23,7 @@
         <!-- <el-button style="margin-left: 30px" color="#c7242f">筛选</el-button> -->
       </el-row>
       <el-row style="width: 100%; align-items: center">
-        <el-col :span="3"class="font">处理状态</el-col>
+        <el-col :span="3" class="font">处理状态</el-col>
         <el-col :span="15">
           <el-select
             v-model="hasReadValue"
@@ -52,18 +52,34 @@
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column width="48"></el-table-column>
-        <el-table-column property="userName" label="姓名" class-name="son1"> </el-table-column>
-        <el-table-column property="sno" label="学号" class-name="son2"/>
-        <el-table-column property="type" label="文件类型"class-name="son3">
+        <el-table-column width="48" v-if="!isMobile"></el-table-column>
+        <el-table-column property="userName" label="姓名" class-name="son1">
+        </el-table-column>
+        <el-table-column
+          property="sno"
+          label="学号"
+          class-name="son2"
+          v-if="!isMobile"
+        />
+        <el-table-column property="type" label="文件类型" class-name="son3">
           <template #default="scope">
             <div class="state_row">
               {{ scope.row.type <= 6 ? options[scope.row.type].label : "" }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="title" label="标题" class-name="son4" />
-        <el-table-column property="createAt" label="提交时间" class-name="son5" >
+        <el-table-column
+          property="title"
+          label="标题"
+          class-name="son4"
+          v-if="!isMobile"
+        />
+        <el-table-column
+          property="createAt"
+          label="提交时间"
+          class-name="son5"
+          v-if="!isMobile"
+        >
           <template #default="scope">
             {{
               new Date(Date.parse(scope.row.createAt)).getFullYear() +
@@ -107,7 +123,7 @@
         <el-table-column label="操作">
           <template #default="scope">
             <el-button
-              class ="button"
+              class="button"
               style="color: #c7242f"
               link
               @click="handleCheck(scope.$index, scope.row)"
@@ -138,6 +154,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElTable, ElMessage } from "element-plus";
+import { useIsMobileStore } from "@/stores/isMobileStore";
 
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { getAllFiles, getFileDetailContent } from "../../api/manageFile";
@@ -147,6 +164,8 @@ const $router = useRouter();
 const typeValue = ref(-1);
 const hasReadValue = ref(-1);
 const input = ref("");
+const isMobileStore = useIsMobileStore();
+const isMobile = isMobileStore.isMobile;
 const options = [
   {
     label: "全部",
@@ -335,64 +354,56 @@ const handleSelectionChange = (val: User[]) => {
 }
 
 @media screen and (max-width: 768px) {
-  .container{
+  .container {
     width: 100%;
     padding: 0px 0px;
     display: flex;
   }
-  .font{
+  .font {
     font-size: 3rem;
   }
-  .head{
+  .head {
     width: 100%;
     height: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  .son2{
-    display:none;
+  .son2 {
+    display: none;
   }
-  .son4{
-    display:none;
+  .son4 {
+    display: none;
   }
-  .son5{
-    display:none;
+  .son5 {
+    display: none;
   }
   .Main {
-  width: 100%; 
-  overflow: hidden; 
-}
-.el-table{
-  overflow: hidden; 
-  table-layout: fixed;
-}
-.el-table__body-wrapper {
-  overflow-x: hidden; 
-}
-.state_row {
-  font-size: 4rem;
-}
-.el-table {
-  overflow: hidden; 
-  table-layout: fixed;
-}
-.button{
-  font-size: 4rem;
-}
-.el-pagination{
-  font-size: 16px;
-  display: flex;
-  justify-content: center;
-  margin-top: 0;
-  padding-right: 0;
-}
-.el-pagination .el-pager,
-.el-pagination .el-pagination__total{
-  display:none;
-}
-.option{
-  font-size: 3rem;
-}
+    width: 100%;
+  }
+
+  .state_row {
+    font-size: 4rem;
+  }
+  .el-table {
+    table-layout: fixed;
+  }
+  .button {
+    font-size: 4rem;
+  }
+  .el-pagination {
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+    padding-right: 0;
+  }
+  .el-pagination .el-pager,
+  .el-pagination .el-pagination__total {
+    display: none;
+  }
+  .option {
+    font-size: 3rem;
+  }
 }
 </style>

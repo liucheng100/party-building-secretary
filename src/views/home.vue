@@ -7,29 +7,32 @@
 -->
 <template>
   <div class="main">
-    
-    <Navtree  class="nav nav-big" />
-    <el-drawer v-model="drawer"  class="drawer"
-    :with-header="false"
-    :with-footer="false"
-    size="50%"
-    @close="drawerVisible = false"
+    <Navtree class="nav nav-big" />
+    <el-drawer
+      v-model="drawer"
+      class="drawer"
+      :with-header="false"
+      :with-footer="false"
+      size="50%"
+      @close="drawerVisible = false"
     >
-    <Navtreep class="nav nav-small"  />
-    
+      <Navtreep class="nav nav-small" />
     </el-drawer>
     <div class="content">
-      <div style="height: 75px; display: flex;" >
-      <MainHeader style="height: 75px; width: 80%;"    />
-      <div class="openbar" style="display: none; height: 75px; width: 20%;" @click="drawer=true">
-            <img class="open" src="@/assets/ljc/kuangjia/user.svg" />
+      <div style="height: 75px; display: flex">
+        <MainHeader style="height: 75px; width: 80%" />
+        <div
+          class="openbar"
+          style="display: none; height: 75px; width: 20%"
+          @click="drawer = true"
+        >
+          <el-icon color="black" size="large"><MoreFilled /></el-icon>
         </div>
-        </div>
+      </div>
       <div id="screen" class="screen">
         <div class="decor">
           <router-view></router-view>
         </div>
-        
       </div>
     </div>
   </div>
@@ -38,11 +41,11 @@
 import Navtree from "@/components/Navtree.vue";
 import Navtreep from "@/components/Navtreep.vue";
 import MainHeader from "@/components/MainHeader.vue";
-import { ref, onMounted, onBeforeUnmount,reactive, provide } from "vue";
+import { ref, onMounted, onBeforeUnmount, reactive, provide } from "vue";
 import { getToken, setToken, setBranchId } from "@/utils/auth";
 import { getInfo } from "@/api/login";
 import { getBranchInfo } from "@/api/branch";
-import { ElDrawer, ElButton } from 'element-plus';
+import { ElDrawer, ElButton } from "element-plus";
 
 // 这里发请求获取支部信息
 const USER_INFO = reactive({});
@@ -72,11 +75,11 @@ const handleResize = () => {
 };
 
 onMounted(() => {
-  window.addEventListener('resize', handleResize);
+  window.addEventListener("resize", handleResize);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', handleResize);
+  window.removeEventListener("resize", handleResize);
 });
 </script>
 <style scoped>
@@ -117,7 +120,7 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
-::v-deep .el-table th .cell {
+:v-deep(.el-table th .cell) {
   font-weight: 400;
 }
 
@@ -125,17 +128,16 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-.nav-big{
+.nav-big {
   display: block;
 }
-.open{
+.open {
   margin-top: 20px;
 }
 :deep(.el-drawer__body) {
-
-    overflow: hidden ;
+  overflow: hidden;
 }
-@media screen and (max-width:768px) {
+@media screen and (max-width: 768px) {
   .nav-small {
     display: block;
   }
@@ -143,11 +145,16 @@ onBeforeUnmount(() => {
   .nav-big {
     display: none;
   }
-  .main{
-    display: flex ;
+  .main {
+    display: flex;
   }
-  .openbar{
-    display: block !important;
+  .openbar {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+  }
+  .decor {
+    padding: 10px 20px;
   }
 }
 </style>

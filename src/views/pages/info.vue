@@ -1,50 +1,53 @@
 <template>
   <div class="all">
-  <div class="background">
-    <img src="../../assets/info/emblem.svg" alt="" />
-  </div>
-  <div class="main">
-    <div class="info">
-      <div class="title">{{ BRANCH_INFO.partybranchName }}</div>
+    <div class="background">
+      <img src="../../assets/info/emblem.svg" alt="" />
+    </div>
+    <div class="main">
+      <div class="info">
+        <div class="title">{{ BRANCH_INFO.partybranchName }}</div>
 
-      <div class="info-item">
-        <div class="font2">所属</div>
-        <div class="font1">{{ BRANCH_INFO.collegeName }}</div>
-      </div>
-      <div class="info-item">
-        <div class="font2">支部编号</div>
-        <div class="font1">{{ BRANCH_INFO.partybranchId }}</div>
-      </div>
-      <div class="info-item">
-        <div class="font2">支部书记</div>
-        <div class="font1">{{ BRANCH_INFO.partybranchSecretary?.username }}</div>
-      </div>
+        <div class="info-item">
+          <div class="font2">所属</div>
+          <div class="font1">{{ BRANCH_INFO.collegeName }}</div>
+        </div>
+        <div class="info-item">
+          <div class="font2">支部编号</div>
+          <div class="font1">{{ BRANCH_INFO.partybranchId }}</div>
+        </div>
+        <div class="info-item">
+          <div class="font2">支部书记</div>
+          <div class="font1">
+            {{ BRANCH_INFO.partybranchSecretary?.username }}
+          </div>
+        </div>
 
-      <div class="info-item">
-        <div class="font2">支部委员</div>
-        <div class="font1">
-          {{ BRANCH_INFO.partybranchOrganizer?.username
-          }}
-          {{ BRANCH_INFO.partybranchOrganizer ? '&nbsp;&nbsp;&nbsp;' : '' }}
-          {{
-            BRANCH_INFO.partybranchPropagator?.username
-          }}
+        <div class="info-item">
+          <div class="font2">支部委员</div>
+          <div class="font1">
+            {{ BRANCH_INFO.partybranchOrganizer?.username }}
+            {{ BRANCH_INFO.partybranchOrganizer ? "&nbsp;&nbsp;&nbsp;" : "" }}
+            {{ BRANCH_INFO.partybranchPropagator?.username }}
+          </div>
         </div>
       </div>
-    </div>
-    <div class="detail">
-      <div class="chart" style="width: calc(100% );padding-right: calc(10%);" ref="chart"></div>
-      <div class="list">
-        <div v-for="item in list" class="list-item" :key="item">
-          <div class="m">
-            <img :src="getIconPath(item.icon)" />
-            <div class="font1">{{ item.name }}</div>
-            <div class="font2">{{ item.num }}</div>
+      <div class="detail">
+        <div
+          class="chart"
+          style="width: calc(100%); padding-right: calc(10%)"
+          ref="chart"
+        ></div>
+        <div class="list">
+          <div v-for="item in list" class="list-item" :key="item">
+            <div class="m">
+              <img :src="getIconPath(item.icon)" />
+              <div class="font1">{{ item.name }}</div>
+              <div class="font2">{{ item.num }}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -166,16 +169,16 @@ function initChart(a, b, c, d, e, f, t) {
 </script>
 
 <style scoped>
-.all{
+.all {
   flex-grow: 1;
 }
 @media screen and (max-width=765px) {
-  .chart{
+  .chart {
     padding-left: 100px !important;
   }
 }
 .main {
-  transition: all .25s ease-in-out;
+  transition: all 0.25s ease-in-out;
   position: relative;
   width: 100%;
   height: 100%;
@@ -192,18 +195,18 @@ function initChart(a, b, c, d, e, f, t) {
   min-width: 300px;
 }
 
-.info-item{
+.info-item {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
-.title{
+.title {
   font-size: 26px !important;
 }
 
-.font1{
+.font1 {
   min-width: 300px;
   color: #2f2f2f;
 }
@@ -218,8 +221,6 @@ function initChart(a, b, c, d, e, f, t) {
   font-size: 24px;
   margin-top: 15px;
 }
-
-
 
 .background {
   position: absolute;
@@ -240,7 +241,7 @@ function initChart(a, b, c, d, e, f, t) {
 
 .detail {
   min-width: 300px;
-  transition: all .25s ease-in-out;
+  transition: all 0.25s ease-in-out;
   z-index: 1;
   right: 0;
   flex: 2;
@@ -290,5 +291,31 @@ function initChart(a, b, c, d, e, f, t) {
 .m .font2 {
   font-size: 24px;
   color: #c7242f;
+}
+
+@media screen and (max-width: 768px) {
+  .chart {
+    padding-left: 10px !important;
+    margin: 0;
+  }
+
+  .info .font1,
+  .info .font2,
+  .title {
+    font-size: 18px;
+  }
+
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .list-item {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .m {
+    padding: 5px;
+  }
 }
 </style>
