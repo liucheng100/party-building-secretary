@@ -29,7 +29,7 @@ import { ref, inject } from 'vue'
 const BRANCH_INFO = inject('BRANCH_INFO')
 const isResizing = ref(false)
 const login = ref(false)
-const isCursor = ref(false)
+const isCursor = ref(false);
 const router = useRouter();
 const route = useRoute();
 
