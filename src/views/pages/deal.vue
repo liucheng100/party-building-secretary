@@ -47,7 +47,7 @@
           </el-col>
           <el-col :span="7">
             <el-button
-              style="width: 100%; font-size: 14px; margin-left: 10px;"
+              style="width: 100%; font-size: 14px; margin-left: 10px"
               color="#c7242f"
               @click="multiProcessAccess()"
             >
@@ -58,7 +58,7 @@
       </el-col>
     </el-row>
     <div class="mobile-head" v-else>
-      <el-col :span="24" class="headbar" style="margin-bottom: 10px;">
+      <el-col :span="24" class="headbar" style="margin-bottom: 10px">
         <el-row style="width: 100%; align-items: center">
           <el-col :span="6" class="headfont">
             <span>当前阶段:</span>
@@ -138,7 +138,7 @@
         <el-table-column label="操作">
           <template #default="scope">
             <el-button
-              style="color: #21b339"
+              style="color: #21b339; font-size: 10px"
               link
               @click="processAcsess(scope.row)"
               >通过</el-button
@@ -162,7 +162,7 @@
       />
     </el-config-provider>
     <!----------------------------------------弹窗------------------------------------------->
-    <el-dialog v-model="visible" title="请填写以下成员变更时间：" width="35%">
+    <el-dialog v-model="visible" title="请填写以下成员变更时间：" class="popup">
       <div class="modal">
         <div style="display: flex" v-if="showMuti">
           <div class="font-4">批量填写：</div>
@@ -206,7 +206,7 @@
         </el-table>
 
         <div class="modal-tail">
-          <el-button color="#c7242f" @click="confirmUpdateBatch(true)"
+          <el-button color="#c7242f" @click="confirmUpdateBatch(true)" style="font-size: 14px;"
             >确认更改</el-button
           >
           <div style="color: #c7242f; margin-top: 5px">
@@ -219,7 +219,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElMessage, ElTable } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
@@ -228,7 +228,7 @@ import { processFilter, updateBatch } from "../../api/stateControl";
 import { useIsMobileStore } from "@/stores/isMobileStore";
 
 const isMobileStore = useIsMobileStore();
-const isMobile = isMobileStore.isMobile;
+const isMobile = computed(() => isMobileStore.isMobile);
 
 interface User {
   userName: string;
@@ -707,6 +707,9 @@ const closeModal = () => {
   z-index: 10;
 }
 
+.popup {
+  width: 35%;
+}
 @media screen and (max-width: 768px) {
   .container {
     width: 100%;
@@ -730,6 +733,9 @@ const closeModal = () => {
   }
   .option {
     font-size: 3rem;
+  }
+  .popup {
+    width: 90%;
   }
 }
 </style>

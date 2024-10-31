@@ -1,12 +1,13 @@
 <template>
   <div class="container">
     <el-icon
+      v-if="!isMobile"
       @click="$router.back()"
       style="height: 50px; margin: 20px 5% 0 auto; font-size: 50px"
       ><Close
     /></el-icon>
     <!-- 表头部分 -->
-    <el-row class="personal-info-title">
+    <el-row class="personal-info-title" v-if="!isMobile">
       <el-col :span="6"><div>姓名</div></el-col>
       <el-col :span="6"><div>学号</div></el-col>
       <el-col :span="6"><div>文件类型</div></el-col>
@@ -14,7 +15,7 @@
     </el-row>
 
     <!-- 个人信息部分 -->
-    <el-row class="personal-info">
+    <el-row class="personal-info" v-if="!isMobile">
       <el-col :span="6"
         ><div>{{ fileInfo.userName }}</div></el-col
       >
@@ -36,6 +37,22 @@
         </div></el-col
       >
     </el-row>
+
+    <!-- 手机端的个人信息部分 -->
+    <div v-if="isMobile" class="mobile-info-box">
+      <div class="info-item">姓名：{{ fileInfo.userName }}</div>
+      <div class="info-item">学号：{{ fileInfo.sno }}</div>
+      <div class="info-item">文件类型：{{ fileName }}</div>
+      <div class="info-item">
+        递交时间：{{
+          new Date(Date.parse(fileInfo.createAt)).getFullYear() +
+          "-" +
+          (new Date(Date.parse(fileInfo.createAt)).getMonth() + 1) +
+          "-" +
+          new Date(Date.parse(fileInfo.createAt)).getDate()
+        }}
+      </div>
+    </div>
 
     <!-- 文章标题 -->
     <div class="article-title">{{ fileInfo.title }}</div>
@@ -65,7 +82,9 @@
 
     <!-- 处理时间 -->
     <div style="width: 80%">
-      <div style="color: #c7242f" class="font1">*该节点需要记录时间，请选择状态变更时间</div>
+      <div style="color: #c7242f" class="font1">
+        *该节点需要记录时间，请选择状态变更时间
+      </div>
     </div>
     <div style="width: 80%" class="change-time-section">
       <el-date-picker
@@ -93,6 +112,10 @@ import { approvalFile } from "../../api/manageFile";
 import { downloadFile } from "../../api/file";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+const isMobile = computed(() => isMobileStore.isMobile);
 
 const $router = useRouter();
 
@@ -264,12 +287,6 @@ const reject = async () => {
   margin-bottom: 20px;
   color: grey;
 }
-
-.info-item {
-  flex: 1;
-  text-align: center;
-}
-
 .article-title {
   font-size: 20px;
   font-weight: bold;
@@ -281,6 +298,7 @@ const reject = async () => {
   margin-bottom: 10px;
   background-color: #fafafa;
   width: 80%;
+  font-size: 16px;
 }
 
 .article-content :deep(p) {
@@ -315,54 +333,29 @@ const reject = async () => {
   margin: 10px 0;
   width: 80%;
 }
-@media screen and (max-width: 768px) {
-  .personal-info-title,
-  .personal-info{
-    font-size: 3rem;
-    flex-direction: column;
-    align-items: flex-start;
+.mobile-info-box {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.info-item {
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+@media (max-width: 480px) {
+  .approval-comment {
+    font-size: 14px; 
   }
 
-  .personal-info-title div,
-  .personal-info div{
-    width: 100%;
-    margin-bottom: 10px;
+  .font1 {
+    font-size: 12px;
   }
-
-  .article-title {
-    font-size: 20px;
-  }
-  .downloadBtn,
-  .custom-button {
-    font-size: 14px;
-    padding: 8px 15px;
-    border-radius: 8px;
-  }
-  .action-buttons{
-    flex-direction: column;
-    align-items: center;
-  }
-  .font1{
-    font-size: 3rem;
-  }
-  .approval-comment,
-  .change-time-section,
-  .action-buttons {
-    width: 80%;
-    font-size: 3rem;
-  }
-  .article-content {
-    width: 80%;
-    font-size: 3rem;
-  }
-  .custom-button {
-    margin-top: 15px;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
 }
 </style>

@@ -1,8 +1,15 @@
 <template>
   <div class="container">
     <div class="head">
-      <div style="width: 200px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="flex: 1; font-size: 16px;">身份 </span
+      <div
+        style="
+          width: 200px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <span style="flex: 1; font-size: 16px">身份 </span
         ><el-select
           v-model="filterValue"
           class="m-2"
@@ -20,7 +27,7 @@
         <!-- <el-button style="margin-left: 30px" color="#c7242f" @click="filterUser()">筛选</el-button>
       疑似反人类按钮 我先给扣了 用上面的@change="filterMember" -->
       </div>
-      <div>
+      <div class="sno-class">
         <span>学号 </span>
         <el-input
           style="display: inline; margin-left: 30px"
@@ -29,6 +36,7 @@
           @change="searchBySno()"
         ></el-input>
         <el-button
+          class="sno-class"
           style="margin-left: 30px"
           color="#c7242f"
           @click="searchBySno()"
@@ -43,9 +51,9 @@
         style="width: 100%; height: 100%"
         :header-cell-style="{ background: '#FFF8F9', color: '#2F2F2F' }"
       >
-        <el-table-column width="48"></el-table-column>
+        <el-table-column width="48" v-if="!isMobile"></el-table-column>
         <el-table-column property="userName" label="姓名"> </el-table-column>
-        <el-table-column property="sno" label="学号" />
+        <el-table-column property="sno" label="学号" v-if="!isMobile"/>
         <el-table-column property="type" label="身份">
           <template #default="scope">
             {{ types[scope.row.type + 1] }}
@@ -82,7 +90,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElTable, ElMessage } from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
@@ -90,6 +98,10 @@ import { reactive } from "vue";
 import { getMemberList, searchByNum } from "../../api/p_management";
 import { getBranchInfo } from "@/api/branch";
 // import { getBranchId } from "@/utils/auth";
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+const isMobile = computed(() => isMobileStore.isMobile);
 
 const $route = useRoute();
 const $router = useRouter();
@@ -255,5 +267,63 @@ const handleSelectionChange = (val: User[]) => {
 
 .el-pagination.is-background .el-pager li {
   border-radius: 50%;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 100%;
+    padding: 0px 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .head {
+    width: 100%; 
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .head > div {
+    width: 100%;
+  }
+
+  .el-select {
+    width: 100% !important;
+    font-size: 16px; 
+  }
+
+  .sno-class {
+    display: flex; 
+    align-items: center;
+    font-size: 16px;
+    width: 100%; 
+  }
+
+  .el-input {
+    font-size: 10px !important; 
+    flex: 4; 
+    height: 40px !important; 
+  }
+
+  .el-button {
+    font-size: 14px; 
+    flex-shrink: 0; 
+    flex: 1;
+  }
+
+  .el-pagination {
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+    padding-right: 0;
+  }
+
+  .el-pagination .el-pager,
+  .el-pagination .el-pagination__total {
+    display: none;
+  }
 }
 </style>

@@ -46,6 +46,10 @@ import { getToken, setToken, setBranchId } from "@/utils/auth";
 import { getInfo } from "@/api/login";
 import { getBranchInfo } from "@/api/branch";
 import { ElDrawer, ElButton } from "element-plus";
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+
 
 // 这里发请求获取支部信息
 const USER_INFO = reactive({});
@@ -67,20 +71,6 @@ if (getToken()) {
   });
 }
 const drawer = ref(false);
-const windowWidth = ref(window.innerWidth);
-
-const handleResize = () => {
-  windowWidth.value = window.innerWidth;
-  window.location.reload(); // 刷新页面
-};
-
-onMounted(() => {
-  window.addEventListener("resize", handleResize);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
-});
 </script>
 <style scoped>
 .main {

@@ -37,7 +37,7 @@
         >
       </div>
     </div>
-    <el-dialog v-model="createDialogVisible" title="创建学习小组" width="30%">
+    <el-dialog v-model="createDialogVisible" title="创建学习小组" class="popup">
       <div class="PopUp">
         <div class="bar">
           <span class="title">组长学号</span>
@@ -61,7 +61,7 @@
         </span>
       </div>
     </el-dialog>
-    <el-dialog v-model="manageDialogVisible" title="管理学习小组" width="30%">
+    <el-dialog v-model="manageDialogVisible" title="管理学习小组" class="popup">
       <div class="PopUp">
         <el-table
           :data="tableData"
@@ -99,7 +99,7 @@
         </el-table>
       </div>
     </el-dialog>
-    <el-dialog v-model="addVisible" title="添加到学习小组" width="30%">
+    <el-dialog v-model="addVisible" title="添加到学习小组" class="popup">
       <div class="PopUp">
         <el-table
           :data="tableData"
@@ -142,10 +142,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, inject } from "vue";
+import { ref, watch, inject, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { addGroup, getList, getGroup, getDeleteGroup } from "@/api/learngroup";
 import { ElMessage } from "element-plus";
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+const isMobile = computed(() => isMobileStore.isMobile);
 
 const router = useRouter();
 const route = useRoute();
@@ -318,5 +322,36 @@ const handleTabChange = () => {
 .PopUp .bar .input {
   width: 60%;
   height: 50px;
+}
+
+.popup {
+  width: 30%;
+}
+
+@media screen and (max-width: 768px) {
+  :deep(.el-dialog) {
+    width: 100% !important;
+  }
+  :deep(.el-input) {
+    font-size: 14px !important;
+  }
+  :deep(.el-button) {
+    font-size: 10px !important;
+  }
+  .custom-button {
+    margin-left: 10px;
+  }
+  .custom-button {
+    margin-left: 10px;
+  }
+  .head {
+    flex-direction: column;
+  }
+}
+</style>
+
+<style>
+.el-radio-button__inner {
+  font-size: 10px !important; 
 }
 </style>

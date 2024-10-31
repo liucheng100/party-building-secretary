@@ -151,7 +151,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ElTable, ElMessage } from "element-plus";
 import { useIsMobileStore } from "@/stores/isMobileStore";
@@ -165,7 +165,7 @@ const typeValue = ref(-1);
 const hasReadValue = ref(-1);
 const input = ref("");
 const isMobileStore = useIsMobileStore();
-const isMobile = isMobileStore.isMobile;
+const isMobile = computed(() => isMobileStore.isMobile);
 const options = [
   {
     label: "全部",

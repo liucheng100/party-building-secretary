@@ -777,8 +777,13 @@ import {
   getFile,
   getSFileDetail,
 } from "../../api/p_management";
-import { DefineComponent } from "vue";
+import { DefineComponent, computed } from "vue";
 import { Position } from "@element-plus/icons-vue";
+
+import { useIsMobileStore } from "@/stores/isMobileStore";
+
+const isMobileStore = useIsMobileStore();
+const isMobile = computed(() => isMobileStore.isMobile);
 
 interface User {
   title: string;

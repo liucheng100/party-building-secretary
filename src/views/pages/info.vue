@@ -53,7 +53,7 @@
 
 <script setup>
 import { watchEffect } from "vue";
-import { ref, reactive, onMounted, inject } from "vue";
+import { ref, reactive, onMounted, inject, onBeforeUnmount } from "vue";
 import * as echarts from "echarts";
 function getIconPath(iconName) {
   return new URL(`../../assets/info/${iconName}.svg`, import.meta.url).href;
@@ -165,6 +165,13 @@ function initChart(a, b, c, d, e, f, t) {
     },
   };
   option && myChart.setOption(option);
+  // 在窗口大小变化时重置图表尺寸
+  window.addEventListener("resize", myChart.resize);
+
+  // 在组件卸载时移除事件监听器
+  onBeforeUnmount(() => {
+    window.removeEventListener("resize", myChart.resize);
+  });
 }
 </script>
 
