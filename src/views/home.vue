@@ -144,7 +144,7 @@ const drawer = ref(false);
     align-items: center;
   }
   .decor {
-    padding: 10px 20px;
+    padding: 10px 10px;
   }
 }
 </style>

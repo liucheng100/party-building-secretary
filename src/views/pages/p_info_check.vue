@@ -11,19 +11,25 @@
             <div style="color: #9f9f9f; margin-bottom: 10px; font-size: 16px">
               姓名
             </div>
-            <div style="font-size: 24px">{{ name }}</div>
+            <div :style="{ fontSize: isMobile ? '16px' : '24px' }">
+              {{ name }}
+            </div>
           </div>
           <div class="stu_id" style="display: flex; flex-direction: column">
             <div style="color: #9f9f9f; margin-bottom: 10px; font-size: 16px">
               学号
             </div>
-            <div style="font-size: 24px">{{ stu_id }}</div>
+            <div :style="{ fontSize: isMobile ? '16px' : '24px' }">
+              {{ stu_id }}
+            </div>
           </div>
           <div class="identity" style="display: flex; flex-direction: column">
             <div style="color: #9f9f9f; margin-bottom: 10px; font-size: 16px">
               身份
             </div>
-            <div style="font-size: 24px">{{ identity }}</div>
+            <div :style="{ fontSize: isMobile ? '16px' : '24px' }">
+              {{ identity }}
+            </div>
           </div>
         </div>
       </div>
@@ -38,6 +44,7 @@
             color: '#2F2F2F',
             padding: '15px',
           }"
+          v-if="!isMobile"
         >
           <el-table-column property="title" label="标题" width="180">
             <template #default="scope">
@@ -85,6 +92,64 @@
             </template>
           </el-table-column>
         </el-table>
+
+        <el-table
+          ref="multipleTableRef"
+          :data="tableData"
+          style="width: 100%"
+          :header-cell-style="{
+            background: '#FFF8F9',
+            color: '#2F2F2F',
+          }"
+          v-else
+        >
+          <el-table-column property="title" label="标题">
+            <template #default="scope">
+              {{ scope.row.title }}
+            </template>
+          </el-table-column>
+          <el-table-column property="class" label="类别">
+            <template #default="scope">
+              {{ scope.row.type <= 6 ? options[scope.row.type].label : "" }}
+            </template>
+          </el-table-column>
+          <el-table-column property="situation" label="当前状态">
+            <template #default="scope">
+              <div class="icon_situation">
+                <i
+                  class="dotClass"
+                  style="background-color: #21b339"
+                  v-if="scope.row.status == 1"
+                ></i>
+                <i
+                  class="dotClass"
+                  style="background-color: #c7242f"
+                  v-if="scope.row.status == 2"
+                ></i>
+                <i
+                  class="dotClass"
+                  style="background-color: #fca235"
+                  v-if="scope.row.status == 0"
+                ></i>
+                <div class="situation_row">
+                  {{ situationType[scope.row.status] }}
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="操作">
+            <template #default="scope">
+              <el-button
+                style="color: #c7242f; font-size: 14px"
+                link
+                @click="handleCheck(scope.row)"
+                >查看</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+
         <el-config-provider :locale="Cn">
           <el-pagination
             class="el-paginatio"
@@ -751,10 +816,11 @@
         </div> -->
       </div>
     </div>
-    <div style="position: absolute; left: 43%; top: 0">
+    <div style="position: absolute; left: 43%; top: 0" v-if="!isMobile">
       <img src="../../assets/back-icon.svg" @click="$router.back()" />
     </div>
   </div>
+  <!-- <div @click="goTop" class="rocket" v-if="isMobile">Top</div> -->
 </template>
 
 <script lang="ts" setup>
@@ -941,6 +1007,15 @@ const changeStatue = (val: any) => {
   //   currentStatu.value = val;
   //   for (let i = 0; i <= currentStatu.value; i++) statueList.value[i] = true;
   // }
+};
+
+// 这函数咋不生效。。??
+const goTop = () => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth", 
+  });
 };
 
 onMounted(async () => {
@@ -1684,5 +1759,154 @@ onMounted(async () => {
   height: 15px;
   font-size: 12px;
   position: relative;
+}
+
+@media screen and (max-width: 768px) {
+  .p_check {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0px;
+  }
+
+  .p_check_1 {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .p_check_head_1 {
+    font-size: 18px !important;
+    margin: 20px 0;
+  }
+
+  .p_check_2 {
+    width: 100%;
+  }
+
+  .p_check_head_2 {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .name,
+  .stu_id,
+  .identity {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .chart {
+    font-size: 12px;
+  }
+
+  .changeTime {
+    font-size: 8px;
+  }
+  .square-line-c[data-v-285394eb] {
+    width: 150px;
+  }
+  .progressLine[data-v-285394eb] {
+    left: 13px;
+  }
+
+  .hint {
+    bottom: 12px;
+  }
+  .hint div {
+    display: inline-block;
+    padding: 8px 13px;
+    font-size: 14px;
+    border-radius: 100px;
+    margin: 0 12px;
+  }
+
+  .step-1 {
+    margin-top: 20px;
+  }
+  .step-last {
+    margin-bottom: 77px;
+  }
+  .step-b-1 {
+    margin-top: 77px;
+  }
+
+  .square-line-c {
+    width: 180px;
+    height: 102px;
+  }
+  .square-line-c-2 {
+    width: 160px;
+    height: 220px;
+  }
+  .square-line-c-2-3 {
+    width: 120px;
+    height: 360px;
+  }
+  .square-line-c-3 {
+    width: 210px;
+    height: 200px;
+  }
+  .square-line-c-3-b {
+    width: 210px;
+    height: 200px;
+  }
+  .triangel {
+    left: -6px;
+    top: 15px;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 8px solid #e2e3e4;
+  }
+
+  .visible {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  .hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  .dot-0 {
+    display: none;
+  }
+  .dot-1 {
+    display: none;
+  }
+  .rocket {
+    position: fixed;
+    top: 84vh;
+    right: 40px;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 16px -6px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  .rocket:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+}
+</style>
+
+<style>
+@media screen and (max-width: 768px) {
+  .el-pagination__jump {
+    display: none;
+  }
+  .el-pagination__sizes.is-first {
+    display: none;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+  .el-pager {
+    display: none;
+  }
 }
 </style>
