@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# some scripts
+build_development.sh
+build_production.sh
+upload_development.zip
+upload_production.zip
