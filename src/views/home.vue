@@ -15,6 +15,7 @@
       :with-footer="false"
       size="50%"
       @close="drawerVisible = false"
+      v-show="isMobileStore.isMobile"
     >
       <Navtreep class="nav nav-small" />
     </el-drawer>

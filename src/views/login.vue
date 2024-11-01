@@ -61,7 +61,7 @@ export default {
       this.loginLoading = true;
       login({ account: this.account, pass: this.password })
         .then(({ data: { code: code, data: data, msg: msg }, ...res }) => {
-          if (code === 0 && data > 0 ) {
+          if (code === 0 && data > 0) {
             ElMessage.success("登录成功");
             setToken(res.headers["token"]);
             this.loginLoading = false;
@@ -132,5 +132,26 @@ export default {
   width: 100%;
   height: 48px;
   border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 180px 50px; 
+  }
+
+  .title,
+  .hint,
+  .tag {
+    font-size: 18px; /* Adjust font sizes */
+  }
+
+  .input {
+    font-size: 16px; /* Slightly smaller font size */
+  }
+
+  .loginBtn {
+    margin-top: 20px; /* Less space above button */
+    height: 44px; /* Slightly shorter button */
+  }
 }
 </style>
