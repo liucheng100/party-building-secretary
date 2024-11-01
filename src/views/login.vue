@@ -142,16 +142,17 @@ export default {
   .title,
   .hint,
   .tag {
-    font-size: 18px; /* Adjust font sizes */
+    font-size: 18px;
   }
 
   .input {
-    font-size: 16px; /* Slightly smaller font size */
+    font-size: 16px; 
   }
 
   .loginBtn {
-    margin-top: 20px; /* Less space above button */
-    height: 44px; /* Slightly shorter button */
+    margin-top: 20px; 
+    height: 44px; 
+    font-size: 14px;
   }
 }
 </style>
