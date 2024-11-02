@@ -26,10 +26,10 @@ export default defineConfig({
           target: 'https://partybak.twt.edu.cn',
           secure: false, 
           changeOrigin: true, 
-          rewrite: (path) => {
-            // console.log("Rewriting path:", path.replace(/^\/api/, '')); 
-            return path.replace(/^\/api/, '');
-          },
+          // rewrite: (path) => {
+          //   // console.log("Rewriting path:", path.replace(/^\/api/, '')); 
+          //   return path.replace(/^\/api/, '');
+          // },
         },
       },
   },
