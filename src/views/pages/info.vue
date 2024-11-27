@@ -54,6 +54,7 @@
 <script setup>
 import { watchEffect } from "vue";
 import { ref, reactive, onMounted, inject, onBeforeUnmount } from "vue";
+import { getStatistics2 } from "@/api/info";
 import * as echarts from "echarts";
 function getIconPath(iconName) {
   return new URL(`../../assets/info/${iconName}.svg`, import.meta.url).href;
@@ -70,29 +71,49 @@ let list = ref([
 const chart = ref(null);
 
 onMounted(() => {
+  getStatistics2().then((res) => {
+    if (res && res.data) {
+      BRANCH_INFO = {
+        ...BRANCH_INFO,
+        ...res.data,
+      };
+
+      list.value = [
+        { name: "入党申请人", num: BRANCH_INFO.applicant, icon: "icon1" },
+        { name: "积极分子", num: BRANCH_INFO.activistTotal, icon: "icon2" },
+        { name: "发展对象", num: BRANCH_INFO.developTotal, icon: "icon3" },
+        { name: "预备党员", num: BRANCH_INFO.probationary, icon: "icon4" },
+        { name: "正式党员", num: BRANCH_INFO.partyMember, icon: "icon5" },
+        { name: "非申请人", num: BRANCH_INFO.notApplicant, icon: "icon6" },
+      ];
+
+      initChart(
+        BRANCH_INFO.partyMember,
+        BRANCH_INFO.probationary,
+        BRANCH_INFO.developTotal,
+        BRANCH_INFO.activistTotal,
+        BRANCH_INFO.applicant,
+        BRANCH_INFO.notApplicant,
+        BRANCH_INFO.total
+      );
+    }
+  });
+
   watchEffect(() => {
     if (BRANCH_INFO) {
-      //console.log(BRANCH_INFO);
-      list.value = [
-        { name: "入党申请人", num: BRANCH_INFO.applicantCount, icon: "icon1" },
-        { name: "积极分子", num: BRANCH_INFO.activeCount, icon: "icon2" },
-        { name: "发展对象", num: BRANCH_INFO.developCount, icon: "icon3" },
-        { name: "预备党员", num: BRANCH_INFO.prepareCount, icon: "icon4" },
-        { name: "正式党员", num: BRANCH_INFO.regularCount, icon: "icon5" },
-        { name: "非申请人", num: BRANCH_INFO.nonApplicantCount, icon: "icon6" },
-      ];
+      initChart(
+        BRANCH_INFO.partyMember,
+        BRANCH_INFO.probationary,
+        BRANCH_INFO.developTotal,
+        BRANCH_INFO.activistTotal,
+        BRANCH_INFO.applicant,
+        BRANCH_INFO.notApplicant,
+        BRANCH_INFO.total
+      );
     }
-    initChart(
-      BRANCH_INFO.regularCount,
-      BRANCH_INFO.prepareCount,
-      BRANCH_INFO.developCount,
-      BRANCH_INFO.activeCount,
-      BRANCH_INFO.applicantCount,
-      BRANCH_INFO.nonApplicantCount,
-      BRANCH_INFO.totalCount
-    );
   });
 });
+
 function initChart(a, b, c, d, e, f, t) {
   var myChart = echarts.init(chart.value);
   var option;
