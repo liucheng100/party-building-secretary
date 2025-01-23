@@ -318,7 +318,7 @@
                 </div>
                 <div class="changeTime">
                   上次变更：{{
-                    changeTimeList[3] ? changeTimeList[3] : "时间暂无"
+                    changeTimeList[2] ? changeTimeList[2] : "时间暂无"
                   }}
                 </div>
               </div>
