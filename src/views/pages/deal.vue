@@ -4,11 +4,23 @@
       <el-col :span="10" class="headbar">
         <el-row style="width: 100%; align-items: center">
           <el-col :span="6" class="headfont">
-            <span> </span>
+            <span>当前阶段 </span>
           </el-col>
           <el-col :span="15">
-           
-        
+            <el-select
+              v-model="stageValue"
+              class="m-2"
+              placeholder="Select"
+              @change="filterMember(true)"
+            >
+              <el-option
+                class="option"
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </el-col>
         </el-row>
       </el-col>

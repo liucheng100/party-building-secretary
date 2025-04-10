@@ -1,1 +1,0 @@
-import{m as i}from"./index.fbe375fc.js";function p(t,e,a,r){return i.get({url:"/api/file/htd/list",params:{type:t,hasRead:e,page:a,countPerPage:r}})}function n(t){return i.get({url:`/api/file/htd/${t}`})}function o(t,e,a,r){return i.post({url:`/api/file/htd/${e}/approval`,params:{status:t,comment:a,approvalAt:r}})}export{n as a,o as b,p as g};
